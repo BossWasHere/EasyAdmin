@@ -3,6 +3,7 @@
 *.java text
 *.kts text
 *.md text
+*.sql text
 *.yml text
 
 /gradlew text eol=lf
