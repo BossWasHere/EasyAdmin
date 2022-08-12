@@ -24,9 +24,11 @@
 
 package com.backwardsnode.easyadmin.bungee;
 
+import com.backwardsnode.easyadmin.api.EasyAdminPlugin;
+import com.backwardsnode.easyadmin.api.data.Platform;
 import net.md_5.bungee.api.plugin.Plugin;
 
-public class EasyAdminBungee extends Plugin {
+public class EasyAdminBungee extends Plugin implements EasyAdminPlugin {
 
     @Override
     public void onLoad() {
@@ -43,4 +45,8 @@ public class EasyAdminBungee extends Plugin {
 
     }
 
+    @Override
+    public Platform getPlatform() {
+        return Platform.BUNGEE;
+    }
 }

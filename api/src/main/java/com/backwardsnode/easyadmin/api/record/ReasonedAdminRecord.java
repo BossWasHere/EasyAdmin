@@ -22,30 +22,20 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api;
+package com.backwardsnode.easyadmin.api.record;
 
-import com.backwardsnode.easyadmin.api.contextual.ContextTester;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * The API for EasyAdmin.
- *
- * <p>Plugins can use this API to perform administrative actions and listen for them.</p>
- *
- * <p>An instance of this API can be obtained from {@link EasyAdminProvider#get()}.</p>
+ * Represents an administrative action taking place between a player and staff member with an optional reason.
  */
-public interface EasyAdmin {
+public interface ReasonedAdminRecord extends AdminRecord {
+
 
     /**
-     * Gets the {@link ContextTester}, which is used to match contexts on a per-server/world basis.
-     * @return the {@link ContextTester}
+     * Gets the reason for this action.
+     * @return the reason. May be null.
      */
-    @NotNull ContextTester getContextTester();
-
-    /**
-     * Gets the {@link EasyAdminPlugin} that is responsible for this API.
-     * @return the {@link EasyAdminPlugin}
-     */
-    @NotNull EasyAdminPlugin getPluginInstance();
+    @Nullable String getReason();
 
 }

@@ -22,30 +22,28 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api;
+package com.backwardsnode.easyadmin.api.record.modify;
 
-import com.backwardsnode.easyadmin.api.contextual.ContextTester;
+import com.backwardsnode.easyadmin.api.record.LiveRecord;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * The API for EasyAdmin.
- *
- * <p>Plugins can use this API to perform administrative actions and listen for them.</p>
- *
- * <p>An instance of this API can be obtained from {@link EasyAdminProvider#get()}.</p>
+ * Represents a record modification wrapper that will eventually return a modified version of a record.
+ * @param <T> the type of record this wrapper will return.
  */
-public interface EasyAdmin {
+public interface RecordModifier<T extends LiveRecord<?>> {
 
     /**
-     * Gets the {@link ContextTester}, which is used to match contexts on a per-server/world basis.
-     * @return the {@link ContextTester}
+     * Gets the modified version of the record.
+     * @return The modified record.
      */
-    @NotNull ContextTester getContextTester();
+    @NotNull T getUpdatedRecord();
 
     /**
-     * Gets the {@link EasyAdminPlugin} that is responsible for this API.
-     * @return the {@link EasyAdminPlugin}
+     * Determines if any changes to this record were actually made.
+     * @implNote If the record was not initially loaded from a data store, this method will always return false.
+     * @return true if any changes were made, otherwise false.
      */
-    @NotNull EasyAdminPlugin getPluginInstance();
+    boolean hasChanged();
 
 }

@@ -24,28 +24,42 @@
 
 package com.backwardsnode.easyadmin.api;
 
-import com.backwardsnode.easyadmin.api.contextual.ContextTester;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * The API for EasyAdmin.
- *
- * <p>Plugins can use this API to perform administrative actions and listen for them.</p>
- *
- * <p>An instance of this API can be obtained from {@link EasyAdminProvider#get()}.</p>
+ * Provides access to the {@link EasyAdmin} API.
+ * This may only be used after the plugin responsible has been initialized.
  */
-public interface EasyAdmin {
+public final class EasyAdminProvider {
+
+    private static EasyAdmin easyAdmin;
+
+    private EasyAdminProvider() {}
 
     /**
-     * Gets the {@link ContextTester}, which is used to match contexts on a per-server/world basis.
-     * @return the {@link ContextTester}
+     * Gets access to the {@link EasyAdmin} API.
+     * @return the current {@link EasyAdmin} API instance
+     * @throws  IllegalStateException if the plugin has not loaded the API yet
      */
-    @NotNull ContextTester getContextTester();
+    public static @NotNull EasyAdmin get() {
+        if (EasyAdminProvider.easyAdmin == null) {
+            throw new IllegalStateException("EasyAdmin has not been initialized yet!");
+        }
+        return EasyAdminProvider.easyAdmin;
+    }
 
-    /**
-     * Gets the {@link EasyAdminPlugin} that is responsible for this API.
-     * @return the {@link EasyAdminPlugin}
-     */
-    @NotNull EasyAdminPlugin getPluginInstance();
+    @ApiStatus.Internal
+    static void register(@NotNull EasyAdmin easyAdmin) {
+        if (EasyAdminProvider.easyAdmin != null) {
+            throw new IllegalStateException("An instance has already been registered");
+        }
+        EasyAdminProvider.easyAdmin = easyAdmin;
+    }
+
+    @ApiStatus.Internal
+    static void unregister() {
+        EasyAdminProvider.easyAdmin = null;
+    }
 
 }

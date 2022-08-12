@@ -22,30 +22,20 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api;
-
-import com.backwardsnode.easyadmin.api.contextual.ContextTester;
-import org.jetbrains.annotations.NotNull;
+package com.backwardsnode.easyadmin.api.data;
 
 /**
- * The API for EasyAdmin.
- *
- * <p>Plugins can use this API to perform administrative actions and listen for them.</p>
- *
- * <p>An instance of this API can be obtained from {@link EasyAdminProvider#get()}.</p>
+ * Represents the type of platform this API is currently running on.
  */
-public interface EasyAdmin {
+public enum Platform {
 
     /**
-     * Gets the {@link ContextTester}, which is used to match contexts on a per-server/world basis.
-     * @return the {@link ContextTester}
+     * Represents all BungeeCord and similar platforms.
      */
-    @NotNull ContextTester getContextTester();
-
+    BUNGEE,
     /**
-     * Gets the {@link EasyAdminPlugin} that is responsible for this API.
-     * @return the {@link EasyAdminPlugin}
+     * Represents all Bukkit and similar platforms.
      */
-    @NotNull EasyAdminPlugin getPluginInstance();
+    BUKKIT
 
 }

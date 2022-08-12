@@ -22,30 +22,22 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api;
+package com.backwardsnode.easyadmin.api.contextual;
 
-import com.backwardsnode.easyadmin.api.contextual.ContextTester;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * The API for EasyAdmin.
- *
- * <p>Plugins can use this API to perform administrative actions and listen for them.</p>
- *
- * <p>An instance of this API can be obtained from {@link EasyAdminProvider#get()}.</p>
+ * Used to test and match records and other context-based data.
  */
-public interface EasyAdmin {
+public interface ContextTester {
 
     /**
-     * Gets the {@link ContextTester}, which is used to match contexts on a per-server/world basis.
-     * @return the {@link ContextTester}
+     * Tests a given {@link Contextual} object against the given test string.
+     * @param contextual the contextual element, usually a record.
+     * @param test the string to match.
+     * @return true if the test string matches any of the contextual expressions, otherwise false.
      */
-    @NotNull ContextTester getContextTester();
-
-    /**
-     * Gets the {@link EasyAdminPlugin} that is responsible for this API.
-     * @return the {@link EasyAdminPlugin}
-     */
-    @NotNull EasyAdminPlugin getPluginInstance();
+    boolean testContext(@NotNull Contextual contextual, @Nullable String test);
 
 }

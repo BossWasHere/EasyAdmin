@@ -22,30 +22,38 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api;
+package com.backwardsnode.easyadmin.api.record.modify;
 
-import com.backwardsnode.easyadmin.api.contextual.ContextTester;
+import com.backwardsnode.easyadmin.api.record.BanRecord;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
- * The API for EasyAdmin.
- *
- * <p>Plugins can use this API to perform administrative actions and listen for them.</p>
- *
- * <p>An instance of this API can be obtained from {@link EasyAdminProvider#get()}.</p>
+ * Modification wrapper for {@link BanRecord}.
  */
-public interface EasyAdmin {
+public interface BanRecordModifier extends RecordModifier<BanRecord> {
 
     /**
-     * Gets the {@link ContextTester}, which is used to match contexts on a per-server/world basis.
-     * @return the {@link ContextTester}
+     * Sets the date at which the ban will automatically expire.
+     * <p>Setting a date in the <b>past</b> will immediately expire this record.</p>
+     * <p>Setting a date in the <b>future</b> will reinstate this record, even if it had previously ended.</p>
+     * @param unbanDate the date and time at which the record will expire.
      */
-    @NotNull ContextTester getContextTester();
+    void setAutoUnbanDate(@NotNull LocalDateTime unbanDate);
 
     /**
-     * Gets the {@link EasyAdminPlugin} that is responsible for this API.
-     * @return the {@link EasyAdminPlugin}
+     * Reinstates this ban record, clearing any previous expiration date and cancellation details.
      */
-    @NotNull EasyAdminPlugin getPluginInstance();
+    void reinstateBan();
+
+    /**
+     * Immediately ends this ban record at this current time instant, overwriting unban details even if this record has already ended.
+     * @param unbanStaff the UUID of the staff member who cancelled this record, or null for console.
+     * @param unbanReason the reason for cancelling this record.
+     */
+    void unbanNow(@Nullable UUID unbanStaff, @Nullable String unbanReason);
 
 }

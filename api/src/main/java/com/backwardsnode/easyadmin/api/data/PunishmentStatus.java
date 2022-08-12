@@ -22,30 +22,54 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api;
+package com.backwardsnode.easyadmin.api.data;
 
-import com.backwardsnode.easyadmin.api.contextual.ContextTester;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * The API for EasyAdmin.
- *
- * <p>Plugins can use this API to perform administrative actions and listen for them.</p>
- *
- * <p>An instance of this API can be obtained from {@link EasyAdminProvider#get()}.</p>
+ * Represents the status of a punishment.
  */
-public interface EasyAdmin {
+public enum PunishmentStatus {
+    /**
+     * Signifies that a given punishment is still active and should be enforced.
+     */
+    ACTIVE("Active"),
+    /**
+     * Signifies that a given punishment has expired and should be ignored.
+     */
+    EXPIRED("Expired"),
+    /**
+     * Signifies that a given punishment has been manually terminated and should be ignored.
+     */
+    ENDED("Ended");
+
+    private final String dbValue;
+
+    PunishmentStatus(String dbValue) {
+        this.dbValue = dbValue;
+    }
 
     /**
-     * Gets the {@link ContextTester}, which is used to match contexts on a per-server/world basis.
-     * @return the {@link ContextTester}
+     * Gets the database-friendly name of the punishment status.
+     * @return the name of the punishment status.
      */
-    @NotNull ContextTester getContextTester();
+    @Override
+    public String toString() {
+        return dbValue;
+    }
 
     /**
-     * Gets the {@link EasyAdminPlugin} that is responsible for this API.
-     * @return the {@link EasyAdminPlugin}
+     * Gets the punishment status from the database-friendly name.
+     * @param name the name of the punishment status.
+     * @return the punishment status, or null if not found.
      */
-    @NotNull EasyAdminPlugin getPluginInstance();
-
+    public static @Nullable PunishmentStatus fromString(@NotNull String name) {
+        for (PunishmentStatus status : values()) {
+            if (status.dbValue.equals(name)) {
+                return status;
+            }
+        }
+        return null;
+    }
 }

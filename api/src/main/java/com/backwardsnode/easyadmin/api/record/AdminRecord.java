@@ -22,30 +22,35 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api;
+package com.backwardsnode.easyadmin.api.record;
 
-import com.backwardsnode.easyadmin.api.contextual.ContextTester;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
- * The API for EasyAdmin.
- *
- * <p>Plugins can use this API to perform administrative actions and listen for them.</p>
- *
- * <p>An instance of this API can be obtained from {@link EasyAdminProvider#get()}.</p>
+ * Represents an administrative action taking place between a player and staff member.
  */
-public interface EasyAdmin {
+public interface AdminRecord {
 
     /**
-     * Gets the {@link ContextTester}, which is used to match contexts on a per-server/world basis.
-     * @return the {@link ContextTester}
+     * Gets the {@link UUID} of the player involved in this action.
+     * @return the player's UUID.
      */
-    @NotNull ContextTester getContextTester();
+    @NotNull UUID getPlayer();
 
     /**
-     * Gets the {@link EasyAdminPlugin} that is responsible for this API.
-     * @return the {@link EasyAdminPlugin}
+     * Gets the {@link UUID} of the staff member involved in this action, or null if on behalf of the console.
+     * @return the staff member's UUID, or null for the console.
      */
-    @NotNull EasyAdminPlugin getPluginInstance();
+    @Nullable UUID getStaff();
+
+    /**
+     * Gets the {@link LocalDateTime} of when this action took place.
+     * @return the time of this action.
+     */
+    @NotNull LocalDateTime getDateAdded();
 
 }

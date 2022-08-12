@@ -24,28 +24,33 @@
 
 package com.backwardsnode.easyadmin.api;
 
-import com.backwardsnode.easyadmin.api.contextual.ContextTester;
+import com.backwardsnode.easyadmin.api.data.Platform;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * The API for EasyAdmin.
- *
- * <p>Plugins can use this API to perform administrative actions and listen for them.</p>
- *
- * <p>An instance of this API can be obtained from {@link EasyAdminProvider#get()}.</p>
+ * Represents a plugin platform-agnostic EasyAdmin plugin.
  */
-public interface EasyAdmin {
+public interface EasyAdminPlugin {
 
     /**
-     * Gets the {@link ContextTester}, which is used to match contexts on a per-server/world basis.
-     * @return the {@link ContextTester}
+     * Called when the server loads the plugin.
      */
-    @NotNull ContextTester getContextTester();
+    void onLoad();
 
     /**
-     * Gets the {@link EasyAdminPlugin} that is responsible for this API.
-     * @return the {@link EasyAdminPlugin}
+     * Called when the server enables the plugin.
      */
-    @NotNull EasyAdminPlugin getPluginInstance();
+    void onEnable();
+
+    /**
+     * Called when the server disables the plugin.
+     */
+    void onDisable();
+
+    /**
+     * Gets the {@link Platform} that this plugin is running on.
+     * @return {@link Platform#BUKKIT} if running on Bukkit or {@link Platform#BUNGEE} if running on Bungeecord.
+     */
+    @NotNull Platform getPlatform();
 
 }

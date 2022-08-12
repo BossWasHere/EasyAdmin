@@ -22,30 +22,27 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api;
+package com.backwardsnode.easyadmin.api.record;
 
-import com.backwardsnode.easyadmin.api.contextual.ContextTester;
+import com.backwardsnode.easyadmin.api.record.modify.RecordModifier;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * The API for EasyAdmin.
- *
- * <p>Plugins can use this API to perform administrative actions and listen for them.</p>
- *
- * <p>An instance of this API can be obtained from {@link EasyAdminProvider#get()}.</p>
+ * Represents a record that can be modified and then saved.
+ * @param <S> the wrapper responsible for making modifications to the record.
+ * @param <T> the type the wrapper should need to copy.
  */
-public interface EasyAdmin {
+public interface ModifiableRecord<S extends RecordModifier, T extends LiveRecord<?>> {
 
     /**
-     * Gets the {@link ContextTester}, which is used to match contexts on a per-server/world basis.
-     * @return the {@link ContextTester}
+     * Creates a new {@link RecordModifier} wrapper around the current record for modifications.
+     * @return the new wrapper.
      */
-    @NotNull ContextTester getContextTester();
+    @NotNull S getModifiableRecord();
 
     /**
-     * Gets the {@link EasyAdminPlugin} that is responsible for this API.
-     * @return the {@link EasyAdminPlugin}
+     * Copies the current record object into a new one to make modifications to.
+     * @return a copy of the current record.
      */
-    @NotNull EasyAdminPlugin getPluginInstance();
-
+    @NotNull T copy();
 }

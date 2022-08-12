@@ -22,30 +22,25 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api;
+package com.backwardsnode.easyadmin.api.record;
 
-import com.backwardsnode.easyadmin.api.contextual.ContextTester;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * The API for EasyAdmin.
- *
- * <p>Plugins can use this API to perform administrative actions and listen for them.</p>
- *
- * <p>An instance of this API can be obtained from {@link EasyAdminProvider#get()}.</p>
+ * Represents a record that can be created or loaded from a database.
+ * @param <ID> the type which represents this record's primary key in a database.
  */
-public interface EasyAdmin {
+public interface LiveRecord<ID> {
 
     /**
-     * Gets the {@link ContextTester}, which is used to match contexts on a per-server/world basis.
-     * @return the {@link ContextTester}
+     * Gets the ID of this record.
+     * @return the record's ID.
      */
-    @NotNull ContextTester getContextTester();
+    @NotNull ID getId();
 
     /**
-     * Gets the {@link EasyAdminPlugin} that is responsible for this API.
-     * @return the {@link EasyAdminPlugin}
+     * Determines if this record was loaded from a database or not.
+     * @return true if loaded, false if newly created.
      */
-    @NotNull EasyAdminPlugin getPluginInstance();
-
+    boolean isLoaded();
 }

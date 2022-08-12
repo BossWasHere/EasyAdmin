@@ -24,9 +24,11 @@
 
 package com.backwardsnode.easyadmin.bukkit;
 
+import com.backwardsnode.easyadmin.api.EasyAdminPlugin;
+import com.backwardsnode.easyadmin.api.data.Platform;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class EasyAdminBukkit extends JavaPlugin {
+public class EasyAdminBukkit extends JavaPlugin implements EasyAdminPlugin {
 
     @Override
     public void onLoad() {
@@ -41,6 +43,11 @@ public class EasyAdminBukkit extends JavaPlugin {
     @Override
     public void onDisable() {
 
+    }
+
+    @Override
+    public Platform getPlatform() {
+        return Platform.BUKKIT;
     }
 
 }

@@ -22,30 +22,7 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api;
-
-import com.backwardsnode.easyadmin.api.contextual.ContextTester;
-import org.jetbrains.annotations.NotNull;
-
 /**
- * The API for EasyAdmin.
- *
- * <p>Plugins can use this API to perform administrative actions and listen for them.</p>
- *
- * <p>An instance of this API can be obtained from {@link EasyAdminProvider#get()}.</p>
+ * Package containing record modification wrappers for EasyAdmin.
  */
-public interface EasyAdmin {
-
-    /**
-     * Gets the {@link ContextTester}, which is used to match contexts on a per-server/world basis.
-     * @return the {@link ContextTester}
-     */
-    @NotNull ContextTester getContextTester();
-
-    /**
-     * Gets the {@link EasyAdminPlugin} that is responsible for this API.
-     * @return the {@link EasyAdminPlugin}
-     */
-    @NotNull EasyAdminPlugin getPluginInstance();
-
-}
+package com.backwardsnode.easyadmin.api.record.modify;
