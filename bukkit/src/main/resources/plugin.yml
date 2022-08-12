@@ -1,0 +1,7 @@
+name: EasyAdmin
+version: ${version}
+description: Bukkit adapter for network administration plugin
+author: BackwardsNode
+main: com.backwardsnode.easyadmin.bukkit.EasyAdminBukkit
+load: STARTUP
+api-version: 1.13

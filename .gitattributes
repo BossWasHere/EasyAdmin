@@ -1,0 +1,9 @@
+* text=auto eol=lf
+
+*.java text
+*.kts text
+*.md text
+*.yml text
+
+/gradlew text eol=lf
+*.bat text eol=crlf

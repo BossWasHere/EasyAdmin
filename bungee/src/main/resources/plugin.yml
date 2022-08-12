@@ -1,0 +1,5 @@
+name: EasyAdmin
+version: ${version}
+description: Bungeecord network administration plugin
+author: BackwardsNode
+main: com.backwardsnode.easyadmin.bungee.EasyAdminBungee
