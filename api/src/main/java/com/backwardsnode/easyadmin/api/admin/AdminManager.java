@@ -382,10 +382,18 @@ public interface AdminManager {
     @Nullable PlayerRecord getPlayerRecord(@NotNull UUID playerUUID);
 
     /**
+     * Gets the {@link PlayerRecord} associated with the given username, if it exists.
+     * @param username the username of the player to load a record for.
+     * @return the player record, or {@code null} if none exists.
+     * @apiNote if multiple records are found, the API will try to match it to the player who currently has the username.
+     */
+    @Nullable PlayerRecord getPlayerRecordByName(@NotNull String username);
+
+    /**
      * Gets the {@link PlayerRecord} associated with the given UUID, or creates a new one if it doesn't exist.
      * @param playerUUID the UUID of the player to load a record for.
      * @param currentUsername the current username of the player.
-     * @return the player record, or {@code null} if none exists.
+     * @return the player record, or a new one if none exists.
      * @apiNote passing a username that is different to the recorded username will not update this record.
      */
     @NotNull PlayerRecord getOrInitPlayerRecord(@NotNull UUID playerUUID, @NotNull String currentUsername);
