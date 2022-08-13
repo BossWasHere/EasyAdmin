@@ -35,6 +35,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static com.backwardsnode.easyadmin.api.internal.Tables.*;
@@ -580,11 +581,12 @@ public abstract class AbstractStatementFactory implements DatabaseStatementFacto
             if (recordModification.hasPlayerDynamicStatsChanged()) count++;
 
             PreparedStatement statement;
+            LocalDateTime lastLeave = record.getLastLeave();
             if (count > 1) {
                 statement = initUpdatePlayerFullRecordSql(connection);
                 statement.setString(1, notNull(record.getUsername()));
                 statement.setTimestamp(2, Timestamp.valueOf(record.getLastJoin()));
-                statement.setTimestamp(3, Timestamp.valueOf(record.getLastLeave()));
+                statement.setTimestamp(3, lastLeave == null ? null : Timestamp.valueOf(lastLeave));
                 statement.setString(4, record.getLastAddress());
                 statement.setString(5, record.getLastServer());
                 statement.setLong(6, record.getPlaytime());
@@ -601,7 +603,7 @@ public abstract class AbstractStatementFactory implements DatabaseStatementFacto
 
             } else if (recordModification.hasPlayerLeaveStatsChanged()) {
                 statement = initUpdatePlayerLeavingRecordSql(connection);
-                statement.setTimestamp(1, Timestamp.valueOf(record.getLastLeave()));
+                statement.setTimestamp(1, lastLeave == null ? null : Timestamp.valueOf(lastLeave));
                 statement.setString(2, record.getLastServer());
                 statement.setLong(3, record.getPlaytime());
                 statement.setString(4, notNull(record.getId()));
@@ -652,24 +654,27 @@ public abstract class AbstractStatementFactory implements DatabaseStatementFacto
     }
 
     protected String addDateFilter(String dateColumn, LookupOptions options) {
-        if (options.hasDateBefore()) {
-            if (options.hasDateAfter()) {
+        if (options.getDateBefore() != null) {
+            if (options.getDateAfter() != null) {
                 return " AND " + dateColumn + " BETWEEN ? AND ?";
             }
             return " AND " + dateColumn + " < ?";
         }
-        if (options.hasDateAfter()) {
+        if (options.getDateAfter() != null) {
             return " AND " + dateColumn + " > ?";
         }
         return "";
     }
 
     protected void applyOptions(PreparedStatement statement, LookupOptions options, int index) throws SQLException {
-        if (options.hasDateAfter()) {
-            statement.setTimestamp(index++, Timestamp.valueOf(options.getDateAfter()));
+        LocalDateTime dateAfter = options.getDateAfter();
+        LocalDateTime dateBefore = options.getDateBefore();
+
+        if (dateAfter != null) {
+            statement.setTimestamp(index++, Timestamp.valueOf(dateAfter));
         }
-        if (options.hasDateBefore()) {
-            statement.setTimestamp(index++, Timestamp.valueOf(options.getDateBefore()));
+        if (dateBefore != null) {
+            statement.setTimestamp(index++, Timestamp.valueOf(dateBefore));
         }
 
         statement.setInt(index++, options.getLimit());

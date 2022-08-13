@@ -75,12 +75,4 @@ public final class LookupOptions {
     public boolean getSortDescending() {
         return sortDescending;
     }
-
-    public boolean hasDateBefore() {
-        return dateBefore != null;
-    }
-
-    public boolean hasDateAfter() {
-        return dateAfter != null;
-    }
 }
