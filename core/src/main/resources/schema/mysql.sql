@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS players (
     totalJoins      int             NOT NULL DEFAULT 1,
     PRIMARY KEY (uuid),
     INDEX (username)
-) DEFAULT CHARSET utf8;
+) DEFAULT CHARSET utf8mb4;
 
 CREATE TABLE IF NOT EXISTS bans (
     id              int             AUTO_INCREMENT,
