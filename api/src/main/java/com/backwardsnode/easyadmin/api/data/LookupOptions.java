@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.core.database;
+package com.backwardsnode.easyadmin.api.data;
 
 import java.time.LocalDateTime;
 
