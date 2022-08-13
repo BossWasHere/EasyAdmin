@@ -24,33 +24,31 @@
 
 package com.backwardsnode.easyadmin.api.data;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.time.LocalDateTime;
 
 public final class LookupOptions {
 
     private final int limit;
     private final int offset;
+    private final boolean sortDescending;
     private final LocalDateTime dateBefore;
     private final LocalDateTime dateAfter;
-    private final boolean sortDescending;
 
     public LookupOptions(int limit) {
-        this.limit = limit;
-        this.offset = 0;
-        this.dateBefore = null;
-        this.dateAfter = null;
-        this.sortDescending = true;
+        this(limit, 0);
     }
 
-    public LookupOptions(int limit, int offset, boolean sortDescending) {
+    public LookupOptions(int limit, int offset) {
         this.limit = limit;
         this.offset = offset;
-        this.sortDescending = sortDescending;
+        this.sortDescending = true;
         this.dateBefore = null;
         this.dateAfter = null;
     }
 
-    public LookupOptions(int limit, int offset, boolean sortDescending, LocalDateTime dateBefore, LocalDateTime dateAfter) {
+    public LookupOptions(int limit, int offset, boolean sortDescending, @Nullable LocalDateTime dateBefore, @Nullable LocalDateTime dateAfter) {
         this.limit = limit;
         this.offset = offset;
         this.sortDescending = sortDescending;
@@ -66,15 +64,23 @@ public final class LookupOptions {
         return offset;
     }
 
-    public LocalDateTime getDateBefore() {
+    public @Nullable LocalDateTime getDateBefore() {
         return dateBefore;
     }
 
-    public LocalDateTime getDateAfter() {
+    public @Nullable LocalDateTime getDateAfter() {
         return dateAfter;
     }
 
     public boolean getSortDescending() {
         return sortDescending;
+    }
+
+    public boolean hasDateBefore() {
+        return dateBefore != null;
+    }
+
+    public boolean hasDateAfter() {
+        return dateAfter != null;
     }
 }

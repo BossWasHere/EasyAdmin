@@ -37,6 +37,8 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.UUID;
 
+import static com.backwardsnode.easyadmin.api.internal.Tables.*;
+
 public abstract class AbstractStatementFactory implements DatabaseStatementFactory {
 
     private static final int DEFAULT_SELECT_LIMIT_MAX = 100;
@@ -134,80 +136,80 @@ public abstract class AbstractStatementFactory implements DatabaseStatementFacto
         return connection.prepareStatement("SELECT * FROM players WHERE username = ?;");
     }
 
-    protected PreparedStatement initRetrievePlayerBansSql(Connection connection) throws SQLException {
-        return connection.prepareStatement("SELECT * FROM bans WHERE playerUuid = ? ORDER BY id DESC LIMIT ? OFFSET ?;");
+    protected PreparedStatement initRetrievePlayerBansSql(Connection connection, LookupOptions options) throws SQLException {
+        return connection.prepareStatement("SELECT * FROM bans WHERE playerUuid = ?" + addDateFilter(BANS.BAN_DATE, options) + " ORDER BY id DESC LIMIT ? OFFSET ?;");
     }
 
-    protected PreparedStatement initRetrievePlayerCommentsSql(Connection connection) throws SQLException {
-        return connection.prepareStatement("SELECT * FROM comments WHERE playerUuid = ? ORDER BY id DESC LIMIT ? OFFSET ?;");
+    protected PreparedStatement initRetrievePlayerCommentsSql(Connection connection, LookupOptions options) throws SQLException {
+        return connection.prepareStatement("SELECT * FROM comments WHERE playerUuid = ?" + addDateFilter(COMMENTS.DATE_ADDED, options) + " ORDER BY id DESC LIMIT ? OFFSET ?;");
     }
 
-    protected PreparedStatement initRetrievePlayerKicksSql(Connection connection) throws SQLException {
-        return connection.prepareStatement("SELECT * FROM kicks WHERE playerUuid = ? ORDER BY id DESC LIMIT ? OFFSET ?;");
+    protected PreparedStatement initRetrievePlayerKicksSql(Connection connection, LookupOptions options) throws SQLException {
+        return connection.prepareStatement("SELECT * FROM kicks WHERE playerUuid = ?" + addDateFilter(KICKS.KICK_DATE, options) + " ORDER BY id DESC LIMIT ? OFFSET ?;");
     }
 
-    protected PreparedStatement initRetrievePlayerMutesSql(Connection connection) throws SQLException {
-        return connection.prepareStatement("SELECT * FROM mutes WHERE playerUuid = ? ORDER BY id DESC LIMIT ? OFFSET ?;");
+    protected PreparedStatement initRetrievePlayerMutesSql(Connection connection, LookupOptions options) throws SQLException {
+        return connection.prepareStatement("SELECT * FROM mutes WHERE playerUuid = ?" + addDateFilter(MUTES.MUTE_DATE, options) + " ORDER BY id DESC LIMIT ? OFFSET ?;");
     }
 
-    protected PreparedStatement initRetrieveStaffBansSql(Connection connection) throws SQLException {
-        return connection.prepareStatement("SELECT * FROM bans WHERE staffUuid = ? ORDER BY id DESC LIMIT ? OFFSET ?;");
+    protected PreparedStatement initRetrieveStaffBansSql(Connection connection, LookupOptions options) throws SQLException {
+        return connection.prepareStatement("SELECT * FROM bans WHERE staffUuid = ?" + addDateFilter(BANS.BAN_DATE, options) + " ORDER BY id DESC LIMIT ? OFFSET ?;");
     }
 
-    protected PreparedStatement initRetrieveStaffCommentsSql(Connection connection) throws SQLException {
-        return connection.prepareStatement("SELECT * FROM comments WHERE staffUuid = ? ORDER BY id DESC LIMIT ? OFFSET ?;");
+    protected PreparedStatement initRetrieveStaffCommentsSql(Connection connection, LookupOptions options) throws SQLException {
+        return connection.prepareStatement("SELECT * FROM comments WHERE staffUuid = ?" + addDateFilter(COMMENTS.DATE_ADDED, options) + " ORDER BY id DESC LIMIT ? OFFSET ?;");
     }
 
-    protected PreparedStatement initRetrieveStaffKicksSql(Connection connection) throws SQLException {
-        return connection.prepareStatement("SELECT * FROM kicks WHERE staffUuid = ? ORDER BY id DESC LIMIT ? OFFSET ?;");
+    protected PreparedStatement initRetrieveStaffKicksSql(Connection connection, LookupOptions options) throws SQLException {
+        return connection.prepareStatement("SELECT * FROM kicks WHERE staffUuid = ?" + addDateFilter(KICKS.KICK_DATE, options) + " ORDER BY id DESC LIMIT ? OFFSET ?;");
     }
 
-    protected PreparedStatement initRetrieveStaffMutesSql(Connection connection) throws SQLException {
-        return connection.prepareStatement("SELECT * FROM mutes WHERE staffUuid = ? ORDER BY id DESC LIMIT ? OFFSET ?;");
+    protected PreparedStatement initRetrieveStaffMutesSql(Connection connection, LookupOptions options) throws SQLException {
+        return connection.prepareStatement("SELECT * FROM mutes WHERE staffUuid = ?" + addDateFilter(MUTES.MUTE_DATE, options) + " ORDER BY id DESC LIMIT ? OFFSET ?;");
     }
 
-    protected PreparedStatement initRetrievePlayerBansByStatusSql(Connection connection) throws SQLException {
-        return connection.prepareStatement("SELECT * FROM bans WHERE playerUuid = ? AND status = ? ORDER BY id DESC LIMIT ? OFFSET ?;");
+    protected PreparedStatement initRetrievePlayerBansByStatusSql(Connection connection, LookupOptions options) throws SQLException {
+        return connection.prepareStatement("SELECT * FROM bans WHERE playerUuid = ? AND status = ?" + addDateFilter(BANS.BAN_DATE, options) + " ORDER BY id DESC LIMIT ? OFFSET ?;");
     }
 
-    protected PreparedStatement initRetrievePlayerMutesByStatusSql(Connection connection) throws SQLException {
-        return connection.prepareStatement("SELECT * FROM mutes WHERE playerUuid = ? AND status = ? ORDER BY id DESC LIMIT ? OFFSET ?;");
+    protected PreparedStatement initRetrievePlayerMutesByStatusSql(Connection connection, LookupOptions options) throws SQLException {
+        return connection.prepareStatement("SELECT * FROM mutes WHERE playerUuid = ? AND status = ?" + addDateFilter(MUTES.MUTE_DATE, options) + " ORDER BY id DESC LIMIT ? OFFSET ?;");
     }
 
-    protected PreparedStatement initRetrievePlayerCommentsByTypeSql(Connection connection) throws SQLException {
-        return connection.prepareStatement("SELECT * FROM comments WHERE playerUuid = ? AND isWarning = ? ORDER BY id DESC LIMIT ? OFFSET ?;");
+    protected PreparedStatement initRetrievePlayerCommentsByTypeSql(Connection connection, LookupOptions options) throws SQLException {
+        return connection.prepareStatement("SELECT * FROM comments WHERE playerUuid = ? AND isWarning = ?" + addDateFilter(COMMENTS.DATE_ADDED, options) + " ORDER BY id DESC LIMIT ? OFFSET ?;");
     }
 
-    protected PreparedStatement initRetrieveIPBansSql(Connection connection) throws SQLException {
-        return connection.prepareStatement("SELECT * FROM bans WHERE playerIP = ? ORDER BY id DESC LIMIT ? OFFSET ?;");
+    protected PreparedStatement initRetrieveIPBansSql(Connection connection, LookupOptions options) throws SQLException {
+        return connection.prepareStatement("SELECT * FROM bans WHERE playerIP = ?" + addDateFilter(BANS.BAN_DATE, options) + " ORDER BY id DESC LIMIT ? OFFSET ?;");
     }
 
-    protected PreparedStatement initRetrieveIPMutesSql(Connection connection) throws SQLException {
-        return connection.prepareStatement("SELECT * FROM mutes WHERE playerIP = ? ORDER BY id DESC LIMIT ? OFFSET ?;");
+    protected PreparedStatement initRetrieveIPMutesSql(Connection connection, LookupOptions options) throws SQLException {
+        return connection.prepareStatement("SELECT * FROM mutes WHERE playerIP = ?" + addDateFilter(MUTES.MUTE_DATE, options) + " ORDER BY id DESC LIMIT ? OFFSET ?;");
     }
 
-    protected PreparedStatement initRetrieveIPBansByStatusSql(Connection connection) throws SQLException {
-        return connection.prepareStatement("SELECT * FROM bans WHERE playerIP = ? AND status = ? ORDER BY id DESC LIMIT ? OFFSET ?;");
+    protected PreparedStatement initRetrieveIPBansByStatusSql(Connection connection, LookupOptions options) throws SQLException {
+        return connection.prepareStatement("SELECT * FROM bans WHERE playerIP = ? AND status = ?" + addDateFilter(BANS.BAN_DATE, options) + " ORDER BY id DESC LIMIT ? OFFSET ?;");
     }
 
-    protected PreparedStatement initRetrieveIPMutesByStatusSql(Connection connection) throws SQLException {
-        return connection.prepareStatement("SELECT * FROM mutes WHERE playerIP = ? AND status = ? ORDER BY id DESC LIMIT ? OFFSET ?;");
+    protected PreparedStatement initRetrieveIPMutesByStatusSql(Connection connection, LookupOptions options) throws SQLException {
+        return connection.prepareStatement("SELECT * FROM mutes WHERE playerIP = ? AND status = ?" + addDateFilter(MUTES.MUTE_DATE, options) + " ORDER BY id DESC LIMIT ? OFFSET ?;");
     }
 
-    protected PreparedStatement initRetrievePlayerBansOrIPBansSql(Connection connection) throws SQLException {
-        return connection.prepareStatement("SELECT * FROM bans WHERE playerUuid = ? OR playerIP = ? ORDER BY id DESC LIMIT ? OFFSET ?;");
+    protected PreparedStatement initRetrievePlayerBansOrIPBansSql(Connection connection, LookupOptions options) throws SQLException {
+        return connection.prepareStatement("SELECT * FROM bans WHERE (playerUuid = ? OR playerIP = ?)" + addDateFilter(BANS.BAN_DATE, options) + " ORDER BY id DESC LIMIT ? OFFSET ?;");
     }
 
-    protected PreparedStatement initRetrievePlayerMutesOrIPMutesSql(Connection connection) throws SQLException {
-        return connection.prepareStatement("SELECT * FROM mutes WHERE playerUuid = ? OR playerIP = ? ORDER BY id DESC LIMIT ? OFFSET ?;");
+    protected PreparedStatement initRetrievePlayerMutesOrIPMutesSql(Connection connection, LookupOptions options) throws SQLException {
+        return connection.prepareStatement("SELECT * FROM mutes WHERE (playerUuid = ? OR playerIP = ?)" + addDateFilter(MUTES.MUTE_DATE, options) + " ORDER BY id DESC LIMIT ? OFFSET ?;");
     }
 
-    protected PreparedStatement initRetrievePlayerBansOrIPBansByStatusSql(Connection connection) throws SQLException {
-        return connection.prepareStatement("SELECT * FROM bans WHERE (playerUuid = ? OR playerIP = ?) AND status = ? ORDER BY id DESC LIMIT ? OFFSET ?;");
+    protected PreparedStatement initRetrievePlayerBansOrIPBansByStatusSql(Connection connection, LookupOptions options) throws SQLException {
+        return connection.prepareStatement("SELECT * FROM bans WHERE (playerUuid = ? OR playerIP = ?) AND status = ?" + addDateFilter(BANS.BAN_DATE, options) + " ORDER BY id DESC LIMIT ? OFFSET ?;");
     }
 
-    protected PreparedStatement initRetrievePlayerMutesOrIPMutesByStatusSql(Connection connection) throws SQLException {
-        return connection.prepareStatement("SELECT * FROM mutes WHERE (playerUuid = ? OR playerIP = ?) AND status = ? ORDER BY id DESC LIMIT ? OFFSET ?;");
+    protected PreparedStatement initRetrievePlayerMutesOrIPMutesByStatusSql(Connection connection, LookupOptions options) throws SQLException {
+        return connection.prepareStatement("SELECT * FROM mutes WHERE (playerUuid = ? OR playerIP = ?) AND status = ?" + addDateFilter(MUTES.MUTE_DATE, options) + " ORDER BY id DESC LIMIT ? OFFSET ?;");
     }
 
     protected PreparedStatement initUpdatePlayerJoiningRecordSql(Connection connection) throws SQLException {
@@ -388,183 +390,183 @@ public abstract class AbstractStatementFactory implements DatabaseStatementFacto
 
     @Override
     public PreparedStatement getRetrievePlayerBansStatement(Connection connection, UUID player, LookupOptions options) throws SQLException {
-        PreparedStatement statement = initRetrievePlayerBansSql(connection);
+        PreparedStatement statement = initRetrievePlayerBansSql(connection, options);
 
         statement.setString(1, notNull(player));
-        applyOffsetAndLimit(statement, optionsOrDefault(options), 2);
+        applyOptions(statement, optionsOrDefault(options), 2);
         return statement;
     }
 
     @Override
     public PreparedStatement getRetrievePlayerCommentsStatement(Connection connection, UUID player, LookupOptions options) throws SQLException {
-        PreparedStatement statement = initRetrievePlayerCommentsSql(connection);
+        PreparedStatement statement = initRetrievePlayerCommentsSql(connection, options);
 
         statement.setString(1, notNull(player));
-        applyOffsetAndLimit(statement, optionsOrDefault(options), 2);
+        applyOptions(statement, optionsOrDefault(options), 2);
         return statement;
     }
 
     @Override
     public PreparedStatement getRetrievePlayerKicksStatement(Connection connection, UUID player, LookupOptions options) throws SQLException {
-        PreparedStatement statement = initRetrievePlayerKicksSql(connection);
+        PreparedStatement statement = initRetrievePlayerKicksSql(connection, options);
 
         statement.setString(1, notNull(player));
-        applyOffsetAndLimit(statement, optionsOrDefault(options), 2);
+        applyOptions(statement, optionsOrDefault(options), 2);
         return statement;
     }
 
     @Override
     public PreparedStatement getRetrievePlayerMutesStatement(Connection connection, UUID player, LookupOptions options) throws SQLException {
-        PreparedStatement statement = initRetrievePlayerMutesSql(connection);
+        PreparedStatement statement = initRetrievePlayerMutesSql(connection, options);
 
         statement.setString(1, notNull(player));
-        applyOffsetAndLimit(statement, optionsOrDefault(options), 2);
+        applyOptions(statement, optionsOrDefault(options), 2);
         return statement;
     }
 
     @Override
     public PreparedStatement getRetrieveStaffBansStatement(Connection connection, UUID staff, LookupOptions options) throws SQLException {
-        PreparedStatement statement = initRetrieveStaffBansSql(connection);
+        PreparedStatement statement = initRetrieveStaffBansSql(connection, options);
 
         statement.setString(1, notNull(staff));
-        applyOffsetAndLimit(statement, optionsOrDefault(options), 2);
+        applyOptions(statement, optionsOrDefault(options), 2);
         return statement;
     }
 
     @Override
     public PreparedStatement getRetrieveStaffCommentsStatement(Connection connection, UUID staff, LookupOptions options) throws SQLException {
-        PreparedStatement statement = initRetrieveStaffCommentsSql(connection);
+        PreparedStatement statement = initRetrieveStaffCommentsSql(connection, options);
 
         statement.setString(1, notNull(staff));
-        applyOffsetAndLimit(statement, optionsOrDefault(options), 2);
+        applyOptions(statement, optionsOrDefault(options), 2);
         return statement;
     }
 
     @Override
     public PreparedStatement getRetrieveStaffKicksStatement(Connection connection, UUID staff, LookupOptions options) throws SQLException {
-        PreparedStatement statement = initRetrieveStaffKicksSql(connection);
+        PreparedStatement statement = initRetrieveStaffKicksSql(connection, options);
 
         statement.setString(1, notNull(staff));
-        applyOffsetAndLimit(statement, optionsOrDefault(options), 2);
+        applyOptions(statement, optionsOrDefault(options), 2);
         return statement;
     }
 
     @Override
     public PreparedStatement getRetrieveStaffMutesStatement(Connection connection, UUID staff, LookupOptions options) throws SQLException {
-        PreparedStatement statement = initRetrieveStaffMutesSql(connection);
+        PreparedStatement statement = initRetrieveStaffMutesSql(connection, options);
 
         statement.setString(1, notNull(staff));
-        applyOffsetAndLimit(statement, optionsOrDefault(options), 2);
+        applyOptions(statement, optionsOrDefault(options), 2);
         return statement;
     }
 
     @Override
     public PreparedStatement getRetrievePlayerBansByStatusStatement(Connection connection, UUID player, PunishmentStatus status, LookupOptions options) throws SQLException {
-        PreparedStatement statement = initRetrievePlayerBansByStatusSql(connection);
+        PreparedStatement statement = initRetrievePlayerBansByStatusSql(connection, options);
 
         statement.setString(1, notNull(player));
         statement.setString(2, notNull(status));
-        applyOffsetAndLimit(statement, optionsOrDefault(options), 3);
+        applyOptions(statement, optionsOrDefault(options), 3);
         return statement;
     }
 
     @Override
     public PreparedStatement getRetrievePlayerMutesByStatusStatement(Connection connection, UUID player, PunishmentStatus status, LookupOptions options) throws SQLException {
-        PreparedStatement statement = initRetrievePlayerMutesByStatusSql(connection);
+        PreparedStatement statement = initRetrievePlayerMutesByStatusSql(connection, options);
 
         statement.setString(1, notNull(player));
         statement.setString(2, notNull(status));
-        applyOffsetAndLimit(statement, optionsOrDefault(options), 3);
+        applyOptions(statement, optionsOrDefault(options), 3);
         return statement;
     }
 
     @Override
     public PreparedStatement getRetrievePlayerCommentsByTypeStatement(Connection connection, UUID player, boolean isWarning, LookupOptions options) throws SQLException {
-        PreparedStatement statement = initRetrievePlayerCommentsByTypeSql(connection);
+        PreparedStatement statement = initRetrievePlayerCommentsByTypeSql(connection, options);
 
         statement.setString(1, notNull(player));
         statement.setBoolean(2, isWarning);
-        applyOffsetAndLimit(statement, optionsOrDefault(options), 3);
+        applyOptions(statement, optionsOrDefault(options), 3);
         return statement;
     }
 
     @Override
     public PreparedStatement getRetrieveIPBansStatement(Connection connection, String ipAddress, LookupOptions options) throws SQLException {
-        PreparedStatement statement = initRetrieveIPBansSql(connection);
+        PreparedStatement statement = initRetrieveIPBansSql(connection, options);
 
         statement.setString(1, notNull(ipAddress));
-        applyOffsetAndLimit(statement, options, 2);
+        applyOptions(statement, options, 2);
         return statement;
     }
 
     @Override
     public PreparedStatement getRetrieveIPMutesStatement(Connection connection, String ipAddress, LookupOptions options) throws SQLException {
-        PreparedStatement statement = initRetrieveIPMutesSql(connection);
+        PreparedStatement statement = initRetrieveIPMutesSql(connection, options);
 
         statement.setString(1, notNull(ipAddress));
-        applyOffsetAndLimit(statement, options, 2);
+        applyOptions(statement, options, 2);
         return statement;
     }
 
     @Override
     public PreparedStatement getRetrieveIPBansByStatusStatement(Connection connection, String ipAddress, PunishmentStatus status, LookupOptions options) throws SQLException {
-        PreparedStatement statement = initRetrieveIPBansByStatusSql(connection);
+        PreparedStatement statement = initRetrieveIPBansByStatusSql(connection, options);
 
         statement.setString(1, notNull(ipAddress));
         statement.setString(2, notNull(status));
-        applyOffsetAndLimit(statement, options, 3);
+        applyOptions(statement, options, 3);
         return statement;
     }
 
     @Override
     public PreparedStatement getRetrieveIPMutesByStatusStatement(Connection connection, String ipAddress, PunishmentStatus status, LookupOptions options) throws SQLException {
-        PreparedStatement statement = initRetrieveIPMutesByStatusSql(connection);
+        PreparedStatement statement = initRetrieveIPMutesByStatusSql(connection, options);
 
         statement.setString(1, notNull(ipAddress));
         statement.setString(2, notNull(status));
-        applyOffsetAndLimit(statement, options, 3);
+        applyOptions(statement, options, 3);
         return statement;
     }
 
     @Override
     public PreparedStatement getRetrievePlayerBansOrIPBansStatement(Connection connection, UUID player, String ipAddress, LookupOptions options) throws SQLException {
-        PreparedStatement statement = initRetrievePlayerBansOrIPBansSql(connection);
+        PreparedStatement statement = initRetrievePlayerBansOrIPBansSql(connection, options);
 
         statement.setString(1, notNull(player));
         statement.setString(2, notNull(ipAddress));
-        applyOffsetAndLimit(statement, options, 3);
+        applyOptions(statement, options, 3);
         return statement;
     }
 
     @Override
     public PreparedStatement getRetrievePlayerMutesOrIPMutesStatement(Connection connection, UUID player, String ipAddress, LookupOptions options) throws SQLException {
-        PreparedStatement statement = initRetrievePlayerMutesOrIPMutesSql(connection);
+        PreparedStatement statement = initRetrievePlayerMutesOrIPMutesSql(connection, options);
 
         statement.setString(1, notNull(player));
         statement.setString(2, notNull(ipAddress));
-        applyOffsetAndLimit(statement, options, 3);
+        applyOptions(statement, options, 3);
         return statement;
     }
 
     @Override
     public PreparedStatement getRetrievePlayerBansOrIPBansByStatusStatement(Connection connection, UUID player, String ipAddress, PunishmentStatus status, LookupOptions options) throws SQLException {
-        PreparedStatement statement = initRetrievePlayerBansOrIPBansByStatusSql(connection);
+        PreparedStatement statement = initRetrievePlayerBansOrIPBansByStatusSql(connection, options);
 
         statement.setString(1, notNull(player));
         statement.setString(2, notNull(ipAddress));
         statement.setString(3, notNull(status));
-        applyOffsetAndLimit(statement, options, 4);
+        applyOptions(statement, options, 4);
         return statement;
     }
 
     @Override
     public PreparedStatement getRetrievePlayerMutesOrIPMutesByStatusStatement(Connection connection, UUID player, String ipAddress, PunishmentStatus status, LookupOptions options) throws SQLException {
-        PreparedStatement statement = initRetrievePlayerMutesOrIPMutesByStatusSql(connection);
+        PreparedStatement statement = initRetrievePlayerMutesOrIPMutesByStatusSql(connection, options);
 
         statement.setString(1, notNull(player));
         statement.setString(2, notNull(ipAddress));
         statement.setString(3, notNull(status));
-        applyOffsetAndLimit(statement, options, 4);
+        applyOptions(statement, options, 4);
         return statement;
     }
 
@@ -649,9 +651,29 @@ public abstract class AbstractStatementFactory implements DatabaseStatementFacto
         return getCreateMuteStatement(connection, record);
     }
 
-    protected void applyOffsetAndLimit(PreparedStatement statement, LookupOptions options, int index) throws SQLException {
-        statement.setInt(index, options.getLimit());
-        statement.setInt(index + 1, options.getOffset());
+    protected String addDateFilter(String dateColumn, LookupOptions options) {
+        if (options.hasDateBefore()) {
+            if (options.hasDateAfter()) {
+                return " AND " + dateColumn + " BETWEEN ? AND ?";
+            }
+            return " AND " + dateColumn + " < ?";
+        }
+        if (options.hasDateAfter()) {
+            return " AND " + dateColumn + " > ?";
+        }
+        return "";
+    }
+
+    protected void applyOptions(PreparedStatement statement, LookupOptions options, int index) throws SQLException {
+        if (options.hasDateAfter()) {
+            statement.setTimestamp(index++, Timestamp.valueOf(options.getDateAfter()));
+        }
+        if (options.hasDateBefore()) {
+            statement.setTimestamp(index++, Timestamp.valueOf(options.getDateBefore()));
+        }
+
+        statement.setInt(index++, options.getLimit());
+        statement.setInt(index, options.getOffset());
     }
 
     protected LookupOptions optionsOrDefault(LookupOptions options) {
