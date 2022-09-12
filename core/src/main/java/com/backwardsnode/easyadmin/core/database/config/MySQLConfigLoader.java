@@ -30,6 +30,7 @@ import com.zaxxer.hikari.HikariConfig;
 
 public final class MySQLConfigLoader extends RemoteConfigLoader<EasyAdminMySQL> {
 
+    private final int preparedStatementCacheSqlLimit;
     private boolean useServerPreparedStatements = true;
     private boolean useLocalSessionState = true;
     private boolean rewriteBatchedStatements = true;
@@ -39,21 +40,34 @@ public final class MySQLConfigLoader extends RemoteConfigLoader<EasyAdminMySQL> 
     private boolean maintainTimeStats = false;
 
     public MySQLConfigLoader(String host, int port, String database, String username, String password) {
-        this(host, port, database, username, password, true, 250, 2048);
+        this(host, port, database, username, password, 256, 2048);
     }
 
-    public MySQLConfigLoader(String host, int port, String database, String username, String password, boolean cachePreparedStatements, int preparedStatementCacheSize, int preparedStatementCacheSqlLimit) {
-        super(host, port, database, username, password, cachePreparedStatements, preparedStatementCacheSize, preparedStatementCacheSqlLimit);
+    public MySQLConfigLoader(String host, int port, String database, String username, String password, int preparedStatementCacheSize, int preparedStatementCacheSqlLimit) {
+        super(host, port, database, username, password, preparedStatementCacheSize);
+        this.preparedStatementCacheSqlLimit = preparedStatementCacheSqlLimit;
     }
 
     @Override
     public String getJdbcUrl() {
-        return "jdbc:mysql://" + HOST + ':' + PORT + "/" + DATABASE;
+        return "jdbc:mysql://" + host + ':' + port + "/" + database;
     }
 
     @Override
     public HikariConfig toHikariConfig() {
-        HikariConfig config = super.toHikariConfig();
+        HikariConfig config = new HikariConfig();
+
+        config.setJdbcUrl(getJdbcUrl());
+        config.setUsername(username);
+        config.setPassword(password);
+
+        if (doCachePreparedStatements()) {
+            config.addDataSourceProperty("cachePrepStmts", "true");
+            config.addDataSourceProperty("prepStmtCacheSize", String.valueOf(preparedStatementCacheSize));
+            config.addDataSourceProperty("prepStmtCacheSqlLimit", String.valueOf(preparedStatementCacheSqlLimit));
+        } else {
+            config.addDataSourceProperty("cachePrepStmts", "false");
+        }
 
         config.addDataSourceProperty("useServerPrepStmts", String.valueOf(useServerPreparedStatements));
         config.addDataSourceProperty("useLocalSessionState", String.valueOf(useLocalSessionState));
@@ -74,6 +88,10 @@ public final class MySQLConfigLoader extends RemoteConfigLoader<EasyAdminMySQL> 
     @Override
     public boolean isStatementFactoryCompatible(DatabaseStatementFactory factory) {
         return factory instanceof EasyAdminMySQL;
+    }
+
+    public int getPreparedStatementCacheSQLLimit() {
+        return preparedStatementCacheSqlLimit;
     }
 
     public boolean isUseServerPreparedStatements() {

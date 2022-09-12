@@ -29,78 +29,54 @@ import com.zaxxer.hikari.HikariConfig;
 
 public abstract class RemoteConfigLoader<T extends DatabaseStatementFactory> implements ConfigLoader<T> {
 
-    protected final String HOST;
-    protected final int PORT;
-    protected final String DATABASE;
-    protected final String USERNAME;
-    protected final String PASSWORD;
-    protected final boolean CACHE_PREP_STATEMENTS;
-    protected final int PREP_STATEMENT_CACHE_SIZE;
-    protected final int PREP_STATEMENT_CACHE_SQL_LIMIT;
+    protected final String host;
+    protected final int port;
+    protected final String database;
+    protected final String username;
+    protected final String password;
+    protected final int preparedStatementCacheSize;
 
     protected RemoteConfigLoader(String host, int port, String database, String username, String password) {
-        this(host, port, database, username, password, true, 250, 2048);
+        this(host, port, database, username, password, 256);
     }
 
-    protected RemoteConfigLoader(String host, int port, String database, String username, String password, boolean cachePreparedStatements, int preparedStatementCacheSize, int preparedStatementCacheSqlLimit) {
-        HOST = host;
-        PORT = port;
-        DATABASE = database;
-        USERNAME = username;
-        PASSWORD = password;
-        CACHE_PREP_STATEMENTS = cachePreparedStatements;
-        PREP_STATEMENT_CACHE_SIZE = preparedStatementCacheSize;
-        PREP_STATEMENT_CACHE_SQL_LIMIT = preparedStatementCacheSqlLimit;
+    protected RemoteConfigLoader(String host, int port, String database, String username, String password, int preparedStatementCacheSize) {
+        this.host = host;
+        this.port = port;
+        this.database = database;
+        this.username = username;
+        this.password = password;
+        this.preparedStatementCacheSize = preparedStatementCacheSize;
     }
 
     public abstract String getJdbcUrl();
-    public HikariConfig toHikariConfig() {
-        HikariConfig config = new HikariConfig();
-
-        config.setJdbcUrl(getJdbcUrl());
-        config.setUsername(USERNAME);
-        config.setPassword(PASSWORD);
-
-        if (CACHE_PREP_STATEMENTS) {
-            config.addDataSourceProperty("cachePrepStmts", "true");
-            config.addDataSourceProperty("prepStmtCacheSize", String.valueOf(PREP_STATEMENT_CACHE_SIZE));
-            config.addDataSourceProperty("prepStmtCacheSqlLimit", String.valueOf(PREP_STATEMENT_CACHE_SQL_LIMIT));
-        } else {
-            config.addDataSourceProperty("cachePrepStmts", "false");
-        }
-
-        return config;
-    }
+    public abstract HikariConfig toHikariConfig();
 
     public String getHost() {
-        return HOST;
+        return host;
     }
 
     public int getPort() {
-        return PORT;
+        return port;
     }
 
     public String getDatabase() {
-        return DATABASE;
+        return database;
     }
 
     public String getUsername() {
-        return USERNAME;
+        return username;
     }
 
     public String getPassword() {
-        return PASSWORD;
+        return password;
     }
 
     public boolean doCachePreparedStatements() {
-        return CACHE_PREP_STATEMENTS;
+        return preparedStatementCacheSize > 0;
     }
 
     public int getPreparedStatementCacheSize() {
-        return PREP_STATEMENT_CACHE_SIZE;
-    }
-
-    public int getPreparedStatementCacheSQLLimit() {
-        return PREP_STATEMENT_CACHE_SQL_LIMIT;
+        return preparedStatementCacheSize;
     }
 }
