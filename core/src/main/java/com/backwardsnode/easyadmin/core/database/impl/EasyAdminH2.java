@@ -24,8 +24,8 @@
 
 package com.backwardsnode.easyadmin.core.database.impl;
 
-import com.backwardsnode.easyadmin.core.database.AbstractStatementFactory;
 import com.backwardsnode.easyadmin.api.data.LookupOptions;
+import com.backwardsnode.easyadmin.core.database.AbstractStatementFactory;
 
 public class EasyAdminH2 extends AbstractStatementFactory {
 
