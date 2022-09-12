@@ -30,6 +30,8 @@ import com.backwardsnode.easyadmin.api.record.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -397,57 +399,239 @@ public interface AdminManager {
      * @apiNote passing a username that is different to the recorded username will not update this record.
      */
     @NotNull PlayerRecord getOrInitPlayerRecord(@NotNull UUID playerUUID, @NotNull String currentUsername);
-    
+
+    /**
+     * Creates and stores a new general {@link CommentRecord} for a player.
+     * @param playerUUID the UUID of the player to add a comment for.
+     * @param staffUUID the UUID of the staff member who is adding the comment, or null if on behalf of the console.
+     * @param comment the comment to add.
+     * @param notifyPlayer if true, the player will be notified of the comment.
+     * @return the newly created comment record.
+     */
+    @NotNull CommentRecord addPlayerComment(@NotNull UUID playerUUID, @Nullable UUID staffUUID, String comment, boolean notifyPlayer);
+
+    /**
+     * Creates and stores a new warning {@link CommentRecord} for a player.
+     * @param playerUUID the UUID of the player to add a warning for.
+     * @param staffUUID the UUID of the staff member who is adding the warning, or null if on behalf of the console.
+     * @param warning the warning to add.
+     * @param notifyPlayer if true, the player will be notified of the warning.
+     * @return the newly created comment record.
+     */
+    @NotNull CommentRecord addPlayerWarning(@NotNull UUID playerUUID, @Nullable UUID staffUUID, String warning, boolean notifyPlayer);
+
+    /**
+     * Creates and stores a new {@link BanRecord} for a player, effective immediately.
+     * @param playerUUID the UUID of the player to ban.
+     * @param staffUUID the UUID of the staff member who is banning the player, or null if on behalf of the console.
+     * @param contexts the contexts to ban in, or null to ban globally.
+     * @param reason the (optional) reason for the ban.
+     * @return the newly created ban record, or null if the ban could not be created.
+     * @apiNote a ban may not be created if the player is already banned in the given contexts.
+     */
+    @Nullable BanRecord banPlayer(@NotNull UUID playerUUID, @Nullable UUID staffUUID, @Nullable String contexts, @Nullable String reason);
+
+    /**
+     * Creates and stores a new {@link BanRecord} for a player that will expire after a given duration, effective immediately.
+     * @param playerUUID the UUID of the player to ban.
+     * @param staffUUID the UUID of the staff member who is banning the player, or null if on behalf of the console.
+     * @param duration the duration of the ban.
+     * @param contexts the contexts to ban in, or null to ban globally.
+     * @param reason the (optional) reason for the ban.
+     * @return the newly created ban record, or null if the ban could not be created.
+     * @apiNote a ban may not be created if the player is already banned in the given contexts.
+     */
+    @Nullable BanRecord banPlayerFor(@NotNull UUID playerUUID, @Nullable UUID staffUUID, @NotNull Duration duration, @Nullable String contexts, @Nullable String reason);
+
+    /**
+     * Creates and stores a new {@link BanRecord} for a player that will expire at the given date and time, effective immediately.
+     * @param playerUUID the UUID of the player to ban.
+     * @param staffUUID the UUID of the staff member who is banning the player, or null if on behalf of the console.
+     * @param dateTime the date and time at which the ban will expire.
+     * @param contexts the contexts to ban in, or null to ban globally.
+     * @param reason the (optional) reason for the ban.
+     * @return the newly created ban record, or null if the ban could not be created.
+     * @apiNote a ban may not be created if the player is already banned in the given contexts.
+     */
+    @Nullable BanRecord banPlayerUntil(@NotNull UUID playerUUID, @Nullable UUID staffUUID, @NotNull LocalDateTime dateTime, @Nullable String contexts, @Nullable String reason);
+
+    /**
+     * Creates and stores a new {@link BanRecord} for a player and their IP address, effective immediately.
+     * @param playerUUID the UUID of the player whose IP is being banned.
+     * @param ipAddress the IP address to ban.
+     * @param staffUUID the UUID of the staff member who is banning the player, or null if on behalf of the console.
+     * @param contexts the contexts to ban in, or null to ban globally.
+     * @param reason the (optional) reason for the ban.
+     * @return the newly created ban record, or null if the ban could not be created.
+     * @apiNote a ban may not be created if the player/IP is already banned in the given contexts.
+     */
+    @Nullable BanRecord banPlayerIP(@NotNull UUID playerUUID, @NotNull String ipAddress, @Nullable UUID staffUUID, @Nullable String contexts, @Nullable String reason);
+
+    /**
+     * Creates and stores a new {@link BanRecord} for a player and their IP address that will expire after a given duration, effective immediately.
+     * @param playerUUID the UUID of the player whose IP is being banned.
+     * @param ipAddress the IP address to ban.
+     * @param staffUUID the UUID of the staff member who is banning the player, or null if on behalf of the console.
+     * @param duration the duration of the ban.
+     * @param contexts the contexts to ban in, or null to ban globally.
+     * @param reason the (optional) reason for the ban.
+     * @return the newly created ban record, or null if the ban could not be created.
+     * @apiNote a ban may not be created if the player/IP is already banned in the given contexts.
+     */
+    @Nullable BanRecord banPlayerIPFor(@NotNull UUID playerUUID, @NotNull String ipAddress, @Nullable UUID staffUUID, @NotNull Duration duration, @Nullable String contexts, @Nullable String reason);
+
+    /**
+     * Creates and stores a new {@link BanRecord} for a player and their IP address that will expire at the given date and time, effective immediately.
+     * @param playerUUID the UUID of the player whose IP is being banned.
+     * @param ipAddress the IP address to ban.
+     * @param staffUUID the UUID of the staff member who is banning the player, or null if on behalf of the console.
+     * @param dateTime the date and time at which the ban will expire.
+     * @param contexts the contexts to ban in, or null to ban globally.
+     * @param reason the (optional) reason for the ban.
+     * @return the newly created ban record, or null if the ban could not be created.
+     * @apiNote a ban may not be created if the player/IP is already banned in the given contexts.
+     */
+    @Nullable BanRecord banPlayerIPUntil(@NotNull UUID playerUUID, @NotNull String ipAddress, @Nullable UUID staffUUID, @NotNull LocalDateTime dateTime, @Nullable String contexts, @Nullable String reason);
+
+    /**
+     * Creates and stores a new {@link KickRecord} for a player, kicking them immediately.
+     * @param playerUUID the UUID of the player to kick.
+     * @param staffUUID the UUID of the staff member who is kicking the player, or null if on behalf of the console.
+     * @param reason the (optional) reason for the kick.
+     * @param disconnect if true, the player will be disconnected from the network.
+     * @return the newly created kick record, or null if the player is not online.
+     */
+    @Nullable KickRecord kickPlayer(@NotNull UUID playerUUID, @Nullable UUID staffUUID, @Nullable String reason, boolean disconnect);
+
+    /**
+     * Creates and stores a new {@link MuteRecord} for a player, effective immediately.
+     * @param playerUUID the UUID of the player to mute.
+     * @param staffUUID the UUID of the staff member who is muting the player, or null if on behalf of the console.
+     * @param contexts the contexts to mute in, or null to mute globally.
+     * @param reason the (optional) reason for the mute.
+     * @return the newly created mute record, or null if the mute could not be created.
+     * @apiNote a mute may not be created if the player is already muted in the given contexts.
+     */
+    @Nullable MuteRecord mutePlayer(@NotNull UUID playerUUID, @Nullable UUID staffUUID, @Nullable String contexts, @Nullable String reason);
+
+    /**
+     * Creates and stores a new {@link MuteRecord} for a player that will expire after a given duration, effective immediately.
+     * @param playerUUID the UUID of the player to mute.
+     * @param staffUUID the UUID of the staff member who is muting the player, or null if on behalf of the console.
+     * @param duration the duration of the mute.
+     * @param contexts the contexts to mute in, or null to mute globally.
+     * @param reason the (optional) reason for the mute.
+     * @return the newly created mute record, or null if the mute could not be created.
+     * @apiNote a mute may not be created if the player is already muted in the given contexts.
+     */
+    @Nullable MuteRecord mutePlayerFor(@NotNull UUID playerUUID, @Nullable UUID staffUUID, @NotNull Duration duration, @Nullable String contexts, @Nullable String reason);
+
+    /**
+     * Creates and stores a new {@link MuteRecord} for a player that will expire at the given date and time, effective immediately.
+     * @param playerUUID the UUID of the player to mute.
+     * @param staffUUID the UUID of the staff member who is muting the player, or null if on behalf of the console.
+     * @param dateTime the date and time at which the mute will expire.
+     * @param contexts the contexts to mute in, or null to mute globally.
+     * @param reason the (optional) reason for the mute.
+     * @return the newly created mute record, or null if the mute could not be created.
+     * @apiNote a mute may not be created if the player is already muted in the given contexts.
+     */
+    @Nullable MuteRecord mutePlayerUntil(@NotNull UUID playerUUID, @Nullable UUID staffUUID, @NotNull LocalDateTime dateTime, @Nullable String contexts, @Nullable String reason);
+
+    /**
+     * Creates and stores a new {@link MuteRecord} for a player and their IP address, effective immediately.
+     * @param playerUUID the UUID of the player whose IP is being muted.
+     * @param ipAddress the IP address to mute.
+     * @param staffUUID the UUID of the staff member who is muting the player, or null if on behalf of the console.
+     * @param contexts the contexts to mute in, or null to mute globally.
+     * @param reason the (optional) reason for the mute.
+     * @return the newly created mute record, or null if the mute could not be created.
+     * @apiNote a mute may not be created if the player/IP is already muted in the given contexts.
+     */
+    @Nullable MuteRecord mutePlayerIP(@NotNull UUID playerUUID, @NotNull String ipAddress, @Nullable UUID staffUUID, @Nullable String contexts, @Nullable String reason);
+
+    /**
+     * Creates and stores a new {@link MuteRecord} for a player and their IP address that will expire after a given duration, effective immediately.
+     * @param playerUUID the UUID of the player whose IP is being muted.
+     * @param ipAddress the IP address to mute.
+     * @param staffUUID the UUID of the staff member who is muting the player, or null if on behalf of the console.
+     * @param duration the duration of the mute.
+     * @param contexts the contexts to mute in, or null to mute globally.
+     * @param reason the (optional) reason for the mute.
+     * @return the newly created mute record, or null if the mute could not be created.
+     * @apiNote a mute may not be created if the player/IP is already muted in the given contexts.
+     */
+    @Nullable MuteRecord mutePlayerIPFor(@NotNull UUID playerUUID, @NotNull String ipAddress, @Nullable UUID staffUUID, @NotNull Duration duration, @Nullable String contexts, @Nullable String reason);
+
+    /**
+     * Creates and stores a new {@link MuteRecord} for a player and their IP address that will expire at the given date and time, effective immediately.
+     * @param playerUUID the UUID of the player whose IP is being muted.
+     * @param ipAddress the IP address to mute.
+     * @param staffUUID the UUID of the staff member who is muting the player, or null if on behalf of the console.
+     * @param dateTime the date and time at which the mute will expire.
+     * @param contexts the contexts to mute in, or null to mute globally.
+     * @param reason the (optional) reason for the mute.
+     * @return the newly created mute record, or null if the mute could not be created.
+     * @apiNote a mute may not be created if the player/IP is already muted in the given contexts.
+     */
+    @Nullable MuteRecord mutePlayerIPUntil(@NotNull UUID playerUUID, @NotNull String ipAddress, @Nullable UUID staffUUID, @NotNull LocalDateTime dateTime, @Nullable String contexts, @Nullable String reason);
+
     /**
      * Ends all active bans targeting a specific player.
      * @param playerUUID the UUID of the player to unban.
+     * @param staffUUID the UUID of the staff member who is unbanning the player.
      * @param unbanReason the (optional) reason for this action.
      * @return the number of bans that have been ended.
      */
-    int unbanPlayerEverywhere(@NotNull UUID playerUUID, @Nullable String unbanReason);
+    int unbanPlayerEverywhere(@NotNull UUID playerUUID, @Nullable UUID staffUUID, @Nullable String unbanReason);
 
     /**
      * Ends all active bans targeting a specific player in specific contexts.
      * @param playerUUID the UUID of the player to unban.
+     * @param staffUUID the UUID of the staff member who is unbanning the player.
      * @param unbanReason the (optional) reason for this action.
      * @param contexts the contexts to unban in.
      * @return the number of bans that have been ended.
      */
-    int unbanPlayerInContexts(@NotNull UUID playerUUID, @Nullable String unbanReason, @NotNull String... contexts);
+    int unbanPlayerInContexts(@NotNull UUID playerUUID, @Nullable UUID staffUUID, @Nullable String unbanReason, @NotNull String... contexts);
 
     /**
      * Ends an active ban if one exists, which must be a global ban, targeting a specific player.
      * <p>Bans in specific contexts will remain standing, if any.</p>
      * @param playerUUID the UUID of the player to unban.
+     * @param staffUUID the UUID of the staff member who is unbanning the player.
      * @param unbanReason the (optional) reason for this action.
      * @return true if a ban was ended, false if no ban was found.
      */
-    boolean unbanPlayerInGlobalContextOnly(@NotNull UUID playerUUID, @Nullable String unbanReason);
+    boolean unbanPlayerInGlobalContextOnly(@NotNull UUID playerUUID, @Nullable UUID staffUUID, @Nullable String unbanReason);
 
     /**
      * Ends all active mutes targeting a specific player.
      * @param playerUUID the UUID of the player to unmute.
+     * @param staffUUID the UUID of the staff member who is unmuting the player.
      * @param unmuteReason the (optional) reason for this action.
      * @return the number of mutes that have been ended.
      */
-    int unmutePlayerEverywhere(@NotNull UUID playerUUID, @Nullable String unmuteReason);
+    int unmutePlayerEverywhere(@NotNull UUID playerUUID, @Nullable UUID staffUUID, @Nullable String unmuteReason);
 
     /**
      * Ends all active mutes targeting a specific player in specific contexts.
      * @param playerUUID the UUID of the player to unmute.
+     * @param staffUUID the UUID of the staff member who is unmuting the player.
      * @param unmuteReason the (optional) reason for this action.
      * @param contexts the contexts to unmute in.
      * @return the number of mutes that have been ended.
      */
-    int unmutePlayerInContexts(@NotNull UUID playerUUID, @Nullable String unmuteReason, @NotNull String... contexts);
+    int unmutePlayerInContexts(@NotNull UUID playerUUID, @Nullable UUID staffUUID, @Nullable String unmuteReason, @NotNull String... contexts);
 
     /**
      * Ends an active mute if one exists, which must be a global mute, targeting a specific player.
      * <p>Mutes in specific contexts will remain standing, if any.</p>
      * @param playerUUID the UUID of the player to unmute.
+     * @param staffUUID the UUID of the staff member who is unmuting the player.
      * @param unmuteReason the (optional) reason for this action.
      * @return true if a mute was ended, false if no mute was found.
      */
-    boolean unmutePlayerInGlobalContextOnly(@NotNull UUID playerUUID, @Nullable String unmuteReason);
+    boolean unmutePlayerInGlobalContextOnly(@NotNull UUID playerUUID, @Nullable UUID staffUUID, @Nullable String unmuteReason);
 
 }
