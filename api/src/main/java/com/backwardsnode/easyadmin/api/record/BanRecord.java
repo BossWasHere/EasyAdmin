@@ -24,8 +24,8 @@
 
 package com.backwardsnode.easyadmin.api.record;
 
-import com.backwardsnode.easyadmin.api.record.modify.BanRecordModifier;
 import com.backwardsnode.easyadmin.api.data.PunishmentStatus;
+import com.backwardsnode.easyadmin.api.record.modify.BanRecordModifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
