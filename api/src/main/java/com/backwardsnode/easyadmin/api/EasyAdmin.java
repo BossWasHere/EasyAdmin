@@ -25,7 +25,10 @@
 package com.backwardsnode.easyadmin.api;
 
 import com.backwardsnode.easyadmin.api.admin.AdminManager;
+import com.backwardsnode.easyadmin.api.config.ConfigurationManager;
 import com.backwardsnode.easyadmin.api.contextual.ContextTester;
+import com.backwardsnode.easyadmin.api.internal.ExternalDataSource;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -38,10 +41,21 @@ import org.jetbrains.annotations.NotNull;
 public interface EasyAdmin {
 
     /**
+     * The namespace for EasyAdmin.
+     */
+    String NAMESPACE = "easyadmin";
+
+    /**
      * Gets the {@link AdminManager}, which is used to manage admin records.
      * @return the {@link AdminManager}.
      */
     @NotNull AdminManager getAdminManager();
+
+    /**
+     * Gets the {@link ConfigurationManager}, which handles all configuration for EasyAdmin.
+     * @return the {@link ConfigurationManager}.
+     */
+    @NotNull ConfigurationManager getConfigurationManager();
 
     /**
      * Gets the {@link ContextTester}, which is used to match contexts on a per-server/world basis.
@@ -50,9 +64,10 @@ public interface EasyAdmin {
     @NotNull ContextTester getContextTester();
 
     /**
-     * Gets the {@link EasyAdminPlugin} that is responsible for this API.
-     * @return the {@link EasyAdminPlugin}.
+     * Gets the {@link ExternalDataSource}, which is used to retrieve player data from an external source.
+     * @return the {@link ExternalDataSource}.
      */
-    @NotNull EasyAdminPlugin getPluginInstance();
+    @ApiStatus.Internal
+    @NotNull ExternalDataSource getExternalDataSource();
 
 }
