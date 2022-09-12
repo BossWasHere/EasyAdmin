@@ -25,7 +25,12 @@
 package com.backwardsnode.easyadmin.api;
 
 import com.backwardsnode.easyadmin.api.data.Platform;
+import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
+import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 /**
  * Represents a plugin platform-agnostic EasyAdmin plugin.
@@ -33,19 +38,10 @@ import org.jetbrains.annotations.NotNull;
 public interface EasyAdminPlugin {
 
     /**
-     * Called when the server loads the plugin.
+     * Gets the active API instance for EasyAdmin.
+     * @return the API instance.
      */
-    void onLoad();
-
-    /**
-     * Called when the server enables the plugin.
-     */
-    void onEnable();
-
-    /**
-     * Called when the server disables the plugin.
-     */
-    void onDisable();
+    @NotNull EasyAdmin getInstance();
 
     /**
      * Gets the {@link Platform} that this plugin is running on.
@@ -53,4 +49,31 @@ public interface EasyAdminPlugin {
      */
     @NotNull Platform getPlatform();
 
+    /**
+     * Gets details about a player by their username.
+     * @param username the username of the player.
+     * @return {@link OfflinePlayer} if the player is recognized by the server, otherwise null.
+     */
+    @Nullable OfflinePlayer getOfflinePlayer(String username);
+
+    /**
+     * Gets details about a player by their UUID.
+     * @param uuid the UUID of the player.
+     * @return {@link OfflinePlayer} if the player is recognized by the server, otherwise null.
+     */
+    @Nullable OfflinePlayer getOfflinePlayer(UUID uuid);
+
+    /**
+     * Gets details about an online player by their username.
+     * @param username the username of the player.
+     * @return {@link OnlinePlayer} if the player is online, otherwise null.
+     */
+    @Nullable OnlinePlayer getOnlinePlayer(@NotNull String username);
+
+    /**
+     * Gets details about an online player by their UUID.
+     * @param uuid the UUID of the player.
+     * @return {@link OnlinePlayer} if the player is online, otherwise null.
+     */
+    @Nullable OnlinePlayer getOnlinePlayer(@NotNull UUID uuid);
 }

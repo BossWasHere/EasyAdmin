@@ -24,11 +24,30 @@
 
 package com.backwardsnode.easyadmin.bungee;
 
+import com.backwardsnode.easyadmin.api.EasyAdmin;
 import com.backwardsnode.easyadmin.api.EasyAdminPlugin;
 import com.backwardsnode.easyadmin.api.data.Platform;
+import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
+import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
+import com.backwardsnode.easyadmin.bungee.command.BungeeCommandRegister;
+import com.backwardsnode.easyadmin.bungee.wrapper.OnlinePlayerWrapper;
+import com.backwardsnode.easyadmin.core.command.CommandManager;
 import net.md_5.bungee.api.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 public class EasyAdminBungee extends Plugin implements EasyAdminPlugin {
+
+    private final EasyAdmin instance;
+    private final CommandManager commandManager;
+
+    public EasyAdminBungee() {
+        //TODO implementation
+        instance = null;
+        commandManager = new CommandManager(this, new BungeeCommandRegister(this));
+    }
 
     @Override
     public void onLoad() {
@@ -37,16 +56,43 @@ public class EasyAdminBungee extends Plugin implements EasyAdminPlugin {
 
     @Override
     public void onEnable() {
-
+        commandManager.registerAllCommands();
     }
 
     @Override
     public void onDisable() {
-
+        commandManager.unregisterAllCommands();
     }
 
     @Override
-    public Platform getPlatform() {
+    public @NotNull EasyAdmin getInstance() {
+        return instance;
+    }
+
+    @Override
+    public @NotNull Platform getPlatform() {
         return Platform.BUNGEE;
+    }
+
+    @Override
+    public @Nullable OfflinePlayer getOfflinePlayer(String username) {
+        //TODO implementation
+        return null;
+    }
+
+    @Override
+    public @Nullable OfflinePlayer getOfflinePlayer(UUID uuid) {
+        //TODO implementation
+        return null;
+    }
+
+    @Override
+    public @Nullable OnlinePlayer getOnlinePlayer(@NotNull String username) {
+        return OnlinePlayerWrapper.byUsername(username);
+    }
+
+    @Override
+    public @Nullable OnlinePlayer getOnlinePlayer(@NotNull UUID playerUUID) {
+        return OnlinePlayerWrapper.byUUID(playerUUID);
     }
 }
