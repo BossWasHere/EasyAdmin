@@ -46,4 +46,9 @@ public interface RecordModifier<T extends LiveRecord<?>> {
      */
     boolean hasChanged();
 
+    /**
+     * Pushes changes to the record data store.
+     */
+    void push();
+
 }

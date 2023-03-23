@@ -29,11 +29,19 @@ import com.backwardsnode.easyadmin.api.EasyAdminPlugin;
 import com.backwardsnode.easyadmin.api.data.Platform;
 import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
+import com.backwardsnode.easyadmin.api.internal.FileSystemProvider;
+import com.backwardsnode.easyadmin.bukkit.messaging.BukkitMessagingChannel;
 import com.backwardsnode.easyadmin.bukkit.command.BukkitCommandRegister;
+import com.backwardsnode.easyadmin.bukkit.event.BukkitListener;
 import com.backwardsnode.easyadmin.bukkit.wrapper.OnlinePlayerWrapper;
 import com.backwardsnode.easyadmin.bukkit.wrapper.OfflinePlayerWrapper;
+import com.backwardsnode.easyadmin.core.BukkitPluginMode;
+import com.backwardsnode.easyadmin.core.EasyAdminService;
+import com.backwardsnode.easyadmin.core.boot.Registration;
 import com.backwardsnode.easyadmin.core.command.CommandManager;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.Messenger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,28 +49,48 @@ import java.util.UUID;
 
 public class EasyAdminBukkit extends JavaPlugin implements EasyAdminPlugin {
 
-    private final EasyAdmin instance;
-    private final CommandManager commandManager;
+    private EasyAdminService instance;
+    private CommandManager commandManager;
+    private BukkitListener listener;
+    private BukkitMessagingChannel bukkitChannel;
 
-    public EasyAdminBukkit() {
-        //TODO implementation
-        instance = null;
-        commandManager = new CommandManager(this, new BukkitCommandRegister(this));
-    }
+    private BukkitPluginMode mode;
 
     @Override
     public void onLoad() {
-
+        instance = new EasyAdminService(this);
+        bukkitChannel = new BukkitMessagingChannel(this);
+        commandManager = new CommandManager(this, new BukkitCommandRegister(this));
+        listener = new BukkitListener(this);
     }
 
     @Override
     public void onEnable() {
+        Registration.get().register(instance);
+
+        getServer().getPluginManager().registerEvents(listener, this);
+
+        Messenger messenger = getServer().getMessenger();
+        messenger.registerOutgoingPluginChannel(this, EasyAdmin.CHANNEL);
+        messenger.registerIncomingPluginChannel(this, EasyAdmin.CHANNEL, bukkitChannel);
+
         commandManager.registerAllCommands();
     }
 
     @Override
     public void onDisable() {
+        commandManager.unregisterAllCommands();
 
+        Messenger messenger = getServer().getMessenger();
+        messenger.unregisterOutgoingPluginChannel(this);
+        messenger.unregisterIncomingPluginChannel(this);
+
+        instance.close();
+    }
+
+    @Override
+    public @NotNull String translateAlternateColorCodes(char altColorChar, @NotNull String text) {
+        return ChatColor.translateAlternateColorCodes(altColorChar, text);
     }
 
     @Override
@@ -73,6 +101,15 @@ public class EasyAdminBukkit extends JavaPlugin implements EasyAdminPlugin {
     @Override
     public @NotNull Platform getPlatform() {
         return Platform.BUKKIT;
+    }
+
+    public BukkitPluginMode getPluginMode() {
+        return mode;
+    }
+
+    @Override
+    public @NotNull FileSystemProvider getFileSystemProvider() {
+        return null;
     }
 
     @Override

@@ -26,6 +26,9 @@ package com.backwardsnode.easyadmin.bukkit.wrapper;
 
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class CommandExecutorWrapper implements CommandExecutor {
 
@@ -38,5 +41,15 @@ public class CommandExecutorWrapper implements CommandExecutor {
     @Override
     public boolean hasPermission(String permission) {
         return sender.hasPermission(permission);
+    }
+
+    @Override
+    public void sendMessage(@NotNull String msg) {
+        sender.sendMessage(msg);
+    }
+
+    @Override
+    public @Nullable String getLocale() {
+        return sender instanceof Player player ? player.getLocale() : null;
     }
 }

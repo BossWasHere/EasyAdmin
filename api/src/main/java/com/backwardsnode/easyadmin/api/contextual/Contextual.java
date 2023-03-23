@@ -37,4 +37,12 @@ public interface Contextual {
      */
     @Nullable String getContexts();
 
+    /**
+     * Determines if this object actually has any contexts.
+     * @return true if this object has contexts, false otherwise.
+     */
+    default boolean hasContexts() {
+        return getContexts() != null;
+    }
+
 }

@@ -172,6 +172,11 @@ public final class MuteRecord implements LiveRecord<Integer>, SpecialAdminRecord
         }
 
         @Override
+        public void push() {
+
+        }
+
+        @Override
         public void setAutoUnmuteDate(@NotNull LocalDateTime unmuteDate) {
             record.status = unmuteDate.isBefore(LocalDateTime.now()) ? PunishmentStatus.EXPIRED : PunishmentStatus.ACTIVE;
             record.unmuteStaff = null;

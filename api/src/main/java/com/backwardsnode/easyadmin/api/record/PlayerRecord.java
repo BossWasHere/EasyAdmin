@@ -194,6 +194,11 @@ public final class PlayerRecord implements LiveRecord<UUID>, ModifiableRecord<Pl
             return playerJoiningStatsChanged || playerLeavingStatsChanged || playerDynamicStatsChanged;
         }
 
+        @Override
+        public void push() {
+
+        }
+
         public boolean hasPlayerJoinStatsChanged() {
             return playerJoiningStatsChanged;
         }

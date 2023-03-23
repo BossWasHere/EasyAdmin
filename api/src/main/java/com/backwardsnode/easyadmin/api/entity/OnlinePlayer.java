@@ -37,4 +37,10 @@ public interface OnlinePlayer extends CommandExecutor, OfflinePlayer {
      */
     @NotNull String getSerializedIPAddress();
 
+    /**
+     * Gets the name of the server the player is currently on.
+     * @return the server name.
+     */
+    @NotNull String getServerName();
+
 }

@@ -170,6 +170,11 @@ public final class BanRecord implements LiveRecord<Integer>, SpecialAdminRecord,
         }
 
         @Override
+        public void push() {
+
+        }
+
+        @Override
         public void setAutoUnbanDate(@NotNull LocalDateTime unbanDate) {
             record.status = unbanDate.isBefore(LocalDateTime.now()) ? PunishmentStatus.EXPIRED : PunishmentStatus.ACTIVE;
             record.unbanStaff = null;

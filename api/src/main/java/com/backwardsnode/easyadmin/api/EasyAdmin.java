@@ -24,10 +24,15 @@
 
 package com.backwardsnode.easyadmin.api;
 
+import com.backwardsnode.easyadmin.api.admin.AdminDynamo;
 import com.backwardsnode.easyadmin.api.admin.AdminManager;
+import com.backwardsnode.easyadmin.api.admin.ChatFilter;
+import com.backwardsnode.easyadmin.api.admin.RecommendationEngine;
 import com.backwardsnode.easyadmin.api.config.ConfigurationManager;
 import com.backwardsnode.easyadmin.api.contextual.ContextTester;
+import com.backwardsnode.easyadmin.api.event.EventBus;
 import com.backwardsnode.easyadmin.api.internal.ExternalDataSource;
+import com.backwardsnode.easyadmin.api.server.NetworkInfo;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,10 +51,27 @@ public interface EasyAdmin {
     String NAMESPACE = "easyadmin";
 
     /**
+     * The name of the shared plugin channel.
+     */
+    String CHANNEL = "easyadmin:main";
+
+    /**
+     * Gets the {@link AdminDynamo}, which is used to dynamically alert and respond to repeated actions.
+     * @return The {@link AdminDynamo}.
+     */
+    @NotNull AdminDynamo getAdminDynamo();
+
+    /**
      * Gets the {@link AdminManager}, which is used to manage admin records.
      * @return the {@link AdminManager}.
      */
     @NotNull AdminManager getAdminManager();
+
+    /**
+     * Gets the {@link ChatFilter}, which is used to filter chat messages.
+     * @return the {@link ChatFilter}.
+     */
+    @NotNull ChatFilter getChatFilter();
 
     /**
      * Gets the {@link ConfigurationManager}, which handles all configuration for EasyAdmin.
@@ -64,10 +86,28 @@ public interface EasyAdmin {
     @NotNull ContextTester getContextTester();
 
     /**
+     * Gets the {@link EventBus}, which plugins can use to listen for events on this instance.
+     * @return the {@link EventBus}.
+     */
+    @NotNull EventBus getEventBus();
+
+    /**
      * Gets the {@link ExternalDataSource}, which is used to retrieve player data from an external source.
      * @return the {@link ExternalDataSource}.
      */
     @ApiStatus.Internal
     @NotNull ExternalDataSource getExternalDataSource();
+
+    /**
+     * Gets the {@link NetworkInfo}, which is used to retrieve information about the network.
+     * @return the {@link NetworkInfo}.
+     */
+    @NotNull NetworkInfo getNetworkInformation();
+
+    /**
+     * Gets the {@link RecommendationEngine}, which is used to recommend actions to take on a player.
+     * @return the {@link RecommendationEngine}.
+     */
+    @NotNull RecommendationEngine getRecommendationEngine();
 
 }

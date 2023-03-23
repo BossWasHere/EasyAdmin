@@ -33,6 +33,8 @@ import com.backwardsnode.easyadmin.core.command.ExecutionStatus;
 import com.backwardsnode.easyadmin.core.command.args.ArgumentResult;
 import com.backwardsnode.easyadmin.core.command.args.ArgumentSelector;
 import com.backwardsnode.easyadmin.core.commands.data.LookupData;
+import com.backwardsnode.easyadmin.core.i18n.CommonMessages;
+import com.backwardsnode.easyadmin.core.i18n.MessageKey;
 
 public class Lookup implements Command<LookupData> {
 
@@ -80,6 +82,16 @@ public class Lookup implements Command<LookupData> {
         }
 
         return false;
+    }
+
+    @Override
+    public MessageKey getDescription(CommandExecutor executor, CommandData data, LookupData state) {
+        return CommonMessages.ADMINISTRATIVE.LOOKUP.DESC;
+    }
+
+    @Override
+    public MessageKey getUsageMessage(CommandExecutor executor, CommandData data, LookupData state) {
+        return CommonMessages.ADMINISTRATIVE.LOOKUP.USAGE;
     }
 
     @Override

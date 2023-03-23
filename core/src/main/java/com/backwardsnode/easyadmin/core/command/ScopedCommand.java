@@ -114,10 +114,13 @@ public abstract class ScopedCommand<S extends ScopedCommand.ScopedData> implemen
         AliasType type = commands.get(data.command());
         if (type == null) {
             state.setStatus(ExecutionStatus.ERROR);
-        } else if (checkPermission(executor, type.scope())) {
-            state.setStatus(ExecutionStatus.SUCCESS);
         } else {
-            state.setStatus(ExecutionStatus.NO_PERMISSION);
+            state.setScope(type.scope());
+            if (checkPermission(executor, type.scope())) {
+                state.setStatus(ExecutionStatus.SUCCESS);
+            } else {
+                state.setStatus(ExecutionStatus.NO_PERMISSION);
+            }
         }
         return state;
     }

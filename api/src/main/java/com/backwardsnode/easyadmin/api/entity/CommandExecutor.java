@@ -24,6 +24,9 @@
 
 package com.backwardsnode.easyadmin.api.entity;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Represents an entity that can send and execute server commands.
  */
@@ -34,6 +37,18 @@ public interface CommandExecutor {
      * @param permission The permission node to check.
      * @return true if the player has the permission node, false otherwise.
      */
-    boolean hasPermission(String permission);
+    boolean hasPermission(@NotNull String permission);
+
+    /**
+     * Sends a message to this entity.
+     * @param msg the message to send.
+     */
+    void sendMessage(@NotNull String msg);
+
+    /**
+     * Gets the locale of this entity.
+     * @return the entity's locale, or null if it has none.
+     */
+    @Nullable String getLocale();
 
 }

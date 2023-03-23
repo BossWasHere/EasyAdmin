@@ -27,6 +27,7 @@ package com.backwardsnode.easyadmin.core.command;
 import com.backwardsnode.easyadmin.api.EasyAdmin;
 import com.backwardsnode.easyadmin.api.EasyAdminPlugin;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
+import com.backwardsnode.easyadmin.core.i18n.MessageKey;
 
 public interface Command<S> {
 
@@ -48,10 +49,17 @@ public interface Command<S> {
     }
 
     S loadState(EasyAdminPlugin instance, CommandExecutor executor, CommandData data);
+
     boolean processArgs(EasyAdminPlugin instance, CommandExecutor executor, CommandData data, S state);
+
+    MessageKey getDescription(CommandExecutor executor, CommandData data, S state);
+
+    MessageKey getUsageMessage(CommandExecutor executor, CommandData data, S state);
+
     default ExecutionStatus preExecute(EasyAdminPlugin instance, CommandExecutor executor, CommandData data, S state) {
         return ExecutionStatus.SUCCESS;
     }
+
     ExecutionStatus execute(EasyAdminPlugin instance, CommandExecutor executor, CommandData data, S state);
 
 }

@@ -35,4 +35,16 @@ public interface ConfigurationManager {
      */
     CommandConfiguration getCommandConfiguration();
 
+    /**
+     * Gets the configuration for enabled/disabled features.
+     * @return the {@link FeatureConfiguration} instance.
+     */
+    FeatureConfiguration getFeatureConfiguration();
+
+    /**
+     * Gets the configuration for messaging and locale.
+     * @return the {@link LocaleConfiguration} instance.
+     */
+    LocaleConfiguration getLocaleConfiguration();
+
 }

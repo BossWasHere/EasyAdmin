@@ -40,7 +40,7 @@ public final class EasyAdminProvider {
     /**
      * Gets access to the {@link EasyAdmin} API.
      * @return the current {@link EasyAdmin} API instance
-     * @throws  IllegalStateException if the plugin has not loaded the API yet
+     * @throws IllegalStateException if the plugin has not loaded the API yet
      */
     public static @NotNull EasyAdmin get() {
         if (EasyAdminProvider.easyAdmin == null) {
@@ -49,6 +49,7 @@ public final class EasyAdminProvider {
         return EasyAdminProvider.easyAdmin;
     }
 
+    @SuppressWarnings("unused")
     @ApiStatus.Internal
     static void register(@NotNull EasyAdmin easyAdmin) {
         if (EasyAdminProvider.easyAdmin != null) {
@@ -57,6 +58,7 @@ public final class EasyAdminProvider {
         EasyAdminProvider.easyAdmin = easyAdmin;
     }
 
+    @SuppressWarnings("unused")
     @ApiStatus.Internal
     static void unregister() {
         EasyAdminProvider.easyAdmin = null;

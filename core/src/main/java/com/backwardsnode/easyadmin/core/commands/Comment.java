@@ -35,6 +35,7 @@ import com.backwardsnode.easyadmin.core.command.ExecutionStatus;
 import com.backwardsnode.easyadmin.core.command.args.ArgumentResult;
 import com.backwardsnode.easyadmin.core.command.args.ArgumentSelector;
 import com.backwardsnode.easyadmin.core.commands.data.CommentData;
+import com.backwardsnode.easyadmin.core.i18n.MessageKey;
 
 import java.util.UUID;
 
@@ -90,6 +91,16 @@ public class Comment implements Command<CommentData> {
         state.setComment(selector.readRemainingString());
 
         return !state.getComment().isEmpty();
+    }
+
+    @Override
+    public MessageKey getDescription(CommandExecutor executor, CommandData data, CommentData state) {
+        return null;
+    }
+
+    @Override
+    public MessageKey getUsageMessage(CommandExecutor executor, CommandData data, CommentData state) {
+        return null;
     }
 
     @Override

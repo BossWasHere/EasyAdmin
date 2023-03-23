@@ -69,4 +69,20 @@ public interface SpecialAdminRecord extends ReasonedAdminRecord, Contextual {
      */
     @Nullable String getTerminationReason();
 
+    /**
+     * Determines if this record has an IP address associated with it.
+     * @return true if this record has an IP address, false otherwise.
+     */
+    default boolean hasIpAddress() {
+        return getIpAddress() != null;
+    }
+
+    default boolean isTemporary() {
+        return getStatus() == PunishmentStatus.EXPIRED || getTerminationDate() != null;
+    }
+
+    default boolean hasEnded() {
+        return getStatus() == PunishmentStatus.ENDED;
+    }
+
 }

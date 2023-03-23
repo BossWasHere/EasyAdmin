@@ -29,10 +29,20 @@ import com.backwardsnode.easyadmin.api.EasyAdminPlugin;
 import com.backwardsnode.easyadmin.api.data.Platform;
 import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
+import com.backwardsnode.easyadmin.api.internal.FileSystemProvider;
+import com.backwardsnode.easyadmin.bungee.interop.ExtraServerInfoManager;
+import com.backwardsnode.easyadmin.bungee.messaging.BungeeMessagingChannel;
 import com.backwardsnode.easyadmin.bungee.command.BungeeCommandRegister;
+import com.backwardsnode.easyadmin.bungee.event.BungeeListener;
+import com.backwardsnode.easyadmin.bungee.wrapper.OfflinePlayerWrapper;
 import com.backwardsnode.easyadmin.bungee.wrapper.OnlinePlayerWrapper;
+import com.backwardsnode.easyadmin.core.EasyAdminService;
+import com.backwardsnode.easyadmin.core.boot.Registration;
 import com.backwardsnode.easyadmin.core.command.CommandManager;
+import com.backwardsnode.easyadmin.core.i18n.MessageProvider;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.api.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,28 +50,53 @@ import java.util.UUID;
 
 public class EasyAdminBungee extends Plugin implements EasyAdminPlugin {
 
-    private final EasyAdmin instance;
-    private final CommandManager commandManager;
+    private EasyAdminService instance;
+    private CommandManager commandManager;
+    private BungeeListener listener;
+    private BungeeMessagingChannel bungeeChannel;
+    private ExtraServerInfoManager extraServerInfoManager;
+    private MessageProvider messageProvider;
 
     public EasyAdminBungee() {
-        //TODO implementation
-        instance = null;
-        commandManager = new CommandManager(this, new BungeeCommandRegister(this));
     }
 
     @Override
     public void onLoad() {
-
+        instance = new EasyAdminService(this);
+        bungeeChannel = new BungeeMessagingChannel(this);
+        commandManager = new CommandManager(this, new BungeeCommandRegister(this));
+        extraServerInfoManager = new ExtraServerInfoManager();
+        listener = new BungeeListener(this);
+        messageProvider = new MessageProvider(this, true);
     }
 
     @Override
     public void onEnable() {
+        Registration.get().register(instance);
+
+        getProxy().registerChannel(EasyAdmin.CHANNEL);
+
+        PluginManager pluginManager = getProxy().getPluginManager();
+        pluginManager.registerListener(this, listener);
+        pluginManager.registerListener(this, bungeeChannel);
+
         commandManager.registerAllCommands();
     }
 
     @Override
     public void onDisable() {
         commandManager.unregisterAllCommands();
+
+        getProxy().getPluginManager().unregisterListeners(this);
+
+        getProxy().unregisterChannel(EasyAdmin.CHANNEL);
+
+        instance.close();
+    }
+
+    @Override
+    public @NotNull String translateAlternateColorCodes(char altColorChar, @NotNull String text) {
+        return ChatColor.translateAlternateColorCodes(altColorChar, text);
     }
 
     @Override
@@ -74,16 +109,27 @@ public class EasyAdminBungee extends Plugin implements EasyAdminPlugin {
         return Platform.BUNGEE;
     }
 
+    public ExtraServerInfoManager getExtraServerInfoManager() {
+        return extraServerInfoManager;
+    }
+
+    public MessageProvider getMessageProvider() {
+        return messageProvider;
+    }
+
     @Override
-    public @Nullable OfflinePlayer getOfflinePlayer(String username) {
-        //TODO implementation
+    public @NotNull FileSystemProvider getFileSystemProvider() {
         return null;
     }
 
     @Override
+    public @Nullable OfflinePlayer getOfflinePlayer(String username) {
+        return OfflinePlayerWrapper.byUsername(username);
+    }
+
+    @Override
     public @Nullable OfflinePlayer getOfflinePlayer(UUID uuid) {
-        //TODO implementation
-        return null;
+        return OfflinePlayerWrapper.byUUID(uuid);
     }
 
     @Override

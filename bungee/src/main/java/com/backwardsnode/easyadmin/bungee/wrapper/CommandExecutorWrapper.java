@@ -26,6 +26,10 @@ package com.backwardsnode.easyadmin.bungee.wrapper;
 
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class CommandExecutorWrapper implements CommandExecutor {
 
@@ -36,7 +40,17 @@ public class CommandExecutorWrapper implements CommandExecutor {
     }
 
     @Override
-    public boolean hasPermission(String permission) {
+    public boolean hasPermission(@NotNull String permission) {
         return sender.hasPermission(permission);
+    }
+
+    @Override
+    public void sendMessage(@NotNull String msg) {
+        sender.sendMessage(TextComponent.fromLegacyText(msg));
+    }
+
+    @Override
+    public @Nullable String getLocale() {
+        return sender instanceof ProxiedPlayer player ? player.getLocale().toString() : null;
     }
 }

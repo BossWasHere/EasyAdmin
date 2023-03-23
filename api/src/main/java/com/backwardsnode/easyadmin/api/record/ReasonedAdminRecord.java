@@ -38,4 +38,12 @@ public interface ReasonedAdminRecord extends AdminRecord {
      */
     @Nullable String getReason();
 
+    /**
+     * Determines if a reason is provided for this action.
+     * @return true if a reason is provided, false otherwise.
+     */
+    default boolean hasReason() {
+        return getReason() != null;
+    }
+
 }

@@ -26,6 +26,7 @@ package com.backwardsnode.easyadmin.core.commands;
 
 import com.backwardsnode.easyadmin.api.EasyAdminPlugin;
 import com.backwardsnode.easyadmin.api.admin.AdminManager;
+import com.backwardsnode.easyadmin.api.data.ActionScope;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
@@ -35,6 +36,9 @@ import com.backwardsnode.easyadmin.core.command.ExecutionStatus;
 import com.backwardsnode.easyadmin.core.command.args.ArgumentResult;
 import com.backwardsnode.easyadmin.core.command.args.ArgumentSelector;
 import com.backwardsnode.easyadmin.core.commands.data.KickData;
+import com.backwardsnode.easyadmin.core.commands.data.TemporalScopedData;
+import com.backwardsnode.easyadmin.core.i18n.CommonMessages;
+import com.backwardsnode.easyadmin.core.i18n.MessageKey;
 
 import java.util.UUID;
 
@@ -90,6 +94,24 @@ public class Kick implements Command<KickData> {
         state.setReason(selector.readRemainingString());
 
         return true;
+    }
+
+    @Override
+    public MessageKey getDescription(CommandExecutor executor, CommandData data, KickData state) {
+        if (state.isGlobal()) {
+            return CommonMessages.ADMINISTRATIVE.KICK.KICK_ALL_DESC;
+        }
+
+        return CommonMessages.ADMINISTRATIVE.KICK.KICK_DESC;
+    }
+
+    @Override
+    public MessageKey getUsageMessage(CommandExecutor executor, CommandData data, KickData state) {
+        if (state.isGlobal()) {
+            return CommonMessages.ADMINISTRATIVE.KICK.KICK_ALL_USAGE;
+        }
+
+        return CommonMessages.ADMINISTRATIVE.KICK.KICK_USAGE;
     }
 
     @Override

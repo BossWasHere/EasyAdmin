@@ -1,0 +1,134 @@
+##################################
+#  EasyAdmin Configuration   //  #
+#   \\     For Bukkit + Bungee   #
+##################################
+# Plugin language. Available languages listed on plugin page
+language: en_US
+# Log additional information useful for troubleshooting
+debugMode: false
+
+# How dates should be presented
+# Formats must be parsable by java.text.SimpleDateFormat (https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html)
+dateFormat: "yyyy-MM-dd HH:mm:ssZ"
+# How durations should be presented
+# Valid codes are: y- year, M- month, w- week, d- day, h- hour, m- minute, s- second
+# Codes must be in descending order of size
+# Example: "dhms" - 4 days, 7 hours, 59 minutes, 1 second
+timeFormat: dhms
+
+# Which server to send banned or kicked players to. Valid options are: priority, specific-fallback, specific
+# priority: Uses the priorities specified in the proxy's configuration
+# specific-fallback: Tries to connect to the specified server, else uses the proxy's priority list
+# specific: Tries to connect to the specified server, disconnecting the player if this fails
+# Note: providing a specific server name will override the restricted server property if set to true
+kickBanMode: priority
+kickBanServer: ServerName
+# Whether to format color codes in reasons and comments (e.g. &2 = Green)
+formatComments: true
+# The time range in hours to display administrative actions a staff member has made on staff lookup. Set to -1 to hide this value
+recentActionRange: 48
+
+storage:
+  # How to store data. Valid options are: h2, mysql, postgres, sqlite
+  type: h2
+  # If data should be cached. Recommended for remote databases or large servers
+  # false: don't cache, always retrieve from database
+  # true: cache records, retrieve records when not found or outdated
+  cache: false
+  # Remote database connection configuration
+  settings:
+    user: username
+    pass: password
+    database: ea
+    host: localhost
+    port: 3306 # default 5432 for postgres
+
+uuid:
+  # Allow records to be added for players that have never joined
+  allowUntrackedRecords: false
+  # Use api.mojang.com to resolve username UUIDs
+  enableMojangAPI: true
+  # Use an alternative backup API when api.mojang.com cannot be reached
+  enableBackupAPI: true
+  backupAPI:
+    url: "https://us.mc-api.net/v3/uuid/$NAME"
+    format: json
+    key: uuid
+
+# The built-in webserver can provide either an API or online interface for managing administrative actions
+net:
+  # Enable webserver functions
+  enable: true
+  # Which port the server will listen on
+  port: 9936
+  # How the plugin should serve web access
+  # json: exposes a REST API using JSON payloads
+  # interface: hosts a user-friendly web interface
+  mode: json
+  # The path where web files are located when using a web interface
+  interfacePath: web
+  authentication:
+    # How users should authenticate themselves when making requests through web APIs
+    # jwt: use JSON Web Tokens to authenticate
+    # session: use browser cookies to authenticate
+    # none: don't require authentication - only IPs listed in the proxies section will have access
+    mode: jwt
+    # How users associate their MC UUIDs with web interface access
+    # passwordless: player must connect to server to gain a code to access the webpage
+    # account: player must connect to server to gain a code, then create an account which will be stored by the plugin for future use
+    # multiaccount: same as account, but multiple MC UUIDs can be added to the same account
+    access: account
+    # Time in seconds after logging in before the browser will prompt the user to login again (-1 to disable)
+    expiration: 2592000
+
+  # Which addresses are trusted and/or permitted to send X-Forwarded-For headers i.e. reverse proxies
+  proxies:
+    - "127.0.0.1"
+    - "0:0:0:0:0:0:0:1"
+
+# Commands can be customized here
+# enabled: If the base command can be used
+# temporary: If temporary bans/mutes can be issued which will expire after a specific duration
+# global: If the global command is enabled (e.g. /gban) to apply to the player on all servers
+# ip: If the IP command is enabled (e.g. /banip, /gbanip) to apply to the player's IP address
+commands:
+  ban:
+    enabled: true
+    temporary: true
+    global: true
+    ip: true
+    notifyOnUnban: false
+    requireReason: true
+  comment:
+    enabled: true
+  kick:
+    enabled: true
+    global: true
+    requireReason: true
+  mute:
+    enabled: true
+    temporary: true
+    global: true
+    ip: true
+    notifyOnMute: true
+    notifyOnUnmute: false
+    requireReason: true
+    # Here you can add commands which muted players should not be allowed to execute - they will not be passed to the server
+    blocked-commands:
+      - msg
+      - r
+      - say
+      - tell
+      - me
+      - action
+    # Non-command messages that should be passed to the server
+    allowed-messages:
+      "a really obscure message":
+        context:
+          - hub
+  warn:
+    enabled: true
+  lookup:
+    enabled: true
+  stafflookup:
+    enabled: true

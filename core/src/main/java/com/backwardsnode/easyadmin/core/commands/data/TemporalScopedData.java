@@ -37,8 +37,8 @@ public class TemporalScopedData extends ScopedCommand.ScopedData {
     private String context;
     private String reason;
 
-    public TemporalScopedData(ExecutionStatus scope) {
-        super(scope);
+    public TemporalScopedData(ExecutionStatus status) {
+        super(status);
     }
 
     public OfflinePlayer getPlayer() {

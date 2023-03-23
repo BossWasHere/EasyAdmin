@@ -35,6 +35,8 @@ import com.backwardsnode.easyadmin.core.command.ScopedCommand;
 import com.backwardsnode.easyadmin.core.command.args.ArgumentResult;
 import com.backwardsnode.easyadmin.core.command.args.ArgumentSelector;
 import com.backwardsnode.easyadmin.core.commands.data.TemporalScopedData;
+import com.backwardsnode.easyadmin.core.i18n.CommonMessages;
+import com.backwardsnode.easyadmin.core.i18n.MessageKey;
 
 import java.time.Duration;
 import java.util.UUID;
@@ -88,6 +90,34 @@ public class Ban extends ScopedCommand<TemporalScopedData> {
         state.setReason(selector.readRemainingString());
 
         return true;
+    }
+
+    @Override
+    public MessageKey getDescription(CommandExecutor executor, CommandData data, TemporalScopedData state) {
+        return switch (state.getScope()) {
+            case DEFAULT -> CommonMessages.ADMINISTRATIVE.BAN.BAN_DESC;
+            case GLOBAL -> CommonMessages.ADMINISTRATIVE.BAN.BAN_ALL_DESC;
+            case GLOBAL_IP -> CommonMessages.ADMINISTRATIVE.BAN.BAN_IP_ALL_DESC;
+            case IP -> CommonMessages.ADMINISTRATIVE.BAN.BAN_IP_DESC;
+            case TEMPORARY -> CommonMessages.ADMINISTRATIVE.BAN.TEMPBAN_DESC;
+            case TEMPORARY_GLOBAL -> CommonMessages.ADMINISTRATIVE.BAN.TEMPBAN_ALL_DESC;
+            case TEMPORARY_GLOBAL_IP -> CommonMessages.ADMINISTRATIVE.BAN.TEMPBAN_IP_ALL_DESC;
+            case TEMPORARY_IP -> CommonMessages.ADMINISTRATIVE.BAN.TEMPBAN_IP_DESC;
+        };
+    }
+
+    @Override
+    public MessageKey getUsageMessage(CommandExecutor executor, CommandData data, TemporalScopedData state) {
+        return switch (state.getScope()) {
+            case DEFAULT -> CommonMessages.ADMINISTRATIVE.BAN.BAN_USAGE;
+            case GLOBAL -> CommonMessages.ADMINISTRATIVE.BAN.BAN_ALL_USAGE;
+            case GLOBAL_IP -> CommonMessages.ADMINISTRATIVE.BAN.BAN_IP_ALL_USAGE;
+            case IP -> CommonMessages.ADMINISTRATIVE.BAN.BAN_IP_USAGE;
+            case TEMPORARY -> CommonMessages.ADMINISTRATIVE.BAN.TEMPBAN_USAGE;
+            case TEMPORARY_GLOBAL -> CommonMessages.ADMINISTRATIVE.BAN.TEMPBAN_ALL_USAGE;
+            case TEMPORARY_GLOBAL_IP -> CommonMessages.ADMINISTRATIVE.BAN.TEMPBAN_IP_ALL_USAGE;
+            case TEMPORARY_IP -> CommonMessages.ADMINISTRATIVE.BAN.TEMPBAN_IP_USAGE;
+        };
     }
 
     @Override

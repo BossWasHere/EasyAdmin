@@ -28,6 +28,7 @@ import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -41,13 +42,29 @@ public class OnlinePlayerWrapper extends OfflinePlayerWrapper implements OnlineP
     }
 
     @Override
-    public boolean hasPermission(String permission) {
+    public boolean hasPermission(@NotNull String permission) {
         return player.hasPermission(permission);
+    }
+
+    @Override
+    public void sendMessage(@NotNull String msg) {
+        player.sendMessage(msg);
+    }
+
+    @Override
+    public @Nullable String getLocale() {
+        return player.getLocale();
     }
 
     @Override
     public @NotNull String getSerializedIPAddress() {
         return player.getAddress().getAddress().getHostAddress();
+    }
+
+    @Override
+    public @NotNull String getServerName() {
+        // TODO should this get name from proxy if available?
+        return Bukkit.getServer().getName();
     }
 
     public static OnlinePlayerWrapper byUUID(@NotNull UUID uuid) {

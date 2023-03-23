@@ -25,6 +25,7 @@
 package com.backwardsnode.easyadmin.api.internal;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -38,12 +39,12 @@ public interface ExternalDataSource {
      * @param playerUUID The UUID of the player to retrieve the username for.
      * @return The username of the player.
      */
-    String getUsernameForUUID(@NotNull UUID playerUUID);
+    @Nullable String getUsernameForUUID(@NotNull UUID playerUUID);
 
     /**
      * Retrieves the UUID for the given username.
      * @param username The username of the player to retrieve the UUID for.
      * @return The UUID of the player.
      */
-    UUID getUUIDForUsername(@NotNull String username);
+    @Nullable UUID getUUIDForUsername(@NotNull String username);
 }

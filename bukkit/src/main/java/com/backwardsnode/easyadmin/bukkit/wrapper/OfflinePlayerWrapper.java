@@ -47,7 +47,14 @@ public class OfflinePlayerWrapper implements OfflinePlayer {
     @Override
     public @NotNull String getUsername() {
         String username = player.getName();
-        return username == null ? EasyAdminProvider.get().getExternalDataSource().getUsernameForUUID(getUUID()) : username;
+        if (username == null) {
+            username = EasyAdminProvider.get().getExternalDataSource().getUsernameForUUID(getUUID());
+            if (username == null) {
+                throw new IllegalStateException("Could not find username for player " + getUUID());
+            }
+        }
+
+        return username;
     }
 
     public static OfflinePlayerWrapper byUUID(@NotNull UUID uuid) {

@@ -27,6 +27,8 @@ package com.backwardsnode.easyadmin.api;
 import com.backwardsnode.easyadmin.api.data.Platform;
 import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
+import com.backwardsnode.easyadmin.api.internal.FileSystemProvider;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,6 +38,13 @@ import java.util.UUID;
  * Represents a plugin platform-agnostic EasyAdmin plugin.
  */
 public interface EasyAdminPlugin {
+
+    /**
+     * Transforms the input text into a color/style formatted string.
+     * @param text the raw text.
+     * @return the formatted text.
+     */
+    @NotNull String translateAlternateColorCodes(char altColorChar, @NotNull String text);
 
     /**
      * Gets the active API instance for EasyAdmin.
@@ -48,6 +57,13 @@ public interface EasyAdminPlugin {
      * @return {@link Platform#BUKKIT} if running on Bukkit or {@link Platform#BUNGEE} if running on Bungeecord.
      */
     @NotNull Platform getPlatform();
+
+    /**
+     * Gets the file system provider for this plugin instance.
+     * @return the {@link FileSystemProvider} for this plugin instance.
+     */
+    @ApiStatus.Internal
+    @NotNull FileSystemProvider getFileSystemProvider();
 
     /**
      * Gets details about a player by their username.

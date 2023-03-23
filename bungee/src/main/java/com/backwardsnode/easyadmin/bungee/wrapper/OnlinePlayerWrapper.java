@@ -26,8 +26,10 @@ package com.backwardsnode.easyadmin.bungee.wrapper;
 
 import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -41,8 +43,18 @@ public class OnlinePlayerWrapper extends OfflinePlayerWrapper implements OnlineP
     }
 
     @Override
-    public boolean hasPermission(String permission) {
+    public boolean hasPermission(@NotNull String permission) {
         return player.hasPermission(permission);
+    }
+
+    @Override
+    public void sendMessage(@NotNull String msg) {
+        player.sendMessage(TextComponent.fromLegacyText(msg));
+    }
+
+    @Override
+    public @Nullable String getLocale() {
+        return player.getLocale().toString();
     }
 
     @Override
@@ -50,6 +62,11 @@ public class OnlinePlayerWrapper extends OfflinePlayerWrapper implements OnlineP
     public @NotNull String getSerializedIPAddress() {
         // TODO: unix socket support??
         return player.getAddress().getAddress().getHostAddress();
+    }
+
+    @Override
+    public @NotNull String getServerName() {
+        return player.getServer().getInfo().getName();
     }
 
     public static OnlinePlayerWrapper byUUID(@NotNull UUID uuid) {
