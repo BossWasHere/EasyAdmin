@@ -34,6 +34,7 @@ import com.backwardsnode.easyadmin.core.database.config.LocalConfigLoader;
 import com.backwardsnode.easyadmin.core.database.config.RemoteConfigLoader;
 import com.backwardsnode.easyadmin.core.database.util.SQLBiFunction;
 import com.backwardsnode.easyadmin.core.database.util.SQLFunction;
+import com.backwardsnode.easyadmin.core.record.RecordLoader;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.jetbrains.annotations.NotNull;
@@ -130,48 +131,24 @@ public final class DatabaseController {
         insertOrUpdate(statementFactory::getUpdatePlayerRecordStatement, recordModification);
     }
 
-    public Collection<BanRecord> getPlayerBans(@NotNull UUID playerUUID) {
-        return getPlayerBans(playerUUID, null);
-    }
-
     public Collection<BanRecord> getPlayerBans(@NotNull UUID playerUUID, LookupOptions lookupOptions) {
         return collectionResponse(c -> statementFactory.getRetrievePlayerBansStatement(c, playerUUID, lookupOptions), RecordLoader::loadBanRecord);
-    }
-
-    public Collection<BanRecord> getPlayerBansByStatus(@NotNull UUID playerUUID, @NotNull PunishmentStatus status) {
-        return getPlayerBansByStatus(playerUUID, status, null);
     }
 
     public Collection<BanRecord> getPlayerBansByStatus(@NotNull UUID playerUUID, @NotNull PunishmentStatus status, LookupOptions lookupOptions) {
         return collectionResponse(c -> statementFactory.getRetrievePlayerBansByStatusStatement(c, playerUUID, status, lookupOptions), RecordLoader::loadBanRecord);
     }
 
-    public Collection<BanRecord> getIPBans(@NotNull String ipAddress) {
-        return getIPBans(ipAddress, null);
-    }
-
     public Collection<BanRecord> getIPBans(@NotNull String ipAddress, LookupOptions lookupOptions) {
         return collectionResponse(c -> statementFactory.getRetrieveIPBansStatement(c, ipAddress, lookupOptions), RecordLoader::loadBanRecord);
-    }
-
-    public Collection<BanRecord> getIPBansByStatus(@NotNull String ipAddress, @NotNull PunishmentStatus status) {
-        return getIPBansByStatus(ipAddress, status, null);
     }
 
     public Collection<BanRecord> getIPBansByStatus(@NotNull String ipAddress, @NotNull PunishmentStatus status, LookupOptions lookupOptions) {
         return collectionResponse(c -> statementFactory.getRetrieveIPBansByStatusStatement(c, ipAddress, status, lookupOptions), RecordLoader::loadBanRecord);
     }
 
-    public Collection<BanRecord> getPlayerBansOrIPBans(@NotNull UUID playerUUID, @NotNull String ipAddress) {
-        return getPlayerBansOrIPBans(playerUUID, ipAddress, null);
-    }
-
     public Collection<BanRecord> getPlayerBansOrIPBans(@NotNull UUID playerUUID, @NotNull String ipAddress, LookupOptions lookupOptions) {
         return collectionResponse(c -> statementFactory.getRetrievePlayerBansOrIPBansStatement(c, playerUUID, ipAddress, lookupOptions), RecordLoader::loadBanRecord);
-    }
-
-    public Collection<BanRecord> getPlayerBansOrIPBansByStatus(@NotNull UUID playerUUID, @NotNull String ipAddress, @NotNull PunishmentStatus status) {
-        return getPlayerBansOrIPBansByStatus(playerUUID, ipAddress, status, null);
     }
 
     public Collection<BanRecord> getPlayerBansOrIPBansByStatus(@NotNull UUID playerUUID, @NotNull String ipAddress, @NotNull PunishmentStatus status, LookupOptions lookupOptions) {
@@ -194,20 +171,16 @@ public final class DatabaseController {
         insertOrUpdate(statementFactory::getUpdatePlayerBanStatement, recordModification);
     }
 
-    public Collection<CommentRecord> getPlayerComments(@NotNull UUID playerUUID) {
-        return getPlayerComments(playerUUID, null);
-    }
-
     public Collection<CommentRecord> getPlayerComments(@NotNull UUID playerUUID, LookupOptions lookupOptions) {
         return collectionResponse(c -> statementFactory.getRetrievePlayerCommentsStatement(c, playerUUID, lookupOptions), RecordLoader::loadCommentRecord);
     }
 
-    public void insertComment(@NotNull CommentRecord commentRecord) {
-        insertOrUpdate(statementFactory::getCreateCommentStatement, commentRecord);
+    public Collection<CommentRecord> getPlayerCommentsByType(@NotNull UUID playerUUID, boolean isWarning, LookupOptions lookupOptions) {
+        return collectionResponse(c -> statementFactory.getRetrievePlayerCommentsByTypeStatement(c, playerUUID, isWarning, lookupOptions), RecordLoader::loadCommentRecord);
     }
 
-    public Collection<KickRecord> getPlayerKicks(@NotNull UUID playerUUID) {
-        return getPlayerKicks(playerUUID, null);
+    public void insertComment(@NotNull CommentRecord commentRecord) {
+        insertOrUpdate(statementFactory::getCreateCommentStatement, commentRecord);
     }
 
     public Collection<KickRecord> getPlayerKicks(@NotNull UUID playerUUID, LookupOptions lookupOptions) {
@@ -218,48 +191,24 @@ public final class DatabaseController {
         insertOrUpdate(statementFactory::getCreateKickStatement, kickRecord);
     }
 
-    public Collection<MuteRecord> getPlayerMutes(@NotNull UUID playerUUID) {
-        return getPlayerMutes(playerUUID, null);
-    }
-
     public Collection<MuteRecord> getPlayerMutes(@NotNull UUID playerUUID, LookupOptions lookupOptions) {
         return collectionResponse(c -> statementFactory.getRetrievePlayerMutesStatement(c, playerUUID, lookupOptions), RecordLoader::loadMuteRecord);
-    }
-
-    public Collection<MuteRecord> getPlayerMutesByStatus(@NotNull UUID playerUUID, @NotNull PunishmentStatus status) {
-        return getPlayerMutesByStatus(playerUUID, status, null);
     }
 
     public Collection<MuteRecord> getPlayerMutesByStatus(@NotNull UUID playerUUID, @NotNull PunishmentStatus status, LookupOptions lookupOptions) {
         return collectionResponse(c -> statementFactory.getRetrievePlayerMutesByStatusStatement(c, playerUUID, status, lookupOptions), RecordLoader::loadMuteRecord);
     }
 
-    public Collection<MuteRecord> getIPMutes(@NotNull String ipAddress) {
-        return getIPMutes(ipAddress, null);
-    }
-
     public Collection<MuteRecord> getIPMutes(@NotNull String ipAddress, LookupOptions lookupOptions) {
         return collectionResponse(c -> statementFactory.getRetrieveIPMutesStatement(c, ipAddress, lookupOptions), RecordLoader::loadMuteRecord);
-    }
-
-    public Collection<MuteRecord> getIPMutesByStatus(@NotNull String ipAddress, @NotNull PunishmentStatus status) {
-        return getIPMutesByStatus(ipAddress, status, null);
     }
 
     public Collection<MuteRecord> getIPMutesByStatus(@NotNull String ipAddress, @NotNull PunishmentStatus status, LookupOptions lookupOptions) {
         return collectionResponse(c -> statementFactory.getRetrieveIPMutesByStatusStatement(c, ipAddress, status, lookupOptions), RecordLoader::loadMuteRecord);
     }
 
-    public Collection<MuteRecord> getPlayerMutesOrIPMutes(@NotNull UUID playerUUID, @NotNull String ipAddress) {
-        return getPlayerMutesOrIPMutes(playerUUID, ipAddress, null);
-    }
-
     public Collection<MuteRecord> getPlayerMutesOrIPMutes(@NotNull UUID playerUUID, @NotNull String ipAddress, LookupOptions lookupOptions) {
         return collectionResponse(c -> statementFactory.getRetrievePlayerMutesOrIPMutesStatement(c, playerUUID, ipAddress, lookupOptions), RecordLoader::loadMuteRecord);
-    }
-
-    public Collection<MuteRecord> getPlayerMutesOrIPMutesByStatus(@NotNull UUID playerUUID, @NotNull String ipAddress, @NotNull PunishmentStatus status) {
-        return getPlayerMutesOrIPMutesByStatus(playerUUID, ipAddress, status, null);
     }
 
     public Collection<MuteRecord> getPlayerMutesOrIPMutesByStatus(@NotNull UUID playerUUID, @NotNull String ipAddress, @NotNull PunishmentStatus status, LookupOptions lookupOptions) {
@@ -282,32 +231,16 @@ public final class DatabaseController {
         insertOrUpdate(statementFactory::getUpdatePlayerMuteStatement, recordModification);
     }
 
-    public Collection<BanRecord> getStaffBans(@NotNull UUID staffUUID) {
-        return getStaffBans(staffUUID, null);
-    }
-
     public Collection<BanRecord> getStaffBans(@NotNull UUID staffUUID, LookupOptions lookupOptions) {
         return collectionResponse(c -> statementFactory.getRetrieveStaffBansStatement(c, staffUUID, lookupOptions), RecordLoader::loadBanRecord);
-    }
-
-    public Collection<CommentRecord> getStaffComments(@NotNull UUID staffUUID) {
-        return getStaffComments(staffUUID, null);
     }
 
     public Collection<CommentRecord> getStaffComments(@NotNull UUID staffUUID, LookupOptions lookupOptions) {
         return collectionResponse(c -> statementFactory.getRetrieveStaffCommentsStatement(c, staffUUID, lookupOptions), RecordLoader::loadCommentRecord);
     }
 
-    public Collection<KickRecord> getStaffKicks(@NotNull UUID staffUUID) {
-        return getStaffKicks(staffUUID, null);
-    }
-
     public Collection<KickRecord> getStaffKicks(@NotNull UUID staffUUID, LookupOptions lookupOptions) {
         return collectionResponse(c -> statementFactory.getRetrieveStaffKicksStatement(c, staffUUID, lookupOptions), RecordLoader::loadKickRecord);
-    }
-
-    public Collection<MuteRecord> getStaffMutes(@NotNull UUID staffUUID) {
-        return getStaffMutes(staffUUID, null);
     }
 
     public Collection<MuteRecord> getStaffMutes(@NotNull UUID staffUUID, LookupOptions lookupOptions) {

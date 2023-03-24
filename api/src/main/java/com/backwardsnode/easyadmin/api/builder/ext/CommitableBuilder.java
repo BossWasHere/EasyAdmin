@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,21 +22,30 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.record;
+package com.backwardsnode.easyadmin.api.builder.ext;
 
-import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
+import com.backwardsnode.easyadmin.api.builder.BuilderException;
+import com.backwardsnode.easyadmin.api.record.CommitResult;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * Represents a kick entry for a specific player.
- * <p>A new record can be created through the {@link RecordBuilder}</p>
+ * Represents a builder that can commit records to the database and activate them.
+ * @param <T> The type of the object being built.
  */
-public interface KickRecord extends LiveRecord<Integer>, ReasonedAdminRecord {
+public interface CommitableBuilder<T> {
 
     /**
-     * Gets whether this kick is global or not.
-     * <p>A global kick disconnects the player from the network. A simple kick moves the player into a previous/fallback server when used with a server proxy.</p>
-     * @return true if this kick is global, false otherwise.
+     * Builds the object without committing it to the database. You may wish to commit it later.
+     * @return The built object.
+     * @throws BuilderException If the builder fails to build the object.
      */
-    boolean isGlobal();
+    @NotNull T build() throws BuilderException;
+
+    /**
+     * Builds the object and immediately attempts to commit it to the database.
+     * @return The built object.
+     * @throws BuilderException If the builder fails to build the object.
+     */
+    @NotNull CommitResult<T> buildAndCommit() throws BuilderException;
 
 }

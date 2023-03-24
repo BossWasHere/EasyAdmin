@@ -26,14 +26,16 @@ package com.backwardsnode.easyadmin.bungee;
 
 import com.backwardsnode.easyadmin.api.EasyAdmin;
 import com.backwardsnode.easyadmin.api.EasyAdminPlugin;
+import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
 import com.backwardsnode.easyadmin.api.data.Platform;
-import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
+import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import com.backwardsnode.easyadmin.api.internal.FileSystemProvider;
-import com.backwardsnode.easyadmin.bungee.interop.ExtraServerInfoManager;
-import com.backwardsnode.easyadmin.bungee.messaging.BungeeMessagingChannel;
+import com.backwardsnode.easyadmin.api.internal.InternalServiceProviderType;
 import com.backwardsnode.easyadmin.bungee.command.BungeeCommandRegister;
 import com.backwardsnode.easyadmin.bungee.event.BungeeListener;
+import com.backwardsnode.easyadmin.bungee.interop.ExtraServerInfoManager;
+import com.backwardsnode.easyadmin.bungee.messaging.BungeeMessagingChannel;
 import com.backwardsnode.easyadmin.bungee.wrapper.OfflinePlayerWrapper;
 import com.backwardsnode.easyadmin.bungee.wrapper.OnlinePlayerWrapper;
 import com.backwardsnode.easyadmin.core.EasyAdminService;
@@ -107,6 +109,11 @@ public class EasyAdminBungee extends Plugin implements EasyAdminPlugin {
     @Override
     public @NotNull Platform getPlatform() {
         return Platform.BUNGEE;
+    }
+
+    @Override
+    public @NotNull RecordBuilder getRecordBuilderFor(@NotNull InternalServiceProviderType provider) {
+        return null;
     }
 
     public ExtraServerInfoManager getExtraServerInfoManager() {

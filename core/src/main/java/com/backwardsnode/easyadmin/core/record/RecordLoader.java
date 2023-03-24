@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2022-2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,9 +22,10 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.record;
+package com.backwardsnode.easyadmin.core.record;
 
 import com.backwardsnode.easyadmin.api.data.PunishmentStatus;
+import com.backwardsnode.easyadmin.api.record.*;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.sql.ResultSet;
@@ -46,7 +47,7 @@ public final class RecordLoader {
      * @throws SQLException if an error occured while loading the record.
      */
     public static PlayerRecord loadPlayerRecord(ResultSet result) throws SQLException {
-        return new PlayerRecord(true,
+        return new PlayerRecordImpl(true,
                 UUID.fromString(result.getString(PLAYERS.UUID)),
                 result.getString(PLAYERS.USERNAME),
                 result.getTimestamp(PLAYERS.FIRST_JOIN).toLocalDateTime(),
@@ -65,7 +66,7 @@ public final class RecordLoader {
      * @throws SQLException if an error occured while loading the record.
      */
     public static BanRecord loadBanRecord(ResultSet result) throws SQLException {
-        return new BanRecord(true,
+        return new BanRecordImpl(true,
                 result.getInt(BANS.ID),
                 PunishmentStatus.fromString(result.getString(BANS.STATUS)),
                 UUID.fromString(result.getString(BANS.PLAYER_UUID)),
@@ -87,7 +88,7 @@ public final class RecordLoader {
      * @throws SQLException if an error occured while loading the record.
      */
     public static CommentRecord loadCommentRecord(ResultSet result) throws SQLException {
-        return new CommentRecord(true,
+        return new CommentRecordImpl(true,
                 result.getInt(COMMENTS.ID),
                 UUID.fromString(result.getString(COMMENTS.PLAYER_UUID)),
                 nullableUUID(result.getString(COMMENTS.STAFF_UUID)),
@@ -103,7 +104,7 @@ public final class RecordLoader {
      * @throws SQLException if an error occured while loading the record.
      */
     public static KickRecord loadKickRecord(ResultSet result) throws SQLException {
-        return new KickRecord(true,
+        return new KickRecordImpl(true,
                 result.getInt(KICKS.ID),
                 UUID.fromString(result.getString(KICKS.PLAYER_UUID)),
                 nullableUUID(result.getString(KICKS.STAFF_UUID)),
@@ -119,7 +120,7 @@ public final class RecordLoader {
      * @throws SQLException if an error occured while loading the record.
      */
     public static MuteRecord loadMuteRecord(ResultSet result) throws SQLException {
-        return new MuteRecord(true,
+        return new MuteRecordImpl(true,
                 result.getInt(MUTES.ID),
                 PunishmentStatus.fromString(result.getString(MUTES.STATUS)),
                 UUID.fromString(result.getString(MUTES.PLAYER_UUID)),

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,19 +24,5 @@
 
 package com.backwardsnode.easyadmin.api.record;
 
-import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
-
-/**
- * Represents a kick entry for a specific player.
- * <p>A new record can be created through the {@link RecordBuilder}</p>
- */
-public interface KickRecord extends LiveRecord<Integer>, ReasonedAdminRecord {
-
-    /**
-     * Gets whether this kick is global or not.
-     * <p>A global kick disconnects the player from the network. A simple kick moves the player into a previous/fallback server when used with a server proxy.</p>
-     * @return true if this kick is global, false otherwise.
-     */
-    boolean isGlobal();
-
+public record CommitResult<T>(T record, CommitStatus status) {
 }

@@ -34,7 +34,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.MessageFormat;
@@ -42,7 +43,8 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.backwardsnode.easyadmin.core.i18n.CommonMessages.*;
+import static com.backwardsnode.easyadmin.core.i18n.CommonMessages.ADMINISTRATIVE;
+import static com.backwardsnode.easyadmin.core.i18n.CommonMessages.EASYADMIN;
 
 public class MessageProvider {
 

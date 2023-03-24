@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,21 +22,30 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.record;
+package com.backwardsnode.easyadmin.core.event.base;
 
-import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
+import com.backwardsnode.easyadmin.api.EasyAdmin;
+import com.backwardsnode.easyadmin.api.event.EasyAdminEvent;
+import org.jetbrains.annotations.NotNull;
 
-/**
- * Represents a kick entry for a specific player.
- * <p>A new record can be created through the {@link RecordBuilder}</p>
- */
-public interface KickRecord extends LiveRecord<Integer>, ReasonedAdminRecord {
+public abstract class BaseEvent implements EasyAdminEvent {
 
-    /**
-     * Gets whether this kick is global or not.
-     * <p>A global kick disconnects the player from the network. A simple kick moves the player into a previous/fallback server when used with a server proxy.</p>
-     * @return true if this kick is global, false otherwise.
-     */
-    boolean isGlobal();
+    private final EasyAdmin instance;
+    private final Class<? extends EasyAdminEvent> eventClass;
+
+    protected BaseEvent(@NotNull final EasyAdmin instance, @NotNull final Class<? extends EasyAdminEvent> eventClass) {
+        this.instance = instance;
+        this.eventClass = eventClass;
+    }
+
+    @Override
+    public @NotNull EasyAdmin getInstance() {
+        return instance;
+    }
+
+    @Override
+    public @NotNull Class<? extends EasyAdminEvent> getEventClass() {
+        return eventClass;
+    }
 
 }

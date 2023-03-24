@@ -26,9 +26,12 @@ package com.backwardsnode.easyadmin.bukkit.wrapper;
 
 import com.backwardsnode.easyadmin.api.EasyAdminProvider;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
+import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class OfflinePlayerWrapper implements OfflinePlayer {
@@ -55,6 +58,16 @@ public class OfflinePlayerWrapper implements OfflinePlayer {
         }
 
         return username;
+    }
+
+    @Override
+    public @NotNull Optional<OnlinePlayer> getOnlinePlayer() {
+        if (this instanceof OnlinePlayer) {
+            return Optional.of((OnlinePlayer) this);
+        }
+
+        Player bukkitPlayer = player.getPlayer();
+        return bukkitPlayer == null ? Optional.empty() : Optional.of(new OnlinePlayerWrapper(bukkitPlayer));
     }
 
     public static OfflinePlayerWrapper byUUID(@NotNull UUID uuid) {

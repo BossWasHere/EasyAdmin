@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,21 +22,40 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.record;
+package com.backwardsnode.easyadmin.core.cache;
 
-import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
+import java.util.Collection;
 
-/**
- * Represents a kick entry for a specific player.
- * <p>A new record can be created through the {@link RecordBuilder}</p>
- */
-public interface KickRecord extends LiveRecord<Integer>, ReasonedAdminRecord {
+public final class CacheLoader<T> {
 
-    /**
-     * Gets whether this kick is global or not.
-     * <p>A global kick disconnects the player from the network. A simple kick moves the player into a previous/fallback server when used with a server proxy.</p>
-     * @return true if this kick is global, false otherwise.
-     */
-    boolean isGlobal();
+    private final boolean isCollection;
+    private final T payloadSingleton;
+    private final Collection<T> payloadCollection;
+
+    private CacheLoader(final T payloadSingleton, final Collection<T> payloadCollection, final boolean isCollection) {
+        this.payloadSingleton = payloadSingleton;
+        this.payloadCollection = payloadCollection;
+        this.isCollection = isCollection;
+    }
+
+    public boolean isCollection() {
+        return isCollection;
+    }
+
+    public T getPayloadSingleton() {
+        return payloadSingleton;
+    }
+
+    public Collection<T> getPayloadCollection() {
+        return payloadCollection;
+    }
+
+    public static <T> CacheLoader<T> singleton(T payload) {
+        return new CacheLoader<>(payload, null, false);
+    }
+
+    public static <T> CacheLoader<T> collection(Collection<T> payload) {
+        return new CacheLoader<>(null, payload, true);
+    }
 
 }

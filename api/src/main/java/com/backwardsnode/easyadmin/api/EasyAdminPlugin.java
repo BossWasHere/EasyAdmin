@@ -24,10 +24,12 @@
 
 package com.backwardsnode.easyadmin.api;
 
+import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
 import com.backwardsnode.easyadmin.api.data.Platform;
-import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
+import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import com.backwardsnode.easyadmin.api.internal.FileSystemProvider;
+import com.backwardsnode.easyadmin.api.internal.InternalServiceProviderType;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,6 +53,14 @@ public interface EasyAdminPlugin {
      * @return the API instance.
      */
     @NotNull EasyAdmin getInstance();
+
+    /**
+     * Gets the RecordBuilder for the specified provider.
+     * @param provider the {@link InternalServiceProviderType} to get the builder for.
+     * @return the requested {@link RecordBuilder}.
+     */
+    @ApiStatus.Internal
+    @NotNull RecordBuilder getRecordBuilderFor(@NotNull InternalServiceProviderType provider);
 
     /**
      * Gets the {@link Platform} that this plugin is running on.

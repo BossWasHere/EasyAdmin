@@ -48,6 +48,10 @@ public class KickData {
         this.player = player;
     }
 
+    public boolean hasReason() {
+        return reason != null && !reason.isEmpty();
+    }
+
     public String getReason() {
         return reason;
     }

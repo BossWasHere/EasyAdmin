@@ -28,6 +28,7 @@ import com.backwardsnode.easyadmin.api.admin.AdminDynamo;
 import com.backwardsnode.easyadmin.api.admin.AdminManager;
 import com.backwardsnode.easyadmin.api.admin.ChatFilter;
 import com.backwardsnode.easyadmin.api.admin.RecommendationEngine;
+import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
 import com.backwardsnode.easyadmin.api.config.ConfigurationManager;
 import com.backwardsnode.easyadmin.api.contextual.ContextTester;
 import com.backwardsnode.easyadmin.api.event.EventBus;
@@ -66,6 +67,12 @@ public interface EasyAdmin {
      * @return the {@link AdminManager}.
      */
     @NotNull AdminManager getAdminManager();
+
+    /**
+     * Gets the {@link RecordBuilder}, which is used to create new admin records.
+     * @return the {@link RecordBuilder}.
+     */
+    @NotNull RecordBuilder getRecordBuilder();
 
     /**
      * Gets the {@link ChatFilter}, which is used to filter chat messages.

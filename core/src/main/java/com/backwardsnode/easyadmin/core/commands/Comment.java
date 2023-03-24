@@ -25,10 +25,11 @@
 package com.backwardsnode.easyadmin.core.commands;
 
 import com.backwardsnode.easyadmin.api.EasyAdminPlugin;
-import com.backwardsnode.easyadmin.api.admin.AdminManager;
-import com.backwardsnode.easyadmin.api.config.CommandConfiguration;
+import com.backwardsnode.easyadmin.api.builder.CommentBuilder;
+import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
+import com.backwardsnode.easyadmin.api.internal.InternalServiceProviderType;
 import com.backwardsnode.easyadmin.core.command.Command;
 import com.backwardsnode.easyadmin.core.command.CommandData;
 import com.backwardsnode.easyadmin.core.command.ExecutionStatus;
@@ -106,13 +107,18 @@ public class Comment implements Command<CommentData> {
     @Override
     public ExecutionStatus execute(EasyAdminPlugin instance, CommandExecutor executor, CommandData data, CommentData state) {
         UUID staffUUID = executor instanceof OfflinePlayer player ? player.getUUID() : null;
-        AdminManager manager = instance.getInstance().getAdminManager();
-        CommandConfiguration commandConfiguration = instance.getInstance().getConfigurationManager().getCommandConfiguration();
+        RecordBuilder builder = instance.getRecordBuilderFor(InternalServiceProviderType.COMMAND);
+        CommentBuilder commentBuilder =
+                builder.commentOnPlayer(state.getPlayer().getUUID(), state.getComment())
+                        .byStaff(staffUUID)
+                        .setWarning(state.isWarning());
 
-        if (state.isWarning()) {
-            manager.addPlayerWarning(state.getPlayer().getUUID(), staffUUID, state.getComment(), commandConfiguration.notifyPlayerOnWarning());
-        } else {
-            manager.addPlayerComment(state.getPlayer().getUUID(), staffUUID, state.getComment(), commandConfiguration.notifyPlayerOnComment());
+        try {
+            commentBuilder.buildAndCommit();
+            // TODO send confirmation message
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ExecutionStatus.ERROR;
         }
 
         return ExecutionStatus.SUCCESS;

@@ -24,7 +24,6 @@
 
 package com.backwardsnode.easyadmin.core.event;
 
-import com.backwardsnode.easyadmin.api.EasyAdminPlugin;
 import com.backwardsnode.easyadmin.api.event.*;
 import org.jetbrains.annotations.NotNull;
 

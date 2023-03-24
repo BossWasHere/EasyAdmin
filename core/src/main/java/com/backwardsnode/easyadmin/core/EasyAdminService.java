@@ -30,6 +30,7 @@ import com.backwardsnode.easyadmin.api.admin.AdminDynamo;
 import com.backwardsnode.easyadmin.api.admin.AdminManager;
 import com.backwardsnode.easyadmin.api.admin.ChatFilter;
 import com.backwardsnode.easyadmin.api.admin.RecommendationEngine;
+import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
 import com.backwardsnode.easyadmin.api.config.ConfigurationManager;
 import com.backwardsnode.easyadmin.api.contextual.ContextTester;
 import com.backwardsnode.easyadmin.api.event.EventBus;
@@ -63,6 +64,11 @@ public class EasyAdminService implements EasyAdmin, AutoCloseable {
 
     @Override
     public @NotNull AdminManager getAdminManager() {
+        return null;
+    }
+
+    @Override
+    public @NotNull RecordBuilder getRecordBuilder() {
         return null;
     }
 

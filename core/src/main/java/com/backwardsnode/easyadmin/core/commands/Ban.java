@@ -25,10 +25,13 @@
 package com.backwardsnode.easyadmin.core.commands;
 
 import com.backwardsnode.easyadmin.api.EasyAdminPlugin;
-import com.backwardsnode.easyadmin.api.admin.AdminManager;
+import com.backwardsnode.easyadmin.api.builder.BanBuilder;
+import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
 import com.backwardsnode.easyadmin.api.data.ActionScope;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
+import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
+import com.backwardsnode.easyadmin.api.internal.InternalServiceProviderType;
 import com.backwardsnode.easyadmin.core.command.CommandData;
 import com.backwardsnode.easyadmin.core.command.ExecutionStatus;
 import com.backwardsnode.easyadmin.core.command.ScopedCommand;
@@ -39,6 +42,7 @@ import com.backwardsnode.easyadmin.core.i18n.CommonMessages;
 import com.backwardsnode.easyadmin.core.i18n.MessageKey;
 
 import java.time.Duration;
+import java.util.Optional;
 import java.util.UUID;
 
 public class Ban extends ScopedCommand<TemporalScopedData> {
@@ -123,12 +127,40 @@ public class Ban extends ScopedCommand<TemporalScopedData> {
     @Override
     public ExecutionStatus execute(EasyAdminPlugin instance, CommandExecutor executor, CommandData data, TemporalScopedData scope) {
         UUID staffUUID = executor instanceof OfflinePlayer player ? player.getUUID() : null;
-        AdminManager adminManager = instance.getInstance().getAdminManager();
+        RecordBuilder builder = instance.getRecordBuilderFor(InternalServiceProviderType.COMMAND);
+        BanBuilder banBuilder;
+
+        // TODO support IP only bans?
+        Optional<OnlinePlayer> onlinePlayerOptional = scope.getPlayer().getOnlinePlayer();
+
+        // TODO resolve offline player IPs or just error to command sender?
+        if (scope.getScope().isIP() && onlinePlayerOptional.isPresent()) {
+            OnlinePlayer onlinePlayer = onlinePlayerOptional.get();
+            banBuilder = builder.banPlayerAndAddress(onlinePlayer.getUUID(), onlinePlayer.getSerializedIPAddress());
+        } else {
+            banBuilder = builder.banPlayer(scope.getPlayer().getUUID());
+        }
+
+        banBuilder.byStaff(staffUUID);
 
         if (scope.getScope().isTemporary()) {
-            adminManager.banPlayerFor(scope.getPlayer().getUUID(), staffUUID, scope.getDuration(), scope.getContexts(), scope.getReason());
-        } else {
-            adminManager.banPlayer(scope.getPlayer().getUUID(), staffUUID, scope.getContexts(), scope.getReason());
+           banBuilder.withUnbanAfter(scope.getDuration());
+        }
+
+        if (scope.hasContext()) {
+            banBuilder.withContext(scope.getContext());
+        }
+
+        if (scope.hasReason()) {
+            banBuilder.withBanReason(scope.getReason());
+        }
+
+        try {
+            banBuilder.buildAndCommit();
+            // TODO send confirmation message
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ExecutionStatus.ERROR;
         }
 
         return ExecutionStatus.SUCCESS;

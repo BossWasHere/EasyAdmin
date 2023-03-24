@@ -26,15 +26,17 @@ package com.backwardsnode.easyadmin.bukkit;
 
 import com.backwardsnode.easyadmin.api.EasyAdmin;
 import com.backwardsnode.easyadmin.api.EasyAdminPlugin;
+import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
 import com.backwardsnode.easyadmin.api.data.Platform;
-import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
+import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import com.backwardsnode.easyadmin.api.internal.FileSystemProvider;
-import com.backwardsnode.easyadmin.bukkit.messaging.BukkitMessagingChannel;
+import com.backwardsnode.easyadmin.api.internal.InternalServiceProviderType;
 import com.backwardsnode.easyadmin.bukkit.command.BukkitCommandRegister;
 import com.backwardsnode.easyadmin.bukkit.event.BukkitListener;
-import com.backwardsnode.easyadmin.bukkit.wrapper.OnlinePlayerWrapper;
+import com.backwardsnode.easyadmin.bukkit.messaging.BukkitMessagingChannel;
 import com.backwardsnode.easyadmin.bukkit.wrapper.OfflinePlayerWrapper;
+import com.backwardsnode.easyadmin.bukkit.wrapper.OnlinePlayerWrapper;
 import com.backwardsnode.easyadmin.core.BukkitPluginMode;
 import com.backwardsnode.easyadmin.core.EasyAdminService;
 import com.backwardsnode.easyadmin.core.boot.Registration;
@@ -101,6 +103,11 @@ public class EasyAdminBukkit extends JavaPlugin implements EasyAdminPlugin {
     @Override
     public @NotNull Platform getPlatform() {
         return Platform.BUKKIT;
+    }
+
+    @Override
+    public @NotNull RecordBuilder getRecordBuilderFor(@NotNull InternalServiceProviderType provider) {
+        return null;
     }
 
     public BukkitPluginMode getPluginMode() {

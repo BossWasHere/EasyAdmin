@@ -654,6 +654,9 @@ public abstract class AbstractStatementFactory implements DatabaseStatementFacto
     }
 
     protected String addDateFilter(String dateColumn, LookupOptions options) {
+        if (options == null) {
+            return "";
+        }
         if (options.getDateBefore() != null) {
             if (options.getDateAfter() != null) {
                 return " AND " + dateColumn + " BETWEEN ? AND ?";

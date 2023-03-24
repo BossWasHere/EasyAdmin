@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,34 +22,34 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.entity;
+package com.backwardsnode.easyadmin.api.builder;
 
+import com.backwardsnode.easyadmin.api.builder.ext.CommitableBuilder;
+import com.backwardsnode.easyadmin.api.builder.ext.StaffBuilder;
+import com.backwardsnode.easyadmin.api.record.CommentRecord;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.time.LocalDateTime;
 
 /**
- * Represents a player who may be offline.
+ * A builder for creating comment and warning records.
+ * @see RecordBuilder
  */
-public interface OfflinePlayer {
+public interface CommentBuilder extends StaffBuilder<CommentBuilder>, CommitableBuilder<CommentRecord> {
 
     /**
-     * Gets the unique identifier for this player.
-     * @return The player's UUID.
+     * Sets the creation date for the comment record. Most applications will not need to use this method,
+     * as the comment date will default to the current system time.
+     * @param commentDate the comment date.
+     * @return this builder, for chaining.
      */
-    @NotNull UUID getUUID();
+    @NotNull CommentBuilder withCommentDate(@NotNull LocalDateTime commentDate);
 
     /**
-     * Gets the username for this player.
-     * @return The player's username.
+     * Sets whether the comment is a warning or not. By default, the builder will create a comment.
+     * @param isWarning whether the comment is a warning or not.
+     * @return this builder, for chaining.
      */
-    @NotNull String getUsername();
-
-    /**
-     * Gets the online player object for this player, if they are online.
-     * @return An optional possibly containing an {@link OnlinePlayer} object.
-     */
-    @NotNull Optional<OnlinePlayer> getOnlinePlayer();
+    @NotNull CommentBuilder setWarning(boolean isWarning);
 
 }

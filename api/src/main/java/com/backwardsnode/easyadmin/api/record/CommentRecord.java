@@ -24,88 +24,25 @@
 
 package com.backwardsnode.easyadmin.api.record;
 
+import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 /**
  * Represents a comment for a specific player
- * <p>A new record can be created by calling the public constructor.</p>
+ * <p>A new record can be created through the {@link RecordBuilder}</p>
  */
-public final class CommentRecord implements LiveRecord<Integer>, AdminRecord {
-
-    private transient boolean _loaded;
-
-    private int id;
-    private UUID player;
-    private UUID staff;
-    private LocalDateTime commentDate;
-    private boolean isWarning;
-    private String comment;
-
-    CommentRecord(boolean loaded, int id, UUID player, UUID staff, LocalDateTime commentDate, boolean isWarning, String comment) {
-        this._loaded = loaded;
-        this.id = id;
-        this.player = player;
-        this.staff = staff;
-        this.commentDate = commentDate;
-        this.isWarning = isWarning;
-        this.comment = comment;
-    }
-
-    /**
-     * Creates a new comment record.
-     * @param player the player this comment is made about.
-     * @param staff the staff member who made the comment, or null if issued by the console.
-     * @param commentDate the date and time the comment was made.
-     * @param isWarning true if this is a warning comment, false if it is a regular comment.
-     * @param comment the comment itself.
-     */
-    public CommentRecord(@NotNull UUID player, @Nullable UUID staff, @NotNull LocalDateTime commentDate, boolean isWarning, @NotNull String comment) {
-        this(false, -1, player, staff, commentDate, isWarning, comment);
-    }
-
-    @Override
-    public boolean isLoaded() {
-        return _loaded;
-    }
-
-    @Override
-    public @NotNull Integer getId() {
-        return id;
-    }
-
-    @Override
-    public @NotNull UUID getPlayer() {
-        return player;
-    }
-
-    @Override
-    public @Nullable UUID getStaff() {
-        return staff;
-    }
-
-    @Override
-    public @NotNull LocalDateTime getDateAdded() {
-        return commentDate;
-    }
+public interface CommentRecord extends LiveRecord<Integer>, AdminRecord {
 
     /**
      * Gets the type of comment this is.
      * @return true if this is a warning comment, false if it is a regular comment.
      */
-    public boolean isWarning() {
-        return isWarning;
-    }
+    boolean isWarning();
 
     /**
      * Gets the comment itself.
      * @return the comment.
      */
-    public @NotNull String getComment() {
-        return comment;
-    }
+    @NotNull String getComment();
 
 }

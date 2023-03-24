@@ -57,12 +57,20 @@ public class TemporalScopedData extends ScopedCommand.ScopedData {
         this.duration = duration;
     }
 
-    public String getContexts() {
+    public boolean hasContext() {
+        return context != null && !context.isEmpty();
+    }
+
+    public String getContext() {
         return context;
     }
 
     public void setContext(String context) {
         this.context = context;
+    }
+
+    public boolean hasReason() {
+        return reason != null && !reason.isEmpty();
     }
 
     public String getReason() {

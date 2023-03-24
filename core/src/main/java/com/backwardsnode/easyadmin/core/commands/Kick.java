@@ -25,18 +25,18 @@
 package com.backwardsnode.easyadmin.core.commands;
 
 import com.backwardsnode.easyadmin.api.EasyAdminPlugin;
-import com.backwardsnode.easyadmin.api.admin.AdminManager;
-import com.backwardsnode.easyadmin.api.data.ActionScope;
+import com.backwardsnode.easyadmin.api.builder.KickBuilder;
+import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
-import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
+import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
+import com.backwardsnode.easyadmin.api.internal.InternalServiceProviderType;
 import com.backwardsnode.easyadmin.core.command.Command;
 import com.backwardsnode.easyadmin.core.command.CommandData;
 import com.backwardsnode.easyadmin.core.command.ExecutionStatus;
 import com.backwardsnode.easyadmin.core.command.args.ArgumentResult;
 import com.backwardsnode.easyadmin.core.command.args.ArgumentSelector;
 import com.backwardsnode.easyadmin.core.commands.data.KickData;
-import com.backwardsnode.easyadmin.core.commands.data.TemporalScopedData;
 import com.backwardsnode.easyadmin.core.i18n.CommonMessages;
 import com.backwardsnode.easyadmin.core.i18n.MessageKey;
 
@@ -117,9 +117,23 @@ public class Kick implements Command<KickData> {
     @Override
     public ExecutionStatus execute(EasyAdminPlugin instance, CommandExecutor executor, CommandData data, KickData state) {
         UUID staffUUID = executor instanceof OfflinePlayer player ? player.getUUID() : null;
-        AdminManager manager = instance.getInstance().getAdminManager();
+        RecordBuilder builder = instance.getRecordBuilderFor(InternalServiceProviderType.COMMAND);
+        KickBuilder kickBuilder =
+                builder.kickPlayer(state.getPlayer().getUUID())
+                        .byStaff(staffUUID)
+                        .setGlobal(state.isGlobal());
 
-        manager.kickPlayer(state.getPlayer().getUUID(), staffUUID, state.getReason(), state.isGlobal());
+        if (state.hasReason()) {
+            kickBuilder.withKickReason(state.getReason());
+        }
+
+        try {
+            kickBuilder.buildAndCommit();
+            // TODO send confirmation message
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ExecutionStatus.ERROR;
+        }
 
         return ExecutionStatus.SUCCESS;
     }

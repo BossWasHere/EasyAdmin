@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,21 +22,17 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.record;
+package com.backwardsnode.easyadmin.api.record.annotations;
 
-import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Represents a kick entry for a specific player.
- * <p>A new record can be created through the {@link RecordBuilder}</p>
+ * Denotes that the response to this method may be cached internally.
  */
-public interface KickRecord extends LiveRecord<Integer>, ReasonedAdminRecord {
-
-    /**
-     * Gets whether this kick is global or not.
-     * <p>A global kick disconnects the player from the network. A simple kick moves the player into a previous/fallback server when used with a server proxy.</p>
-     * @return true if this kick is global, false otherwise.
-     */
-    boolean isGlobal();
-
+@Retention(RetentionPolicy.SOURCE)
+@Target({ElementType.METHOD})
+public @interface Cached {
 }

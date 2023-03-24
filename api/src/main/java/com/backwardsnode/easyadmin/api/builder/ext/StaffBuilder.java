@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,21 +22,24 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.record;
+package com.backwardsnode.easyadmin.api.builder.ext;
 
-import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 /**
- * Represents a kick entry for a specific player.
- * <p>A new record can be created through the {@link RecordBuilder}</p>
+ * Represents a builder that may be created with a staff entity.
+ * @param <B> The builder type, for chaining.
  */
-public interface KickRecord extends LiveRecord<Integer>, ReasonedAdminRecord {
+public interface StaffBuilder<B> {
 
     /**
-     * Gets whether this kick is global or not.
-     * <p>A global kick disconnects the player from the network. A simple kick moves the player into a previous/fallback server when used with a server proxy.</p>
-     * @return true if this kick is global, false otherwise.
+     * Sets the staff entity of this builder.
+     * @param staffUUID the UUID of the staff entity, or {@code null} if called through the API or by the console.
+     * @return this builder, for chaining.
      */
-    boolean isGlobal();
+    @NotNull B byStaff(@Nullable UUID staffUUID);
 
 }
