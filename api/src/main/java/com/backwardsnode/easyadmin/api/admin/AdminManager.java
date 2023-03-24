@@ -29,7 +29,8 @@ import com.backwardsnode.easyadmin.api.data.PunishmentStatus;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
 import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import com.backwardsnode.easyadmin.api.record.*;
-import com.backwardsnode.easyadmin.api.record.annotations.Cached;
+import com.backwardsnode.easyadmin.api.data.CacheBehavior;
+import com.backwardsnode.easyadmin.api.annotation.Caching;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,7 +50,7 @@ public interface AdminManager {
      * @param includeGlobalBans whether this method can return a global ban record.
      * @return an optional containing the ban record if one exists, or an empty optional if not.
      */
-    @Cached
+    @Caching
     @NotNull Optional<BanRecord> getActiveBanRecord(@NotNull UUID playerUUID, @Nullable String inContext, boolean includeGlobalBans);
 
     /**
@@ -59,7 +60,7 @@ public interface AdminManager {
      * @param includeGlobalBans whether this method can return a global ban record.
      * @return an optional containing the ban record if one exists, or an empty optional if not.
      */
-    @Cached
+    @Caching
     @NotNull Optional<BanRecord> getActiveBanRecord(@NotNull String ipAddress, @Nullable String inContext, boolean includeGlobalBans);
 
     /**
@@ -70,7 +71,7 @@ public interface AdminManager {
      * @param includeGlobalBans whether this method can return a global ban record.
      * @return a ban record, or {@code null} if none exist.
      */
-    @Cached
+    @Caching
     @NotNull Optional<BanRecord> getActiveBanRecord(@NotNull UUID playerUUID, @NotNull String ipAddress, @Nullable String inContext, boolean includeGlobalBans);
 
     /**
@@ -81,7 +82,7 @@ public interface AdminManager {
      * @param includeGlobalBans whether this method can return a global ban record.
      * @return a ban record, or {@code null} if none exist.
      */
-    @Cached
+    @Caching
     @NotNull Optional<BanRecord> getActiveBanRecord(@NotNull OfflinePlayer player, @NotNull String ipAddress, @Nullable String inContext, boolean includeGlobalBans);
 
     /**
@@ -91,7 +92,7 @@ public interface AdminManager {
      * @param includeGlobalMutes whether this method can return a global mute record.
      * @return a mute record, or {@code null} if none exist.
      */
-    @Cached
+    @Caching
     @NotNull Optional<MuteRecord> getActiveMuteRecord(@NotNull UUID playerUUID, @Nullable String inContext, boolean includeGlobalMutes);
 
     /**
@@ -101,7 +102,7 @@ public interface AdminManager {
      * @param includeGlobalMutes whether this method can return a global mute record.
      * @return a mute record, or {@code null} if none exist.
      */
-    @Cached
+    @Caching
     @NotNull Optional<MuteRecord> getActiveMuteRecord(@NotNull String ipAddress, @Nullable String inContext, boolean includeGlobalMutes);
 
     /**
@@ -112,7 +113,7 @@ public interface AdminManager {
      * @param includeGlobalMutes whether this method can return a global mute record.
      * @return a mute record, or {@code null} if none exist.
      */
-    @Cached
+    @Caching
     @NotNull Optional<MuteRecord> getActiveMuteRecord(@NotNull UUID playerUUID, @NotNull String ipAddress, @Nullable String inContext, boolean includeGlobalMutes);
 
     /**
@@ -122,7 +123,7 @@ public interface AdminManager {
      * @param includeGlobalMutes whether this method can return a global mute record.
      * @return a mute record, or {@code null} if none exist.
      */
-    @Cached
+    @Caching
     @NotNull Optional<MuteRecord> getActiveMuteRecord(@NotNull OnlinePlayer player, @Nullable String inContext, boolean includeGlobalMutes);
 
     /**
@@ -131,7 +132,7 @@ public interface AdminManager {
      * @return a collection of ban records, or an empty collection if none exist.
      * @implNote the number of records returned may be capped. Use {@link #getBanRecords(UUID, LookupOptions)} to set a limit.
      */
-    @Cached
+    @Caching
     @NotNull Collection<BanRecord> getBanRecords(@NotNull UUID playerUUID);
 
     /**
@@ -140,7 +141,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of ban records, or an empty collection if none exist.
      */
-    @Cached
+    @Caching(behavior = CacheBehavior.WITH_NULL_LOOKUP_OPTIONS)
     @NotNull Collection<BanRecord> getBanRecords(@NotNull UUID playerUUID, @Nullable LookupOptions options);
 
     /**
@@ -149,7 +150,7 @@ public interface AdminManager {
      * @return a collection of ban records, or an empty collection if none exist.
      * @implNote the number of records returned may be capped. Use {@link #getBanRecords(String, LookupOptions)} to set a limit.
      */
-    @Cached
+    @Caching
     @NotNull Collection<BanRecord> getBanRecords(@NotNull String ipAddress);
 
     /**
@@ -158,7 +159,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of ban records, or an empty collection if none exist.
      */
-    @Cached
+    @Caching(behavior = CacheBehavior.WITH_NULL_LOOKUP_OPTIONS)
     @NotNull Collection<BanRecord> getBanRecords(@NotNull String ipAddress, @Nullable LookupOptions options);
 
     /**
@@ -168,7 +169,7 @@ public interface AdminManager {
      * @return a collection of ban records, or an empty collection if none exist.
      * @implNote the number of records returned may be capped. Use {@link #getBanRecords(UUID, String, LookupOptions)} to set a limit.
      */
-    @Cached
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<BanRecord> getBanRecords(@NotNull UUID playerUUID, @NotNull String ipAddress);
     
     /**
@@ -178,6 +179,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of ban records, or an empty collection if none exist.
      */
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<BanRecord> getBanRecords(@NotNull UUID playerUUID, @NotNull String ipAddress, @Nullable LookupOptions options);
 
     /**
@@ -185,6 +187,7 @@ public interface AdminManager {
      * @param player the online player to check.
      * @return a collection of ban records, or an empty collection if none exist.
      */
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<BanRecord> getBanRecords(@NotNull OnlinePlayer player);
 
     /**
@@ -193,6 +196,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of ban records, or an empty collection if none exist.
      */
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<BanRecord> getBanRecords(@NotNull OnlinePlayer player, @Nullable LookupOptions options);
 
     /**
@@ -202,6 +206,7 @@ public interface AdminManager {
      * @return a collection of ban records, or an empty collection if none exist.
      * @implNote the number of records returned may be capped. Use {@link #getBanRecords(UUID, LookupOptions)} to set a limit.
      */
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<BanRecord> getBanRecordsByStatus(@NotNull UUID playerUUID, @NotNull PunishmentStatus status);
 
     /**
@@ -211,6 +216,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of ban records, or an empty collection if none exist.
      */
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<BanRecord> getBanRecordsByStatus(@NotNull UUID playerUUID, @NotNull PunishmentStatus status, @Nullable LookupOptions options);
 
     /**
@@ -220,6 +226,7 @@ public interface AdminManager {
      * @return a collection of ban records, or an empty collection if none exist.
      * @implNote the number of records returned may be capped. Use {@link #getBanRecords(String, LookupOptions)} to set a limit.
      */
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<BanRecord> getBanRecordsByStatus(@NotNull String ipAddress, @NotNull PunishmentStatus status);
 
     /**
@@ -229,6 +236,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of ban records, or an empty collection if none exist.
      */
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<BanRecord> getBanRecordsByStatus(@NotNull String ipAddress, @NotNull PunishmentStatus status, @Nullable LookupOptions options);
 
     /**
@@ -239,6 +247,7 @@ public interface AdminManager {
      * @return a collection of ban records, or an empty collection if none exist.
      * @implNote the number of records returned may be capped. Use {@link #getBanRecords(UUID, String, LookupOptions)} to set a limit.
      */
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<BanRecord> getBanRecordsByStatus(@NotNull UUID playerUUID, @NotNull String ipAddress, @NotNull PunishmentStatus status);
 
     /**
@@ -249,6 +258,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of ban records, or an empty collection if none exist.
      */
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<BanRecord> getBanRecordsByStatus(@NotNull UUID playerUUID, @NotNull String ipAddress, @NotNull PunishmentStatus status, @Nullable LookupOptions options);
 
     /**
@@ -257,6 +267,7 @@ public interface AdminManager {
      * @param status the status of the records to retrieve.
      * @return a collection of ban records, or an empty collection if none exist.
      */
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<BanRecord> getBanRecordsByStatus(@NotNull OnlinePlayer player, @NotNull PunishmentStatus status);
 
     /**
@@ -266,6 +277,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of ban records, or an empty collection if none exist.
      */
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<BanRecord> getBanRecordsByStatus(@NotNull OnlinePlayer player, @NotNull PunishmentStatus status, @Nullable LookupOptions options);
 
     /**
@@ -274,7 +286,7 @@ public interface AdminManager {
      * @return a collection of comment and warning records, or an empty collection if none exist.
      * @implNote the number of records returned may be capped. Use {@link #getCommentRecords(UUID, LookupOptions)} to set a limit.
      */
-    @Cached
+    @Caching
     @NotNull Collection<CommentRecord> getCommentRecords(@NotNull UUID playerUUID);
 
     /**
@@ -283,7 +295,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of comment and warning records, or an empty collection if none exist.
      */
-    @Cached
+    @Caching(behavior = CacheBehavior.WITH_NULL_LOOKUP_OPTIONS)
     @NotNull Collection<CommentRecord> getCommentRecords(@NotNull UUID playerUUID, @Nullable LookupOptions options);
 
     /**
@@ -291,7 +303,7 @@ public interface AdminManager {
      * @param player the online player to check.
      * @return a collection of comment and warning records, or an empty collection if none exist.
      */
-    @Cached
+    @Caching
     @NotNull Collection<CommentRecord> getCommentRecords(@NotNull OnlinePlayer player);
 
     /**
@@ -300,7 +312,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of comment and warning records, or an empty collection if none exist.
      */
-    @Cached
+    @Caching(behavior = CacheBehavior.WITH_NULL_LOOKUP_OPTIONS)
     @NotNull Collection<CommentRecord> getCommentRecords(@NotNull OnlinePlayer player, @Nullable LookupOptions options);
 
     /**
@@ -310,7 +322,7 @@ public interface AdminManager {
      * @return a collection of comment or warning records, or an empty collection if none exist.
      * @implNote the number of records returned may be capped. Use {@link #getCommentRecordsByType(UUID, boolean, LookupOptions)} to set a limit.
      */
-    @Cached
+    @Caching
     @NotNull Collection<CommentRecord> getCommentRecordsByType(@NotNull UUID playerUUID, boolean warning);
 
     /**
@@ -320,7 +332,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of comment or warning records, or an empty collection if none exist.
      */
-    @Cached
+    @Caching(behavior = CacheBehavior.WITH_NULL_LOOKUP_OPTIONS)
     @NotNull Collection<CommentRecord> getCommentRecordsByType(@NotNull UUID playerUUID, boolean warning, @Nullable LookupOptions options);
 
     /**
@@ -329,7 +341,7 @@ public interface AdminManager {
      * @param warning true to retrieve warnings, false to retrieve comments.
      * @return a collection of comment or warning records, or an empty collection if none exist.
      */
-    @Cached
+    @Caching
     @NotNull Collection<CommentRecord> getCommentRecordsByType(@NotNull OnlinePlayer player, boolean warning);
 
     /**
@@ -339,7 +351,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of comment or warning records, or an empty collection if none exist.
      */
-    @Cached
+    @Caching(behavior = CacheBehavior.WITH_NULL_LOOKUP_OPTIONS)
     @NotNull Collection<CommentRecord> getCommentRecordsByType(@NotNull OnlinePlayer player, boolean warning, @Nullable LookupOptions options);
 
     /**
@@ -348,6 +360,7 @@ public interface AdminManager {
      * @return a collection of kick records, or an empty collection if none exist.
      * @implNote the number of records returned may be capped. Use {@link #getKickRecords(UUID, LookupOptions)} to set a limit.
      */
+    @Caching
     @NotNull Collection<KickRecord> getKickRecords(@NotNull UUID playerUUID);
 
     /**
@@ -356,6 +369,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of kick records, or an empty collection if none exist.
      */
+    @Caching(behavior = CacheBehavior.WITH_NULL_LOOKUP_OPTIONS)
     @NotNull Collection<KickRecord> getKickRecords(@NotNull UUID playerUUID, @Nullable LookupOptions options);
 
     /**
@@ -363,6 +377,7 @@ public interface AdminManager {
      * @param player the online player to check.
      * @return a collection of kick records, or an empty collection if none exist.
      */
+    @Caching
     @NotNull Collection<KickRecord> getKickRecords(@NotNull OnlinePlayer player);
 
     /**
@@ -371,6 +386,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of kick records, or an empty collection if none exist.
      */
+    @Caching(behavior = CacheBehavior.WITH_NULL_LOOKUP_OPTIONS)
     @NotNull Collection<KickRecord> getKickRecords(@NotNull OnlinePlayer player, @Nullable LookupOptions options);
 
     /**
@@ -380,6 +396,7 @@ public interface AdminManager {
      * @return a collection of kick records, or an empty collection if none exist.
      * @implNote the number of records returned may be capped. Use {@link #getKickRecordsByType(UUID, boolean, LookupOptions)} to set a limit.
      */
+    @Caching
     @NotNull Collection<KickRecord> getKickRecordsByType(@NotNull UUID playerUUID, boolean global);
 
     /**
@@ -389,6 +406,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of kick records, or an empty collection if none exist.
      */
+    @Caching(behavior = CacheBehavior.WITH_NULL_LOOKUP_OPTIONS)
     @NotNull Collection<KickRecord> getKickRecordsByType(@NotNull UUID playerUUID, boolean global, @Nullable LookupOptions options);
 
     /**
@@ -397,6 +415,7 @@ public interface AdminManager {
      * @param global true if the records returned should be global, false if not.
      * @return a collection of kick records, or an empty collection if none exist.
      */
+    @Caching
     @NotNull Collection<KickRecord> getKickRecordsByType(@NotNull OnlinePlayer player, boolean global);
 
     /**
@@ -406,6 +425,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of kick records, or an empty collection if none exist.
      */
+    @Caching(behavior = CacheBehavior.WITH_NULL_LOOKUP_OPTIONS)
     @NotNull Collection<KickRecord> getKickRecordsByType(@NotNull OnlinePlayer player, boolean global, @Nullable LookupOptions options);
 
     /**
@@ -414,6 +434,7 @@ public interface AdminManager {
      * @return a collection of mute records, or an empty collection if none exist.
      * @implNote the number of records returned may be capped. Use {@link #getMuteRecords(UUID, LookupOptions)} to set a limit.
      */
+    @Caching
     @NotNull Collection<MuteRecord> getMuteRecords(@NotNull UUID playerUUID);
 
     /**
@@ -422,6 +443,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of mute records, or an empty collection if none exist.
      */
+    @Caching(behavior = CacheBehavior.WITH_NULL_LOOKUP_OPTIONS)
     @NotNull Collection<MuteRecord> getMuteRecords(@NotNull UUID playerUUID, @Nullable LookupOptions options);
 
     /**
@@ -430,6 +452,7 @@ public interface AdminManager {
      * @return a collection of mute records, or an empty collection if none exist.
      * @implNote the number of records returned may be capped. Use {@link #getMuteRecords(String, LookupOptions)} to set a limit.
      */
+    @Caching
     @NotNull Collection<MuteRecord> getMuteRecords(@NotNull String ipAddress);
 
     /**
@@ -438,6 +461,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of mute records, or an empty collection if none exist.
      */
+    @Caching(behavior = CacheBehavior.WITH_NULL_LOOKUP_OPTIONS)
     @NotNull Collection<MuteRecord> getMuteRecords(@NotNull String ipAddress, @Nullable LookupOptions options);
 
     /**
@@ -447,6 +471,7 @@ public interface AdminManager {
      * @return a collection of mute records, or an empty collection if none exist.
      * @implNote the number of records returned may be capped. Use {@link #getMuteRecords(UUID, String, LookupOptions)} to set a limit.
      */
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<MuteRecord> getMuteRecords(@NotNull UUID playerUUID, @NotNull String ipAddress);
 
     /**
@@ -456,6 +481,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of mute records, or an empty collection if none exist.
      */
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<MuteRecord> getMuteRecords(@NotNull UUID playerUUID, @NotNull String ipAddress, @Nullable LookupOptions options);
 
     /**
@@ -463,6 +489,7 @@ public interface AdminManager {
      * @param player the online player to check.
      * @return a collection of mute records, or an empty collection if none exist.
      */
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<MuteRecord> getMuteRecords(@NotNull OnlinePlayer player);
 
     /**
@@ -471,6 +498,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of mute records, or an empty collection if none exist.
      */
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<MuteRecord> getMuteRecords(@NotNull OnlinePlayer player, @Nullable LookupOptions options);
 
     /**
@@ -480,6 +508,7 @@ public interface AdminManager {
      * @return a collection of mute records, or an empty collection if none exist.
      * @implNote the number of records returned may be capped. Use {@link #getMuteRecords(UUID, LookupOptions)} to set a limit.
      */
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<MuteRecord> getMuteRecordsByStatus(@NotNull UUID playerUUID, @NotNull PunishmentStatus status);
 
     /**
@@ -489,6 +518,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of mute records, or an empty collection if none exist.
      */
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<MuteRecord> getMuteRecordsByStatus(@NotNull UUID playerUUID, @NotNull PunishmentStatus status, @Nullable LookupOptions options);
 
     /**
@@ -498,6 +528,7 @@ public interface AdminManager {
      * @return a collection of mute records, or an empty collection if none exist.
      * @implNote the number of records returned may be capped. Use {@link #getMuteRecords(String, LookupOptions)} to set a limit.
      */
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<MuteRecord> getMuteRecordsByStatus(@NotNull String ipAddress, @NotNull PunishmentStatus status);
 
     /**
@@ -507,6 +538,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of mute records, or an empty collection if none exist.
      */
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<MuteRecord> getMuteRecordsByStatus(@NotNull String ipAddress, @NotNull PunishmentStatus status, @Nullable LookupOptions options);
 
     /**
@@ -517,6 +549,7 @@ public interface AdminManager {
      * @return a collection of mute records, or an empty collection if none exist.
      * @implNote the number of records returned may be capped. Use {@link #getMuteRecords(UUID, String, LookupOptions)} to set a limit.
      */
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<MuteRecord> getMuteRecordsByStatus(@NotNull UUID playerUUID, @NotNull String ipAddress, @NotNull PunishmentStatus status);
 
     /**
@@ -527,6 +560,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of mute records, or an empty collection if none exist.
      */
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<MuteRecord> getMuteRecordsByStatus(@NotNull UUID playerUUID, @NotNull String ipAddress, @NotNull PunishmentStatus status, @Nullable LookupOptions options);
 
     /**
@@ -535,6 +569,7 @@ public interface AdminManager {
      * @param status the status of the records to retrieve.
      * @return a collection of mute records, or an empty collection if none exist.
      */
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<MuteRecord> getMuteRecordsByStatus(@NotNull OnlinePlayer player, @NotNull PunishmentStatus status);
 
     /**
@@ -544,6 +579,7 @@ public interface AdminManager {
      * @param options the options to use when retrieving records.
      * @return a collection of mute records, or an empty collection if none exist.
      */
+    @Caching(behavior = CacheBehavior.NEVER)
     @NotNull Collection<MuteRecord> getMuteRecordsByStatus(@NotNull OnlinePlayer player, @NotNull PunishmentStatus status, @Nullable LookupOptions options);
 
     /**
@@ -551,6 +587,7 @@ public interface AdminManager {
      * @param playerUUID the UUID of the player to load a record for.
      * @return an optional containing the player record, or an empty optional if none exists.
      */
+    @Caching
     @NotNull Optional<PlayerRecord> getPlayerRecord(@NotNull UUID playerUUID);
 
     /**
@@ -559,6 +596,7 @@ public interface AdminManager {
      * @return an optional containing the player record, or an empty optional if none exists.
      * @apiNote if multiple records are found, the API will try to match it to the player who currently has the username.
      */
+    @Caching
     @NotNull Optional<PlayerRecord> getPlayerRecordByName(@NotNull String username);
 
     /**
@@ -566,6 +604,7 @@ public interface AdminManager {
      * @param player the online player to load a record for.
      * @return an optional containing the player record, or an empty optional if none exists.
      */
+    @Caching
     @NotNull Optional<PlayerRecord> getPlayerRecord(@NotNull OnlinePlayer player);
 
     /**
@@ -575,6 +614,7 @@ public interface AdminManager {
      * @return the player record, or a new one if none exists.
      * @apiNote passing a username that is different to the recorded username will not update this record.
      */
+    @Caching
     @NotNull PlayerRecord getOrInitPlayerRecord(@NotNull UUID playerUUID, @NotNull String currentUsername);
 
     /**
@@ -582,6 +622,7 @@ public interface AdminManager {
      * @param player the online player to load a record for.
      * @return the player record, or a new one if none exists.
      */
+    @Caching
     @NotNull PlayerRecord getOrInitPlayerRecord(@NotNull OnlinePlayer player);
 
     /**
