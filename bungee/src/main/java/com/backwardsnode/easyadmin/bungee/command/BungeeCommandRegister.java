@@ -27,6 +27,7 @@ package com.backwardsnode.easyadmin.bungee.command;
 import com.backwardsnode.easyadmin.bungee.EasyAdminBungee;
 import com.backwardsnode.easyadmin.core.command.Command;
 import com.backwardsnode.easyadmin.core.command.CommandRegistrationProvider;
+import net.md_5.bungee.api.plugin.PluginManager;
 
 public final class BungeeCommandRegister implements CommandRegistrationProvider {
 
@@ -38,7 +39,21 @@ public final class BungeeCommandRegister implements CommandRegistrationProvider 
 
     @Override
     public void registerCommand(Command<?> command) {
-        plugin.getProxy().getPluginManager().registerCommand(plugin, new BungeeCommand<>(plugin, command));
+        PluginManager manager = plugin.getProxy().getPluginManager();
+
+        manager.registerCommand(plugin, new BungeeCommand<>(plugin, command, command.getCommand()));
+
+        if (command.getShorthandCommand() != null) {
+            manager.registerCommand(plugin, new BungeeCommand<>(plugin, command, command.getShorthandCommand()));
+        }
+
+        for (String alias : command.getAliases()) {
+            manager.registerCommand(plugin, new BungeeCommand<>(plugin, command, alias));
+        }
+
+        for (String subcommandAlias : command.getSubcommandAliases()) {
+            manager.registerCommand(plugin, new BungeeCommand<>(plugin, command, subcommandAlias));
+        }
     }
 
     @Override

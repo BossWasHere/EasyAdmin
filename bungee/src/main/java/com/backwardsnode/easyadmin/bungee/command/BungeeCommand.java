@@ -36,18 +36,19 @@ public class BungeeCommand<S> extends net.md_5.bungee.api.plugin.Command {
 
     private final EasyAdminBungee plugin;
     private final Command<S> source;
+    private final String label;
 
-    public BungeeCommand(EasyAdminBungee plugin, Command<S> source) {
+    public BungeeCommand(EasyAdminBungee plugin, Command<S> source, String label) {
         super(source.getCommand(), null, source.getAliases());
         this.plugin = plugin;
         this.source = source;
+        this.label = label;
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        //TODO label not passed??
         CommandExecutor wrapper = new CommandExecutorWrapper(sender);
-        CommandData data = new CommandData(null, args);
+        CommandData data = new CommandData(label, args);
         S state = source.loadState(plugin, wrapper, data);
 
         if (source.processArgs(plugin, wrapper, data, state)) {
