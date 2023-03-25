@@ -176,6 +176,10 @@ public final class Tables {
          */
         String IS_GLOBAL = "isGlobal";
         /**
+         * Server name kicked within.
+         */
+        String SERVER_NAME = "serverName";
+        /**
          * Kick reason.
          */
         String REASON = "reason";

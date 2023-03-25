@@ -110,6 +110,7 @@ public final class RecordLoader {
                 nullableUUID(result.getString(KICKS.STAFF_UUID)),
                 result.getTimestamp(KICKS.KICK_DATE).toLocalDateTime(),
                 result.getBoolean(KICKS.IS_GLOBAL),
+                result.getString(KICKS.SERVER_NAME),
                 result.getString(KICKS.REASON));
     }
 

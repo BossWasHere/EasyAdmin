@@ -25,6 +25,7 @@
 package com.backwardsnode.easyadmin.core.record;
 
 import com.backwardsnode.easyadmin.api.record.KickRecord;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,19 +42,21 @@ public final class KickRecordImpl implements KickRecord {
     private LocalDateTime kickDate;
     private boolean isGlobal;
     private String reason;
+    private String serverName;
 
-    KickRecordImpl(boolean loaded, int id, UUID player, UUID staff, LocalDateTime kickDate, boolean isGlobal, String reason) {
+    KickRecordImpl(boolean loaded, int id, UUID player, UUID staff, LocalDateTime kickDate, boolean isGlobal, String serverName, String reason) {
         this._loaded = loaded;
         this.id = id;
         this.player = player;
         this.staff = staff;
         this.kickDate = kickDate;
         this.isGlobal = isGlobal;
+        this.serverName = serverName;
         this.reason = reason;
     }
 
     public KickRecordImpl(UUID player, UUID staff, LocalDateTime kickDate, boolean isGlobal, String reason) {
-        this(false, -1, player, staff, kickDate, isGlobal, reason);
+        this(false, -1, player, staff, kickDate, isGlobal, null, reason);
     }
 
     @Override
@@ -83,6 +86,16 @@ public final class KickRecordImpl implements KickRecord {
 
     public boolean isGlobal() {
         return isGlobal;
+    }
+
+    @Override
+    public @NotNull String getServerName() {
+        return serverName;
+    }
+
+    @ApiStatus.Internal
+    public void setServerName(String serverName) {
+        this.serverName = serverName;
     }
 
     @Override

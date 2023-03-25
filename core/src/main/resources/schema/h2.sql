@@ -74,6 +74,7 @@ CREATE TABLE IF NOT EXISTS kicks (
     staffUuid       char(36),
     kickDate        timestamp       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     isGlobal        boolean         NOT NULL,
+    serverName      varchar(255),
     reason          varchar(255),
     PRIMARY KEY (id),
     FOREIGN KEY (playerUuid)        REFERENCES players(uuid),

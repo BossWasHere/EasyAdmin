@@ -66,6 +66,7 @@ CREATE TABLE IF NOT EXISTS kicks (
     staffUuid       char(36)        REFERENCES players(uuid),
     kickDate        timestamp       NOT NULL DEFAULT (CURRENT_TIMESTAMP),
     isGlobal        boolean         NOT NULL,
+    serverName      varchar(255),
     reason          varchar(255)
 );
 CREATE INDEX IF NOT EXISTS kicks_playerUuid ON kicks (playerUuid);

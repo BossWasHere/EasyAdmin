@@ -78,7 +78,7 @@ public abstract class AbstractStatementFactory implements DatabaseStatementFacto
     }
 
     protected PreparedStatement initCreateKickSql(Connection connection) throws SQLException {
-        return connection.prepareStatement("INSERT INTO kicks (playerUuid,staffUuid,kickDate,isGlobal,reason) VALUES (?,?,?,?,?);");
+        return connection.prepareStatement("INSERT INTO kicks (playerUuid,staffUuid,kickDate,isGlobal,serverName,reason) VALUES (?,?,?,?,?,?);");
     }
 
     protected PreparedStatement initCreateMuteSql(Connection connection, MuteRecord record) throws SQLException {
@@ -280,7 +280,8 @@ public abstract class AbstractStatementFactory implements DatabaseStatementFacto
         statement.setString(2, maybeNull(record.getStaff()));
         statement.setTimestamp(3, Timestamp.valueOf(record.getDateAdded()));
         statement.setBoolean(4, record.isGlobal());
-        statement.setString(5, record.getReason());
+        statement.setString(5, record.getServerName());
+        statement.setString(6, record.getReason());
 
         return statement;
     }
