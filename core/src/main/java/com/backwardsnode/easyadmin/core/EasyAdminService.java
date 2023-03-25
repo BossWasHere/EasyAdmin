@@ -35,6 +35,7 @@ import com.backwardsnode.easyadmin.api.config.ConfigurationManager;
 import com.backwardsnode.easyadmin.api.contextual.ContextTester;
 import com.backwardsnode.easyadmin.api.event.EventBus;
 import com.backwardsnode.easyadmin.api.internal.ExternalDataSource;
+import com.backwardsnode.easyadmin.api.internal.MessageFactory;
 import com.backwardsnode.easyadmin.api.server.NetworkInfo;
 import com.backwardsnode.easyadmin.core.boot.Registration;
 import com.backwardsnode.easyadmin.core.event.CommonEventBus;
@@ -94,6 +95,11 @@ public class EasyAdminService implements EasyAdmin, AutoCloseable {
 
     @Override
     public @NotNull ExternalDataSource getExternalDataSource() {
+        return null;
+    }
+
+    @Override
+    public @NotNull MessageFactory getMessageFactory() {
         return null;
     }
 
