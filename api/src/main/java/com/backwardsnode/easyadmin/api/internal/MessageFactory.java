@@ -24,10 +24,26 @@
 
 package com.backwardsnode.easyadmin.api.internal;
 
+/**
+ * Factory for loading and formatting localized messages.
+ */
 public interface MessageFactory {
 
+    /**
+     * Gets and formats a localized message.
+     * @param key The key of the message to get.
+     * @param language The language (locale) to get the message in.
+     * @param args The arguments to format the message with.
+     * @return The formatted message.
+     */
     String getMessage(MessageKey key, String language, Object... args);
 
+    /**
+     * Gets and formats a localized message using the internal default locale.
+     * @param key The key of the message to get.
+     * @param args The arguments to format the message with.
+     * @return The formatted message.
+     */
     String getMessageDefault(MessageKey key, Object... args);
 
 }

@@ -24,10 +24,21 @@
 
 package com.backwardsnode.easyadmin.api.event;
 
+/**
+ * An interface for events that can be cancelled.
+ */
 public interface Cancellable {
 
+    /**
+     * Sets the cancelled state of the event.
+     * @param cancel the new cancelled state.
+     */
     void setCancelled(boolean cancel);
 
+    /**
+     * Gets the cancelled state of the event.
+     * @return the cancelled state.
+     */
     boolean isCancelled();
 
 }

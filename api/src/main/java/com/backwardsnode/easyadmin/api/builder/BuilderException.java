@@ -24,9 +24,12 @@
 
 package com.backwardsnode.easyadmin.api.builder;
 
+import org.jetbrains.annotations.ApiStatus;
+
 /**
  * An exception thrown when a builder fails to build a record.
  */
+@ApiStatus.Internal
 public class BuilderException extends Exception {
 
     public BuilderException(String message) {

@@ -43,6 +43,7 @@ public interface EasyAdminPlugin {
 
     /**
      * Transforms the input text into a color/style formatted string.
+     * @param altColorChar the character to use as the alternate color code character.
      * @param text the raw text.
      * @return the formatted text.
      */

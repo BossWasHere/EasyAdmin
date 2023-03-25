@@ -24,9 +24,24 @@
 
 package com.backwardsnode.easyadmin.api.internal;
 
+/**
+ * Enum to enable switching between providers for internal services.
+ */
 public enum InternalServiceProviderType {
 
+    /**
+     * Accesses services used by through the API.
+     */
     API,
+
+    /**
+     * Accesses services used by through the web API.
+     */
+    WEB_API,
+
+    /**
+     * Accesses services used through command execution.
+     */
     COMMAND
 
 }

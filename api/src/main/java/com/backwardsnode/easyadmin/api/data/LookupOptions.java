@@ -28,6 +28,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
 
+/**
+ * Class for configuring database lookups.
+ */
 public final class LookupOptions {
 
     private final int limit;
@@ -36,10 +39,19 @@ public final class LookupOptions {
     private final LocalDateTime dateBefore;
     private final LocalDateTime dateAfter;
 
+    /**
+     * Initializes a new {@link LookupOptions}.
+     * @param limit the maximum number of results to return.
+     */
     public LookupOptions(int limit) {
         this(limit, 0);
     }
 
+    /**
+     * Initializes a new {@link LookupOptions}.
+     * @param limit the maximum number of results to return.
+     * @param offset the number of results to skip.
+     */
     public LookupOptions(int limit, int offset) {
         this.limit = limit;
         this.offset = offset;
@@ -48,6 +60,14 @@ public final class LookupOptions {
         this.dateAfter = null;
     }
 
+    /**
+     * Initializes a new {@link LookupOptions}.
+     * @param limit the maximum number of results to return.
+     * @param offset the number of results to skip.
+     * @param sortDescending whether to sort the results in descending order.
+     * @param dateBefore the date before which to return results.
+     * @param dateAfter the date after which to return results.
+     */
     public LookupOptions(int limit, int offset, boolean sortDescending, @Nullable LocalDateTime dateBefore, @Nullable LocalDateTime dateAfter) {
         this.limit = limit;
         this.offset = offset;
@@ -56,22 +76,42 @@ public final class LookupOptions {
         this.dateAfter = dateAfter;
     }
 
+    /**
+     * Gets the maximum number of results to return.
+     * @return the limit.
+     */
     public int getLimit() {
         return limit;
     }
 
+    /**
+     * Gets the number of results to skip.
+     * @return the offset.
+     */
     public int getOffset() {
         return offset;
     }
 
+    /**
+     * Gets the date before which to return results.
+     * @return the {@link LocalDateTime} before which to return results, or null.
+     */
     public @Nullable LocalDateTime getDateBefore() {
         return dateBefore;
     }
 
+    /**
+     * Gets the date after which to return results.
+     * @return the {@link LocalDateTime} after which to return results, or null.
+     */
     public @Nullable LocalDateTime getDateAfter() {
         return dateAfter;
     }
 
+    /**
+     * Gets whether to sort the results in descending order.
+     * @return true if the results should be sorted in descending order, false otherwise.
+     */
     public boolean getSortDescending() {
         return sortDescending;
     }

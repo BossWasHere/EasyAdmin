@@ -40,6 +40,7 @@ public @interface Caching {
 
     /**
      * Indicates the caching behavior of the target method.
+     * @return The caching behavior of the target method.
      */
     CacheBehavior behavior() default CacheBehavior.ALWAYS;
 

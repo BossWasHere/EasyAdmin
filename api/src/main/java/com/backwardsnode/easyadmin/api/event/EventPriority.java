@@ -24,12 +24,30 @@
 
 package com.backwardsnode.easyadmin.api.event;
 
+/**
+ * The priority of a handler attached to an event.
+ */
 public enum EventPriority {
 
+    /**
+     * The lowest priority, called first.
+     */
     LOWEST(0),
+    /**
+     * The second-lowest priority.
+     */
     LOW(1),
+    /**
+     * The default priority.
+     */
     NORMAL(2),
+    /**
+     * The second-highest priority.
+     */
     HIGH(3),
+    /**
+     * The highest priority, called last.
+     */
     HIGHEST(4);
 
     private final int ordinal;
@@ -38,6 +56,10 @@ public enum EventPriority {
         this.ordinal = ordinal;
     }
 
+    /**
+     * Gets the ordinal value of this priority.
+     * @return the ordinal value.
+     */
     public int getOrdinal() {
         return ordinal;
     }

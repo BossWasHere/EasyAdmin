@@ -29,12 +29,44 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.function.Consumer;
 
+/**
+ * Manages handlers and dispatching events for this EasyAdmin instance.
+ */
 public interface EventBus {
 
+    /**
+     * Adds an event handler for the specified event class.
+     * @param eventClass The class of the event to handle.
+     * @param handler The handler to add.
+     * @param <T> The type of the event that is being handled.
+     */
     <T extends EasyAdminEvent> void addHandle(@NotNull Class<T> eventClass, @NotNull Consumer<? super T> handler);
+
+    /**
+     * Adds an event handler for the specified event class.
+     * @param eventClass The class of the event to handle.
+     * @param handler The handler to add.
+     * @param priority The priority of the handler.
+     * @param <T> The type of the event that is being handled.
+     */
     <T extends EasyAdminEvent> void addHandle(@NotNull Class<T> eventClass, @NotNull Consumer<? super T> handler, @NotNull EventPriority priority);
+
+    /**
+     * Adds an event handler for the specified event class.
+     * @param eventClass The class of the event to handle.
+     * @param handler The handler to add.
+     * @param priority The priority of the handler.
+     * @param ignoreCancelled Whether this handler should be called even if the event is cancelled.
+     * @param <T> The type of the event that is being handled.
+     */
     <T extends EasyAdminEvent> void addHandle(@NotNull Class<T> eventClass, @NotNull Consumer<? super T> handler, @NotNull EventPriority priority, boolean ignoreCancelled);
 
+    /**
+     * Gets all handlers for the specified event class.
+     * @param eventClass The class of the event to get handlers for.
+     * @return A collection of all handlers for the specified event class.
+     * @param <T> The type of the event that is being handled.
+     */
     @NotNull <T extends EasyAdminEvent> Collection<? extends EventHandle<T>> getHandles(@NotNull Class<T> eventClass);
 
 }

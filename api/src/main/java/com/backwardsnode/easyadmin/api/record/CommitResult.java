@@ -24,8 +24,23 @@
 
 package com.backwardsnode.easyadmin.api.record;
 
-public record CommitResult<T>(T record, CommitStatus status, T existing) {
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/**
+ * Holds the result of a commit operation.
+ * @param record The record that was (or was attempted to be) committed.
+ * @param status The status of the commit operation.
+ * @param existing The existing record that prevented the commit operation from succeeding.
+ * @param <T> The type of record held by this result.
+ */
+public record CommitResult<T>(@NotNull T record, @NotNull CommitStatus status, @Nullable T existing) {
+
+    /**
+     * Shorthand constructor for results that do not reflect an existing record.
+     * @param record The record that was (or was attempted to be) committed.
+     * @param status The status of the commit operation.
+     */
     public CommitResult(T record, CommitStatus status) {
         this(record, status, null);
     }

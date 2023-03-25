@@ -29,6 +29,10 @@ package com.backwardsnode.easyadmin.api.internal;
  */
 public final class Tables {
 
+    private Tables() {
+        throw new IllegalStateException("Cannot instantiate");
+    }
+
     /**
      * Holds the column names for the 'players' table.
      */
