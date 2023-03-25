@@ -194,7 +194,20 @@ admin:
   mustSpecifyServer: "&cThe console must specify a server"
   playerOffline: "&9{0} is currently offline"
   playerNonExistent: "&c{0} is not a player or has never connected"
-  playerImmune: "&c{0} is immune from this command"
+  playerImmune: "&cThis player is immune from this command"
+  error: "&4An error occurred while processing your request. Please report this as an issue! ({0})"
+  cancelled:
+    ban: "&cYour ban action has been cancelled or was unsuccessful."
+    kick: "&cYour kick action has been cancelled or was unsuccessful."
+    mute: "&cYour mute action has been cancelled or was unsuccessful."
+    comment: "&cYour comment action has been cancelled or was unsuccessful."
+    warn: "&cYour warn action has been cancelled or was unsuccessful."
+  withheld:
+    ban: "&dYour ban action has been withheld for processing."
+    kick: "&dYour kick action has been withheld for processing."
+    mute: "&dYour mute action has been withheld for processing."
+    comment: "&dYour comment action has been withheld for processing."
+    warn: "&dYour warn action has been withheld for processing."
   lookup:
     description: "Displays a player or IP address' history"
     usage: "/lookup <player/IP>"
@@ -217,6 +230,7 @@ admin:
     comments: "&3Comments Issued: {0}"
     warnings: "&3Warnings Issued: {0}"
 chat:
+  console: "CONSOLE"
   messageWarning: "&cPlease follow chat rules. You have been warned."
 
 player:

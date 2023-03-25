@@ -28,6 +28,8 @@ import com.backwardsnode.easyadmin.api.EasyAdminPlugin;
 import com.backwardsnode.easyadmin.api.config.LocaleConfiguration;
 import com.backwardsnode.easyadmin.api.data.ActionScope;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
+import com.backwardsnode.easyadmin.api.internal.MessageFactory;
+import com.backwardsnode.easyadmin.api.internal.MessageKey;
 import com.backwardsnode.easyadmin.core.i18n.time.CustomTimeUnit;
 import com.backwardsnode.easyadmin.core.i18n.time.TimeRangeFormat;
 import org.slf4j.Logger;
@@ -40,13 +42,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import static com.backwardsnode.easyadmin.core.i18n.CommonMessages.ADMINISTRATIVE;
 import static com.backwardsnode.easyadmin.core.i18n.CommonMessages.EASYADMIN;
 
-public class MessageProvider {
+public class MessageProvider implements MessageFactory {
 
     public static final String DEFAULT_LANGUAGE = "en_US";
     private static final String FALLBACK_DATE_FORMAT = "yyyy-MM-dd HH:mm:ssZ";
@@ -58,7 +64,7 @@ public class MessageProvider {
     private final Map<String, LanguageGroup> loadedLanguages;
 
     private LanguageGroup defaultLanguageGroup;
-    private SimpleDateFormat dateFormat;
+    private DateTimeFormatter dateFormat;
     private TimeRangeFormat timeRangeFormat;
 
     public MessageProvider(EasyAdminPlugin plugin, boolean loadDefault) {
@@ -77,10 +83,10 @@ public class MessageProvider {
         LocaleConfiguration localeConfig = plugin.getInstance().getConfigurationManager().getLocaleConfiguration();
 
         try {
-            dateFormat = new SimpleDateFormat(localeConfig.getDateFormat());
+            dateFormat = DateTimeFormatter.ofPattern(localeConfig.getDateFormat(), Locale.ROOT);
         } catch (IllegalArgumentException e) {
             logger.warn("Invalid date format '" + localeConfig.getDateFormat() + "', using default format", e);
-            dateFormat = new SimpleDateFormat(FALLBACK_DATE_FORMAT);
+            dateFormat = DateTimeFormatter.ofPattern(FALLBACK_DATE_FORMAT, Locale.ROOT);
         }
 
         try {
@@ -147,12 +153,26 @@ public class MessageProvider {
         executor.sendMessage(getMessage(message, executor.getLocale(), args));
     }
 
+    @Override
     public String getMessage(MessageKey key, String language, Object... args) {
         LanguageGroup lg = loadLanguageOrDefault(language);
         String msg = lg.getMessage(key);
 
         if (args.length > 0) {
-            msg = MessageFormat.format(msg, args);
+            Object[] newArgs = new Object[args.length];
+            for (int i = 0; i < args.length; i++) {
+                Object arg = args[i];
+                if (arg instanceof MessageKey) {
+                    newArgs[i] = lg.getMessage((MessageKey) arg);
+                } else if (arg instanceof Duration) {
+                    newArgs[i] = timeRangeFormat.format((Duration) arg, lg.getTimeUnitMap());
+                } else if (arg instanceof LocalDateTime) {
+                    newArgs[i] = dateFormat.format((LocalDateTime) arg);
+                } else {
+                    newArgs[i] = arg;
+                }
+            }
+            msg = MessageFormat.format(msg, newArgs);
         }
         if (key.addPrefix()) {
             msg = lg.getMessage(EASYADMIN.PREFIX) + msg;
@@ -160,62 +180,9 @@ public class MessageProvider {
         return plugin.translateAlternateColorCodes('&', msg);
     }
 
+    @Override
     public String getMessageDefault(MessageKey key, Object... args) {
         return getMessage(key, defaultLanguage, args);
-    }
-
-    private MessageKey getBanCommandMessage(ActionScope scope, boolean usageMsg) {
-        return switch (scope) {
-            case DEFAULT -> usageMsg ? ADMINISTRATIVE.BAN.BAN_USAGE : ADMINISTRATIVE.BAN.BAN_DESC;
-            case GLOBAL -> usageMsg ? ADMINISTRATIVE.BAN.BAN_ALL_USAGE : ADMINISTRATIVE.BAN.BAN_ALL_DESC;
-            case GLOBAL_IP -> usageMsg ? ADMINISTRATIVE.BAN.BAN_IP_ALL_USAGE : ADMINISTRATIVE.BAN.BAN_IP_ALL_DESC;
-            case IP -> usageMsg ? ADMINISTRATIVE.BAN.BAN_IP_USAGE : ADMINISTRATIVE.BAN.BAN_IP_DESC;
-            case TEMPORARY -> usageMsg ? ADMINISTRATIVE.BAN.TEMPBAN_USAGE : ADMINISTRATIVE.BAN.TEMPBAN_DESC;
-            case TEMPORARY_GLOBAL ->
-                    usageMsg ? ADMINISTRATIVE.BAN.TEMPBAN_ALL_USAGE : ADMINISTRATIVE.BAN.TEMPBAN_ALL_DESC;
-            case TEMPORARY_GLOBAL_IP ->
-                    usageMsg ? ADMINISTRATIVE.BAN.TEMPBAN_IP_ALL_USAGE : ADMINISTRATIVE.BAN.TEMPBAN_IP_ALL_DESC;
-            case TEMPORARY_IP -> usageMsg ? ADMINISTRATIVE.BAN.TEMPBAN_IP_USAGE : ADMINISTRATIVE.BAN.TEMPBAN_IP_DESC;
-        };
-    }
-
-    private MessageKey getCommentCommandMessage(boolean usageMsg) {
-        return usageMsg ? ADMINISTRATIVE.COMMENT.USAGE : ADMINISTRATIVE.COMMENT.DESC;
-    }
-
-    private MessageKey getKickCommandMessage(ActionScope scope, boolean usageMsg) {
-        if (scope.isGlobal()) {
-            return usageMsg ? ADMINISTRATIVE.KICK.KICK_ALL_USAGE : ADMINISTRATIVE.KICK.KICK_ALL_DESC;
-        } else {
-            return usageMsg ? ADMINISTRATIVE.KICK.KICK_USAGE : ADMINISTRATIVE.KICK.KICK_DESC;
-        }
-    }
-
-    private MessageKey getMuteCommandMessage(ActionScope scope, boolean usageMsg) {
-        return switch (scope) {
-            case DEFAULT -> usageMsg ? ADMINISTRATIVE.MUTE.MUTE_USAGE : ADMINISTRATIVE.MUTE.MUTE_DESC;
-            case GLOBAL -> usageMsg ? ADMINISTRATIVE.MUTE.MUTE_ALL_USAGE : ADMINISTRATIVE.MUTE.MUTE_ALL_DESC;
-            case GLOBAL_IP -> usageMsg ? ADMINISTRATIVE.MUTE.MUTE_IP_ALL_USAGE : ADMINISTRATIVE.MUTE.MUTE_IP_ALL_DESC;
-            case IP -> usageMsg ? ADMINISTRATIVE.MUTE.MUTE_IP_USAGE : ADMINISTRATIVE.MUTE.MUTE_IP_DESC;
-            case TEMPORARY -> usageMsg ? ADMINISTRATIVE.MUTE.TEMPMUTE_USAGE : ADMINISTRATIVE.MUTE.TEMPMUTE_DESC;
-            case TEMPORARY_GLOBAL ->
-                    usageMsg ? ADMINISTRATIVE.MUTE.TEMPMUTE_ALL_USAGE : ADMINISTRATIVE.MUTE.TEMPMUTE_ALL_DESC;
-            case TEMPORARY_GLOBAL_IP ->
-                    usageMsg ? ADMINISTRATIVE.MUTE.TEMPMUTE_IP_ALL_USAGE : ADMINISTRATIVE.MUTE.TEMPMUTE_IP_ALL_DESC;
-            case TEMPORARY_IP -> usageMsg ? ADMINISTRATIVE.MUTE.TEMPMUTE_IP_USAGE : ADMINISTRATIVE.MUTE.TEMPMUTE_IP_DESC;
-        };
-    }
-
-    private MessageKey getWarnCommandMessage(boolean usageMsg) {
-        return usageMsg ? ADMINISTRATIVE.WARNING.USAGE : ADMINISTRATIVE.WARNING.DESC;
-    }
-
-    private MessageKey getLookupCommandMessage(boolean usageMsg) {
-        return usageMsg ? ADMINISTRATIVE.LOOKUP.USAGE : ADMINISTRATIVE.LOOKUP.DESC;
-    }
-
-    private MessageKey getStaffLookupCommandMessage(boolean usageMsg) {
-        return usageMsg ? ADMINISTRATIVE.STAFF_LOOKUP.USAGE : ADMINISTRATIVE.STAFF_LOOKUP.DESC;
     }
 
 //    public String createDetailledStaffMessage(BanRecord record, boolean isExisting, boolean showIPs) {

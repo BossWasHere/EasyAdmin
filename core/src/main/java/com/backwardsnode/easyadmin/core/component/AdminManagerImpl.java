@@ -537,7 +537,7 @@ public class AdminManagerImpl implements AdminManager {
     @NotNull
     private <T extends Contextual> Optional<T> firstMatchContext(Collection<T> records, @Nullable String inContext, boolean includeGlobals) {
         for (T record : records) {
-            if (!record.hasContexts() && (includeGlobals || inContext == null)) {
+            if (!record.hasContext() && (includeGlobals || inContext == null)) {
                 return Optional.of(record);
             }
             if (service.getContextTester().testContext(record, inContext)) {

@@ -24,7 +24,9 @@
 
 package com.backwardsnode.easyadmin.bukkit.wrapper;
 
+import com.backwardsnode.easyadmin.api.EasyAdminProvider;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
+import com.backwardsnode.easyadmin.api.internal.MessageKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -46,6 +48,11 @@ public class CommandExecutorWrapper implements CommandExecutor {
     @Override
     public void sendMessage(@NotNull String msg) {
         sender.sendMessage(msg);
+    }
+
+    @Override
+    public void sendMessage(@NotNull MessageKey key, @NotNull Object... args) {
+        sendMessage(EasyAdminProvider.get().getMessageFactory().getMessage(key, getLocale(), args));
     }
 
     @Override

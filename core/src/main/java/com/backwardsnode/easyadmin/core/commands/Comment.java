@@ -30,13 +30,16 @@ import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
 import com.backwardsnode.easyadmin.api.internal.InternalServiceProviderType;
+import com.backwardsnode.easyadmin.api.record.CommentRecord;
+import com.backwardsnode.easyadmin.api.record.CommitResult;
 import com.backwardsnode.easyadmin.core.command.Command;
 import com.backwardsnode.easyadmin.core.command.CommandData;
 import com.backwardsnode.easyadmin.core.command.ExecutionStatus;
 import com.backwardsnode.easyadmin.core.command.args.ArgumentResult;
 import com.backwardsnode.easyadmin.core.command.args.ArgumentSelector;
 import com.backwardsnode.easyadmin.core.commands.data.CommentData;
-import com.backwardsnode.easyadmin.core.i18n.MessageKey;
+import com.backwardsnode.easyadmin.api.internal.MessageKey;
+import com.backwardsnode.easyadmin.core.i18n.CommonMessages;
 
 import java.util.UUID;
 
@@ -96,12 +99,18 @@ public class Comment implements Command<CommentData> {
 
     @Override
     public MessageKey getDescription(CommandExecutor executor, CommandData data, CommentData state) {
-        return null;
+        if (state.isWarning()) {
+            return CommonMessages.ADMINISTRATIVE.WARNING.DESC;
+        }
+        return CommonMessages.ADMINISTRATIVE.COMMENT.DESC;
     }
 
     @Override
     public MessageKey getUsageMessage(CommandExecutor executor, CommandData data, CommentData state) {
-        return null;
+        if (state.isWarning()) {
+            return CommonMessages.ADMINISTRATIVE.WARNING.USAGE;
+        }
+        return CommonMessages.ADMINISTRATIVE.COMMENT.USAGE;
     }
 
     @Override
@@ -114,9 +123,42 @@ public class Comment implements Command<CommentData> {
                         .setWarning(state.isWarning());
 
         try {
-            commentBuilder.buildAndCommit();
-            // TODO send confirmation message
+            CommitResult<CommentRecord> result = commentBuilder.buildAndCommit();
+            switch (result.status()) {
+                case COMMITTED:
+                    if (state.isWarning()) {
+                        executor.sendMessage(CommonMessages.ADMINISTRATIVE.WARNING.WARNED, state.getPlayer().getUsername(), state.getComment());
+                    } else {
+                        executor.sendMessage(CommonMessages.ADMINISTRATIVE.COMMENT.COMMENTED, state.getPlayer().getUsername(), state.getComment());
+                    }
+                    break;
+                case CANCELLED:
+                    if (state.isWarning()) {
+                        executor.sendMessage(CommonMessages.ADMINISTRATIVE.CANCELLED.WARNING);
+                    } else {
+                        executor.sendMessage(CommonMessages.ADMINISTRATIVE.CANCELLED.COMMENT);
+                    }
+                    break;
+                case CANCELLED_DUPLICATE:
+                    // should never happen
+                    break;
+                case CANCELLED_IMMUNE:
+                    executor.sendMessage(CommonMessages.ADMINISTRATIVE.PLAYER_IMMUNE);
+                    break;
+                case IMPOSSIBLE:
+                    // TODO send playerNonExistent message in preExecute?
+                    executor.sendMessage(CommonMessages.ADMINISTRATIVE.PLAYER_OFFLINE);
+                    break;
+                case WITHHELD:
+                    if (state.isWarning()) {
+                        executor.sendMessage(CommonMessages.ADMINISTRATIVE.WITHHELD.WARNING);
+                    } else {
+                        executor.sendMessage(CommonMessages.ADMINISTRATIVE.WITHHELD.COMMENT);
+                    }
+                    break;
+            }
         } catch (Exception e) {
+            executor.sendMessage(CommonMessages.ADMINISTRATIVE.ERROR, e.getClass().getName());
             e.printStackTrace();
             return ExecutionStatus.ERROR;
         }

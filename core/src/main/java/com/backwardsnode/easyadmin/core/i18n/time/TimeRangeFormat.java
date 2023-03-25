@@ -24,6 +24,7 @@
 
 package com.backwardsnode.easyadmin.core.i18n.time;
 
+import java.time.Duration;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -63,6 +64,10 @@ public class TimeRangeFormat {
 
     public CustomTimeUnit[] getUnits() {
         return Arrays.copyOf(units, units.length);
+    }
+
+    public String format(Duration duration, TimeUnitLocaleMap timeUnitNames) {
+        return format(duration.toMillis(), timeUnitNames);
     }
 
     public String format(long millis, TimeUnitLocaleMap timeUnitNames) {

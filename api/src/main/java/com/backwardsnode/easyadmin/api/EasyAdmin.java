@@ -33,6 +33,7 @@ import com.backwardsnode.easyadmin.api.config.ConfigurationManager;
 import com.backwardsnode.easyadmin.api.contextual.ContextTester;
 import com.backwardsnode.easyadmin.api.event.EventBus;
 import com.backwardsnode.easyadmin.api.internal.ExternalDataSource;
+import com.backwardsnode.easyadmin.api.internal.MessageFactory;
 import com.backwardsnode.easyadmin.api.server.NetworkInfo;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -104,6 +105,13 @@ public interface EasyAdmin {
      */
     @ApiStatus.Internal
     @NotNull ExternalDataSource getExternalDataSource();
+
+    /**
+     * Gets the message factory for this plugin instance.
+     * @return the {@link MessageFactory} for this plugin instance.
+     */
+    @ApiStatus.Internal
+    @NotNull MessageFactory getMessageFactory();
 
     /**
      * Gets the {@link NetworkInfo}, which is used to retrieve information about the network.

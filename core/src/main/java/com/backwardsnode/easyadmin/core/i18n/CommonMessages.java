@@ -24,6 +24,8 @@
 
 package com.backwardsnode.easyadmin.core.i18n;
 
+import com.backwardsnode.easyadmin.api.internal.MessageKey;
+
 public final class CommonMessages {
 
     public static final class ADMINISTRATIVE {
@@ -259,15 +261,37 @@ public final class CommonMessages {
 
         }
 
+        public static final class CANCELLED {
+
+            public static final MessageKey BAN = new MessageKey("admin.cancelled.ban");
+            public static final MessageKey KICK = new MessageKey("admin.cancelled.kick");
+            public static final MessageKey MUTE = new MessageKey("admin.cancelled.mute");
+            public static final MessageKey COMMENT = new MessageKey("admin.cancelled.comment");
+            public static final MessageKey WARNING = new MessageKey("admin.cancelled.warn");
+
+        }
+
+        public static final class WITHHELD {
+
+            public static final MessageKey BAN = new MessageKey("admin.withheld.ban");
+            public static final MessageKey KICK = new MessageKey("admin.withheld.kick");
+            public static final MessageKey MUTE = new MessageKey("admin.withheld.mute");
+            public static final MessageKey COMMENT = new MessageKey("admin.withheld.comment");
+            public static final MessageKey WARNING = new MessageKey("admin.withheld.warn");
+
+        }
+
         public static final MessageKey MUST_SPECIFY_SERVER = new MessageKey("admin.mustSpecifyServer");
         public static final MessageKey PLAYER_OFFLINE = new MessageKey("admin.playerOffline");
         public static final MessageKey PLAYER_NONEXISTENT = new MessageKey("admin.playerNonExistent");
         public static final MessageKey PLAYER_IMMUNE = new MessageKey("admin.playerImmune");
+        public static final MessageKey ERROR = new MessageKey("admin.error");
 
     }
 
     public static final class CHAT {
 
+        public static final MessageKey CONSOLE = new MessageKey("chat.console", false);
         public static final MessageKey MESSAGE_WARNING = new MessageKey("chat.messageWarning");
 
     }

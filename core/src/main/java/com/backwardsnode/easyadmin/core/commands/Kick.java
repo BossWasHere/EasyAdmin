@@ -31,6 +31,9 @@ import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
 import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import com.backwardsnode.easyadmin.api.internal.InternalServiceProviderType;
+import com.backwardsnode.easyadmin.api.record.CommentRecord;
+import com.backwardsnode.easyadmin.api.record.CommitResult;
+import com.backwardsnode.easyadmin.api.record.KickRecord;
 import com.backwardsnode.easyadmin.core.command.Command;
 import com.backwardsnode.easyadmin.core.command.CommandData;
 import com.backwardsnode.easyadmin.core.command.ExecutionStatus;
@@ -38,7 +41,7 @@ import com.backwardsnode.easyadmin.core.command.args.ArgumentResult;
 import com.backwardsnode.easyadmin.core.command.args.ArgumentSelector;
 import com.backwardsnode.easyadmin.core.commands.data.KickData;
 import com.backwardsnode.easyadmin.core.i18n.CommonMessages;
-import com.backwardsnode.easyadmin.core.i18n.MessageKey;
+import com.backwardsnode.easyadmin.api.internal.MessageKey;
 
 import java.util.UUID;
 
@@ -128,9 +131,33 @@ public class Kick implements Command<KickData> {
         }
 
         try {
-            kickBuilder.buildAndCommit();
-            // TODO send confirmation message
+            CommitResult<KickRecord> result = kickBuilder.buildAndCommit();
+            switch (result.status()) {
+                case COMMITTED:
+                    if (state.isGlobal()) {
+                        executor.sendMessage(CommonMessages.ADMINISTRATIVE.KICK.KICKED_ALL, state.getPlayer().getUsername(), state.getReason());
+                    } else {
+                        executor.sendMessage(CommonMessages.ADMINISTRATIVE.KICK.KICKED, state.getPlayer().getUsername(), result.record().getServerName(), state.getReason());
+                    }
+                    break;
+                case CANCELLED:
+                    executor.sendMessage(CommonMessages.ADMINISTRATIVE.CANCELLED.KICK);
+                    break;
+                case CANCELLED_DUPLICATE:
+                    // should never happen
+                    break;
+                case CANCELLED_IMMUNE:
+                    executor.sendMessage(CommonMessages.ADMINISTRATIVE.PLAYER_IMMUNE);
+                    break;
+                case IMPOSSIBLE:
+                    executor.sendMessage(CommonMessages.ADMINISTRATIVE.PLAYER_OFFLINE);
+                    break;
+                case WITHHELD:
+                    executor.sendMessage(CommonMessages.ADMINISTRATIVE.WITHHELD.KICK);
+                    break;
+            }
         } catch (Exception e) {
+            executor.sendMessage(CommonMessages.ADMINISTRATIVE.ERROR, e.getClass().getName());
             e.printStackTrace();
             return ExecutionStatus.ERROR;
         }

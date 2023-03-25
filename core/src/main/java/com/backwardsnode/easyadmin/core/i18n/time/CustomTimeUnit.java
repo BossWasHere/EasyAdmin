@@ -24,7 +24,7 @@
 
 package com.backwardsnode.easyadmin.core.i18n.time;
 
-import com.backwardsnode.easyadmin.core.i18n.MessageKey;
+import com.backwardsnode.easyadmin.api.internal.MessageKey;
 
 import java.util.HashMap;
 import java.util.Map;

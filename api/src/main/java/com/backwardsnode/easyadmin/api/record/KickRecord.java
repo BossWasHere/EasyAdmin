@@ -25,6 +25,7 @@
 package com.backwardsnode.easyadmin.api.record;
 
 import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a kick entry for a specific player.
@@ -38,5 +39,11 @@ public interface KickRecord extends LiveRecord<Integer>, ReasonedAdminRecord {
      * @return true if this kick is global, false otherwise.
      */
     boolean isGlobal();
+
+    /**
+     * Gets the name of the server that this kick was performed on.
+     * @return the server name.
+     */
+    @NotNull String getServerName();
 
 }

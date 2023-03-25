@@ -27,7 +27,7 @@ package com.backwardsnode.easyadmin.core.command;
 import com.backwardsnode.easyadmin.api.EasyAdmin;
 import com.backwardsnode.easyadmin.api.EasyAdminPlugin;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
-import com.backwardsnode.easyadmin.core.i18n.MessageKey;
+import com.backwardsnode.easyadmin.api.internal.MessageKey;
 
 public interface Command<S> {
 

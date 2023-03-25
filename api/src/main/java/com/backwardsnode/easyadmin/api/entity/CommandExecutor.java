@@ -24,6 +24,7 @@
 
 package com.backwardsnode.easyadmin.api.entity;
 
+import com.backwardsnode.easyadmin.api.internal.MessageKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,6 +45,13 @@ public interface CommandExecutor {
      * @param msg the message to send.
      */
     void sendMessage(@NotNull String msg);
+
+    /**
+     * Sends a localized message to this entity.
+     * @param key the key of the message to send.
+     * @param args the arguments to replace in the message.
+     */
+    void sendMessage(@NotNull MessageKey key, @NotNull Object... args);
 
     /**
      * Gets the locale of this entity.

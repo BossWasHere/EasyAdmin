@@ -25,10 +25,12 @@
 package com.backwardsnode.easyadmin.api.record;
 
 import com.backwardsnode.easyadmin.api.contextual.Contextual;
+import com.backwardsnode.easyadmin.api.data.ActionScope;
 import com.backwardsnode.easyadmin.api.data.PunishmentStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -77,12 +79,37 @@ public interface SpecialAdminRecord extends ReasonedAdminRecord, Contextual {
         return getIpAddress() != null;
     }
 
+    /**
+     * Determines if this record is temporary.
+     * @return true if this record is temporary, false otherwise.
+     */
     default boolean isTemporary() {
         return getStatus() == PunishmentStatus.EXPIRED || getTerminationDate() != null;
     }
 
+    /**
+     * Determines if this record has ended.
+     * @return true if this record has ended, false otherwise.
+     */
     default boolean hasEnded() {
         return getStatus() == PunishmentStatus.ENDED;
+    }
+
+    /**
+     * Gets the total duration of this record.
+     * @return the duration of this record, or null if it is non-temporary.
+     */
+    default @Nullable Duration getDuration() {
+        LocalDateTime terminationDate = getTerminationDate();
+        return terminationDate == null ? null : Duration.between(getDateAdded(), terminationDate);
+    }
+
+    /**
+     * Gets the scope of this record.
+     * @return the {@link ActionScope} of this record.
+     */
+    default @NotNull ActionScope getScope() {
+        return ActionScope.fromFlags(isTemporary(), !hasContext(), hasIpAddress());
     }
 
 }

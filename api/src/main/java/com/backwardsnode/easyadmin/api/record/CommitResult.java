@@ -24,5 +24,10 @@
 
 package com.backwardsnode.easyadmin.api.record;
 
-public record CommitResult<T>(T record, CommitStatus status) {
+public record CommitResult<T>(T record, CommitStatus status, T existing) {
+
+    public CommitResult(T record, CommitStatus status) {
+        this(record, status, null);
+    }
+
 }

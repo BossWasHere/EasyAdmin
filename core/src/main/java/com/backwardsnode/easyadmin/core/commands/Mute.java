@@ -32,6 +32,8 @@ import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
 import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import com.backwardsnode.easyadmin.api.internal.InternalServiceProviderType;
+import com.backwardsnode.easyadmin.api.record.MuteRecord;
+import com.backwardsnode.easyadmin.api.record.CommitResult;
 import com.backwardsnode.easyadmin.core.command.CommandData;
 import com.backwardsnode.easyadmin.core.command.ExecutionStatus;
 import com.backwardsnode.easyadmin.core.command.ScopedCommand;
@@ -39,11 +41,14 @@ import com.backwardsnode.easyadmin.core.command.args.ArgumentResult;
 import com.backwardsnode.easyadmin.core.command.args.ArgumentSelector;
 import com.backwardsnode.easyadmin.core.commands.data.TemporalScopedData;
 import com.backwardsnode.easyadmin.core.i18n.CommonMessages;
-import com.backwardsnode.easyadmin.core.i18n.MessageKey;
+import com.backwardsnode.easyadmin.api.internal.MessageKey;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
+
+import static com.backwardsnode.easyadmin.core.i18n.CommonMessages.ADMINISTRATIVE.MUTE.*;
 
 public class Mute extends ScopedCommand<TemporalScopedData> {
 
@@ -125,41 +130,139 @@ public class Mute extends ScopedCommand<TemporalScopedData> {
         };
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
-    public ExecutionStatus execute(EasyAdminPlugin instance, CommandExecutor executor, CommandData data, TemporalScopedData scope) {
+    public ExecutionStatus execute(EasyAdminPlugin instance, CommandExecutor executor, CommandData data, TemporalScopedData state) {
         UUID staffUUID = executor instanceof OfflinePlayer player ? player.getUUID() : null;
         RecordBuilder builder = instance.getRecordBuilderFor(InternalServiceProviderType.COMMAND);
         MuteBuilder muteBuilder;
 
-        // TODO support IP only bans?
-        Optional<OnlinePlayer> onlinePlayerOptional = scope.getPlayer().getOnlinePlayer();
+        // TODO support IP only mutes?
+        Optional<OnlinePlayer> onlinePlayerOptional = state.getPlayer().getOnlinePlayer();
 
         // TODO resolve offline player IPs or just error to command sender?
-        if (scope.getScope().isIP() && onlinePlayerOptional.isPresent()) {
+        if (state.getScope().isIP() && onlinePlayerOptional.isPresent()) {
             OnlinePlayer onlinePlayer = onlinePlayerOptional.get();
             muteBuilder = builder.mutePlayerAndAddress(onlinePlayer.getUUID(), onlinePlayer.getSerializedIPAddress());
         } else {
-            muteBuilder = builder.mutePlayer(scope.getPlayer().getUUID());
+            muteBuilder = builder.mutePlayer(state.getPlayer().getUUID());
         }
 
         muteBuilder.byStaff(staffUUID);
 
-        if (scope.getScope().isTemporary()) {
-            muteBuilder.withUnmuteAfter(scope.getDuration());
+        if (state.getScope().isTemporary()) {
+            muteBuilder.withUnmuteAfter(state.getDuration());
         }
 
-        if (scope.hasContext()) {
-            muteBuilder.withContext(scope.getContext());
+        if (state.hasContext()) {
+            muteBuilder.withContext(state.getContext());
         }
 
-        if (scope.hasReason()) {
-            muteBuilder.withMuteReason(scope.getReason());
+        if (state.hasReason()) {
+            muteBuilder.withMuteReason(state.getReason());
         }
 
         try {
-            muteBuilder.buildAndCommit();
-            // TODO send confirmation message
+            CommitResult<MuteRecord> result = muteBuilder.buildAndCommit();
+            String username = state.getPlayer().getUsername();
+            switch (result.status()) {
+                case COMMITTED -> {
+                    String context = state.getContext();
+                    Duration duration = state.getDuration();
+                    String reason = state.getReason();
+                    switch (state.getScope()) {
+                        case DEFAULT -> {
+                            MessageKey key = state.hasReason() ? MUTED_REASON : MUTED;
+                            executor.sendMessage(key, username, context, reason);
+                        }
+                        case TEMPORARY -> {
+                            MessageKey key = state.hasReason() ? TEMPMUTED_REASON : TEMPMUTED;
+                            executor.sendMessage(key, username, context, duration, reason);
+                        }
+                        case GLOBAL -> {
+                            MessageKey key = state.hasReason() ? MUTED_ALL_REASON : MUTED_ALL;
+                            executor.sendMessage(key, username, reason);
+                        }
+                        case IP -> {
+                            MessageKey key = state.hasReason() ? MUTED_IP_REASON : MUTED_IP;
+                            executor.sendMessage(key, username, context, reason);
+                        }
+                        case TEMPORARY_GLOBAL -> {
+                            MessageKey key = state.hasReason() ? TEMPMUTED_ALL_REASON : TEMPMUTED_ALL;
+                            executor.sendMessage(key, username, duration, reason);
+                        }
+                        case TEMPORARY_IP -> {
+                            MessageKey key = state.hasReason() ? TEMPMUTED_IP_REASON : TEMPMUTED_IP;
+                            executor.sendMessage(key, username, context, duration, reason);
+                        }
+                        case GLOBAL_IP -> {
+                            MessageKey key = state.hasReason() ? MUTED_IP_ALL_REASON : MUTED_IP_ALL;
+                            executor.sendMessage(key, username, reason);
+                        }
+                        case TEMPORARY_GLOBAL_IP -> {
+                            MessageKey key = state.hasReason() ? TEMPMUTED_IP_ALL_REASON : TEMPMUTED_IP_ALL;
+                            executor.sendMessage(key, username, duration, reason);
+                        }
+                    }
+                }
+                case CANCELLED_DUPLICATE -> {
+                    MuteRecord existing = result.existing();
+                    Object staffUsername = CommonMessages.CHAT.CONSOLE;
+                    if (existing.getStaff() == null) {
+                        OfflinePlayer staffPlayer = instance.getOfflinePlayer(existing.getStaff());
+                        if (staffPlayer != null) {
+                            staffUsername = staffPlayer.getUsername();
+                        }
+                    }
+                    String context = existing.getContext();
+                    Duration duration = existing.getDuration();
+                    LocalDateTime dateAdded = existing.getDateAdded();
+                    String reason = existing.getReason();
+
+
+                    switch (existing.getScope()) {
+                        case DEFAULT -> {
+                            MessageKey key = existing.hasReason() ? ALREADY_MUTED_REASON : ALREADY_MUTED;
+                            executor.sendMessage(key, username, context, staffUsername, dateAdded, reason);
+                        }
+                        case TEMPORARY -> {
+                            MessageKey key = existing.hasReason() ? ALREADY_TEMPMUTED_REASON : ALREADY_TEMPMUTED;
+                            executor.sendMessage(key, username, context, duration, staffUsername, dateAdded, reason);
+                        }
+                        case GLOBAL -> {
+                            MessageKey key = existing.hasReason() ? ALREADY_MUTED_ALL_REASON : ALREADY_MUTED_ALL;
+                            executor.sendMessage(key, username, staffUsername, dateAdded, staffUsername, dateAdded, reason);
+                        }
+                        case IP -> {
+                            MessageKey key = existing.hasReason() ? ALREADY_MUTED_IP_REASON : ALREADY_MUTED_IP;
+                            executor.sendMessage(key, username, context, staffUsername, dateAdded, reason);
+                        }
+                        case TEMPORARY_GLOBAL -> {
+                            MessageKey key = existing.hasReason() ? ALREADY_TEMPMUTED_ALL_REASON : ALREADY_TEMPMUTED_ALL;
+                            executor.sendMessage(key, username, duration, staffUsername, dateAdded, reason);
+                        }
+                        case TEMPORARY_IP -> {
+                            MessageKey key = existing.hasReason() ? ALREADY_TEMPMUTED_IP_REASON : ALREADY_TEMPMUTED_IP;
+                            executor.sendMessage(key, username, context, duration, staffUsername, dateAdded, reason);
+                        }
+                        case GLOBAL_IP -> {
+                            MessageKey key = existing.hasReason() ? ALREADY_MUTED_IP_ALL_REASON : ALREADY_MUTED_IP_ALL;
+                            executor.sendMessage(key, username, staffUsername, dateAdded, reason);
+                        }
+                        case TEMPORARY_GLOBAL_IP -> {
+                            MessageKey key = existing.hasReason() ? ALREADY_TEMPMUTED_IP_ALL_REASON : ALREADY_TEMPMUTED_IP_ALL;
+                            executor.sendMessage(key, username, duration, staffUsername, dateAdded, reason);
+                        }
+                    }
+                }
+                case CANCELLED -> executor.sendMessage(CommonMessages.ADMINISTRATIVE.CANCELLED.MUTE);
+                case CANCELLED_IMMUNE -> executor.sendMessage(CommonMessages.ADMINISTRATIVE.PLAYER_IMMUNE);
+                // TODO send playerNonExistent message in preExecute?
+                case IMPOSSIBLE -> executor.sendMessage(CommonMessages.ADMINISTRATIVE.PLAYER_OFFLINE);
+                case WITHHELD -> executor.sendMessage(CommonMessages.ADMINISTRATIVE.WITHHELD.MUTE);
+            }
         } catch (Exception e) {
+            executor.sendMessage(CommonMessages.ADMINISTRATIVE.ERROR, e.getClass().getName());
             e.printStackTrace();
             return ExecutionStatus.ERROR;
         }

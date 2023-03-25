@@ -112,7 +112,7 @@ public final class BanRecordImpl implements BanRecord {
     }
 
     @Override
-    public @Nullable String getContexts() {
+    public @Nullable String getContext() {
         return contexts;
     }
 

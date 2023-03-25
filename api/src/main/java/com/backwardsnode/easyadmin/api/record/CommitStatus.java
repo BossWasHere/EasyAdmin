@@ -40,12 +40,22 @@ public enum CommitStatus {
     CANCELLED,
 
     /**
-     * Indicates that the record has not yet been committed, but might be in the future.
+     * Indicates that the record was not committed because another record with the same purpose exists.
      */
-    WITHHELD,
+    CANCELLED_DUPLICATE,
 
     /**
-     * Indicates that the record was not committed because of some error.
+     * Indicates that the record was not committed because its target is immune.
      */
-    ERRORED
+    CANCELLED_IMMUNE,
+
+    /**
+     * Indicates that the record was not committed because it its effect is currently impossible.
+     */
+    IMPOSSIBLE,
+
+    /**
+     * Indicates that the record has not yet been committed, but might be in the future.
+     */
+    WITHHELD
 }

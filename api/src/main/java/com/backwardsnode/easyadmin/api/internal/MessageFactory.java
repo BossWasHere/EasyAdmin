@@ -22,25 +22,12 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.annotation;
+package com.backwardsnode.easyadmin.api.internal;
 
-import com.backwardsnode.easyadmin.api.data.CacheBehavior;
+public interface MessageFactory {
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+    String getMessage(MessageKey key, String language, Object... args);
 
-/**
- * Denotes that the response to this method may be cached internally.
- */
-@Retention(RetentionPolicy.SOURCE)
-@Target({ElementType.METHOD})
-public @interface Caching {
-
-    /**
-     * Indicates the caching behavior of the target method.
-     */
-    CacheBehavior behavior() default CacheBehavior.ALWAYS;
+    String getMessageDefault(MessageKey key, Object... args);
 
 }

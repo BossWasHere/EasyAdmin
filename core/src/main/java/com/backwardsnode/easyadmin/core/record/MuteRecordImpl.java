@@ -114,7 +114,7 @@ public final class MuteRecordImpl implements MuteRecord {
     }
 
     @Override
-    public @Nullable String getContexts() {
+    public @Nullable String getContext() {
         return contexts;
     }
 

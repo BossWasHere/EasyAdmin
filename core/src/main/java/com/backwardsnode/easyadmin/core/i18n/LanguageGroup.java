@@ -24,6 +24,7 @@
 
 package com.backwardsnode.easyadmin.core.i18n;
 
+import com.backwardsnode.easyadmin.api.internal.MessageKey;
 import com.backwardsnode.easyadmin.core.i18n.time.TimeUnitLocaleMap;
 
 import java.util.Map;

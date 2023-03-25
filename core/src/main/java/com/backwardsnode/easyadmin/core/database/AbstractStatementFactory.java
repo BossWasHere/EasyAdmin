@@ -305,7 +305,7 @@ public abstract class AbstractStatementFactory implements DatabaseStatementFacto
         if (record.getTerminationDate() != null) {
             statement.setTimestamp(index++, Timestamp.valueOf(record.getTerminationDate()));
         }
-        statement.setString(index++, record.getContexts());
+        statement.setString(index++, record.getContext());
         statement.setString(index, record.getReason());
     }
 

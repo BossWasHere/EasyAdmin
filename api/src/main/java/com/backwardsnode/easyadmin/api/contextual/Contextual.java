@@ -35,14 +35,14 @@ public interface Contextual {
      * Gets the applicable contexts for this contextual object.
      * @return comma separated string of contexts, or null if no contexts are applicable.
      */
-    @Nullable String getContexts();
+    @Nullable String getContext();
 
     /**
      * Determines if this object actually has any contexts.
      * @return true if this object has contexts, false otherwise.
      */
-    default boolean hasContexts() {
-        return getContexts() != null;
+    default boolean hasContext() {
+        return getContext() != null;
     }
 
 }
