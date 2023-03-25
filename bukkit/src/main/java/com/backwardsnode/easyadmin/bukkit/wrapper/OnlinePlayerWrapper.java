@@ -24,7 +24,9 @@
 
 package com.backwardsnode.easyadmin.bukkit.wrapper;
 
+import com.backwardsnode.easyadmin.api.EasyAdminProvider;
 import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
+import com.backwardsnode.easyadmin.api.internal.MessageKey;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -49,6 +51,11 @@ public class OnlinePlayerWrapper extends OfflinePlayerWrapper implements OnlineP
     @Override
     public void sendMessage(@NotNull String msg) {
         player.sendMessage(msg);
+    }
+
+    @Override
+    public void sendMessage(@NotNull MessageKey key, @NotNull Object... args) {
+        sendMessage(EasyAdminProvider.get().getMessageFactory().getMessage(key, getLocale(), args));
     }
 
     @Override
