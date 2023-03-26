@@ -30,7 +30,6 @@ import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
 import com.backwardsnode.easyadmin.api.data.Platform;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
 import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
-import com.backwardsnode.easyadmin.api.internal.FileSystemProvider;
 import com.backwardsnode.easyadmin.api.internal.InternalServiceProviderType;
 import com.backwardsnode.easyadmin.bukkit.command.BukkitCommandRegister;
 import com.backwardsnode.easyadmin.bukkit.event.BukkitListener;
@@ -41,12 +40,14 @@ import com.backwardsnode.easyadmin.core.BukkitPluginMode;
 import com.backwardsnode.easyadmin.core.EasyAdminService;
 import com.backwardsnode.easyadmin.core.boot.Registration;
 import com.backwardsnode.easyadmin.core.command.CommandManager;
+import com.backwardsnode.easyadmin.core.exception.ServiceInitializationException;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.Messenger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.UUID;
 
 public class EasyAdminBukkit extends JavaPlugin implements EasyAdminPlugin {
@@ -60,7 +61,11 @@ public class EasyAdminBukkit extends JavaPlugin implements EasyAdminPlugin {
 
     @Override
     public void onLoad() {
-        instance = new EasyAdminService(this);
+        try {
+            instance = new EasyAdminService(this);
+        } catch (ServiceInitializationException e) {
+            throw new RuntimeException(e);
+        }
         bukkitChannel = new BukkitMessagingChannel(this);
         commandManager = new CommandManager(this, new BukkitCommandRegister(this));
         listener = new BukkitListener(this);
@@ -106,17 +111,17 @@ public class EasyAdminBukkit extends JavaPlugin implements EasyAdminPlugin {
     }
 
     @Override
+    public @NotNull Path getDataDirectory() {
+        return getDataFolder().toPath();
+    }
+
+    @Override
     public @NotNull RecordBuilder getRecordBuilderFor(@NotNull InternalServiceProviderType provider) {
         return null;
     }
 
     public BukkitPluginMode getPluginMode() {
         return mode;
-    }
-
-    @Override
-    public @NotNull FileSystemProvider getFileSystemProvider() {
-        return null;
     }
 
     @Override

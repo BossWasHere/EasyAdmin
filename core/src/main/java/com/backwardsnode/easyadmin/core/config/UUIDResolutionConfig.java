@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,31 +22,25 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.internal;
+package com.backwardsnode.easyadmin.core.config;
 
-import java.nio.file.Path;
+import com.backwardsnode.easyadmin.core.exception.ConfigurationException;
 
-/**
- * Provides access to paths and files used by the plugin.
- */
-public interface FileSystemProvider {
+public final class UUIDResolutionConfig implements ConfigChecker {
 
-    /**
-     * Gets the initializer for the current plugin's file system.
-     * @return the {@link FileSystemInitializer}.
-     */
-    FileSystemInitializer getInitializer();
+    private boolean allowUntrackedRecords;
+    private boolean enableMojangAPI;
+    private boolean enableBackupAPI;
+    private BackupAPIConfig backupAPI;
 
-    /**
-     * Gets the path to the plugin's data directory.
-     * @return the {@link Path} to the plugin's data directory.
-     */
-    Path getDataDirectory();
+    public static final class BackupAPIConfig {
+        private String url;
+        private String format;
+        private String key;
+    }
 
-    /**
-     * Gets the path to the plugin's language directory.
-     * @return the {@link Path} to the plugin's language directory.
-     */
-    Path getLanguageDirectory();
-
+    @Override
+    public void validate(final String parentPath) throws ConfigurationException {
+        if (backupAPI == null) throw new ConfigurationException(parentPath, "backupAPI");
+    }
 }

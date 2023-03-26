@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,28 +22,22 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin;
+package com.backwardsnode.easyadmin.core.commit;
 
-import com.backwardsnode.easyadmin.core.database.util.DatabaseUtil;
-import org.junit.jupiter.api.Test;
+import com.backwardsnode.easyadmin.api.record.*;
+import com.backwardsnode.easyadmin.core.record.BanRecordImpl;
+import com.backwardsnode.easyadmin.core.record.CommentRecordImpl;
+import com.backwardsnode.easyadmin.core.record.KickRecordImpl;
+import com.backwardsnode.easyadmin.core.record.MuteRecordImpl;
 
-import java.io.IOException;
-import java.util.List;
+public interface Committer {
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+    CommitResult<BanRecord> commit(BanRecordImpl record);
 
-public class SchemaLoadTest {
+    CommitResult<MuteRecord> commit(MuteRecordImpl record);
 
-    @Test
-    public void loadTestSchema() {
-        List<String> statements;
-        try {
-            statements = DatabaseUtil.loadSchemaStatements("mysql.sql");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        assertEquals(5, statements.size());
-        assertTrue(statements.get(0).startsWith("CREATE TABLE"));
-    }
+    CommitResult<CommentRecord> commit(CommentRecordImpl record);
+
+    CommitResult<KickRecord> commit(KickRecordImpl record);
+
 }

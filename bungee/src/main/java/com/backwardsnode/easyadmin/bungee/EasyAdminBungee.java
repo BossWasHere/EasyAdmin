@@ -30,7 +30,6 @@ import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
 import com.backwardsnode.easyadmin.api.data.Platform;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
 import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
-import com.backwardsnode.easyadmin.api.internal.FileSystemProvider;
 import com.backwardsnode.easyadmin.api.internal.InternalServiceProviderType;
 import com.backwardsnode.easyadmin.bungee.command.BungeeCommandRegister;
 import com.backwardsnode.easyadmin.bungee.event.BungeeListener;
@@ -41,6 +40,7 @@ import com.backwardsnode.easyadmin.bungee.wrapper.OnlinePlayerWrapper;
 import com.backwardsnode.easyadmin.core.EasyAdminService;
 import com.backwardsnode.easyadmin.core.boot.Registration;
 import com.backwardsnode.easyadmin.core.command.CommandManager;
+import com.backwardsnode.easyadmin.core.exception.ServiceInitializationException;
 import com.backwardsnode.easyadmin.core.i18n.MessageProvider;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -48,7 +48,9 @@ import net.md_5.bungee.api.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class EasyAdminBungee extends Plugin implements EasyAdminPlugin {
 
@@ -57,23 +59,27 @@ public class EasyAdminBungee extends Plugin implements EasyAdminPlugin {
     private BungeeListener listener;
     private BungeeMessagingChannel bungeeChannel;
     private ExtraServerInfoManager extraServerInfoManager;
-    private MessageProvider messageProvider;
-
-    public EasyAdminBungee() {
-    }
 
     @Override
     public void onLoad() {
-        instance = new EasyAdminService(this);
-        bungeeChannel = new BungeeMessagingChannel(this);
-        commandManager = new CommandManager(this, new BungeeCommandRegister(this));
-        extraServerInfoManager = new ExtraServerInfoManager();
-        listener = new BungeeListener(this);
-        messageProvider = new MessageProvider(this, true);
+        getLogger().info("--- Running EasyAdmin " + getDescription().getVersion() + " ---");
     }
 
     @Override
     public void onEnable() {
+        try {
+            instance = new EasyAdminService(this);
+        } catch (ServiceInitializationException e) {
+            getLogger().log(Level.SEVERE, "Failed to initialize EasyAdmin", e);
+            return;
+        }
+
+        getLogger().info("EasyAdminService started");
+        bungeeChannel = new BungeeMessagingChannel(this);
+        commandManager = new CommandManager(this, new BungeeCommandRegister(this));
+        extraServerInfoManager = new ExtraServerInfoManager();
+        listener = new BungeeListener(this);
+
         Registration.get().register(instance);
 
         getProxy().registerChannel(EasyAdmin.CHANNEL);
@@ -83,16 +89,26 @@ public class EasyAdminBungee extends Plugin implements EasyAdminPlugin {
         pluginManager.registerListener(this, bungeeChannel);
 
         commandManager.registerAllCommands();
+
+        getLogger().info("Finished loading EasyAdmin Bungee");
+
+        instance.getAdminManager().getOrInitPlayerRecord(UUID.randomUUID(), "Bob");
     }
 
     @Override
     public void onDisable() {
+        if (instance == null) {
+            return;
+        }
+        getLogger().info("Shutting down EasyAdmin Bungee");
+
         commandManager.unregisterAllCommands();
 
         getProxy().getPluginManager().unregisterListeners(this);
 
         getProxy().unregisterChannel(EasyAdmin.CHANNEL);
 
+        getLogger().info("Stopping services...");
         instance.close();
     }
 
@@ -112,21 +128,17 @@ public class EasyAdminBungee extends Plugin implements EasyAdminPlugin {
     }
 
     @Override
+    public @NotNull Path getDataDirectory() {
+        return getDataFolder().toPath();
+    }
+
+    @Override
     public @NotNull RecordBuilder getRecordBuilderFor(@NotNull InternalServiceProviderType provider) {
         return null;
     }
 
     public ExtraServerInfoManager getExtraServerInfoManager() {
         return extraServerInfoManager;
-    }
-
-    public MessageProvider getMessageProvider() {
-        return messageProvider;
-    }
-
-    @Override
-    public @NotNull FileSystemProvider getFileSystemProvider() {
-        return null;
     }
 
     @Override

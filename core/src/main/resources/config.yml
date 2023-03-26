@@ -12,7 +12,7 @@ debugMode: false
 dateFormat: "yyyy-MM-dd HH:mm:ssZ"
 # How durations should be presented
 # Valid codes are: y- year, M- month, w- week, d- day, h- hour, m- minute, s- second
-# Codes must be in descending order of size
+# Codes must be in descending order of magnitude
 # Example: "dhms" - 4 days, 7 hours, 59 minutes, 1 second
 timeFormat: dhms
 
@@ -29,7 +29,7 @@ formatComments: true
 recentActionRange: 48
 
 storage:
-  # How to store data. Valid options are: h2, mysql, postgres, sqlite
+  # How to store data. Valid options are: h2, h2_secure, mysql, postgres, sqlite
   type: h2
   # If data should be cached. Recommended for remote databases or large servers
   # false: don't cache, always retrieve from database
@@ -101,9 +101,11 @@ commands:
     requireReason: true
   comment:
     enabled: true
+    notifyOnComment: false
   kick:
     enabled: true
     global: true
+    local: true
     requireReason: true
   mute:
     enabled: true
@@ -114,16 +116,17 @@ commands:
     notifyOnUnmute: false
     requireReason: true
     # Here you can add commands which muted players should not be allowed to execute - they will not be passed to the server
-    blocked-commands:
-      - msg
-      - r
-      - say
-      - tell
-      - me
-      - action
+    blockedCommands:
+      ? "msg"
+      ? "r"
+      ? "say"
+      ? "tell"
+      ? "me"
+      ? "action"
     # Non-command messages that should be passed to the server
-    allowed-messages:
-      "a really obscure message":
+    allowedMessages:
+      ? "a really obscure message"
+      :
         context:
           - hub
   warn:

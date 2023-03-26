@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2022-2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,17 +22,71 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.core.database;
+package com.backwardsnode.easyadmin.core.database.util;
+
+import com.backwardsnode.easyadmin.core.EasyAdminService;
+import com.backwardsnode.easyadmin.core.config.DatabaseConfig;
+import com.backwardsnode.easyadmin.core.database.DatabaseController;
+import com.backwardsnode.easyadmin.core.database.DatabasePlatform;
+import com.backwardsnode.easyadmin.core.database.config.H2ConfigLoader;
+import com.backwardsnode.easyadmin.core.database.config.MySQLConfigLoader;
+import com.backwardsnode.easyadmin.core.database.config.PostgresConfigLoader;
+import com.backwardsnode.easyadmin.core.database.config.SQLiteConfigLoader;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 
-public final class SchemaUtil {
+public final class DatabaseUtil {
+
+    public static DatabaseController createController(final EasyAdminService service, final DatabaseConfig config) {
+        final DatabasePlatform platform = config.getDatabasePlatform();
+        if (platform == null) {
+            return null;
+        }
+        return switch (platform) {
+            case H2 -> new DatabaseController(
+                    new H2ConfigLoader(
+                            service.getDataFile("easyadmin.h2").toAbsolutePath().toString(),
+                            config.getDatabaseUser()
+                    )
+            );
+            case H2_SECURE -> new DatabaseController(
+                    new H2ConfigLoader(
+                            service.getDataFile("easyadmin_s.h2").toAbsolutePath().toString(),
+                            config.getDatabaseUser(),
+                            config.getDatabasePassword()
+                    )
+            );
+            case MYSQL -> new DatabaseController(
+                    new MySQLConfigLoader(
+                            config.getDatabaseHost(),
+                            config.getDatabasePort(),
+                            config.getDatabaseUser(),
+                            config.getDatabasePassword(),
+                            config.getDatabaseName()
+                    )
+            );
+            case POSTGRESQL -> new DatabaseController(
+                    new PostgresConfigLoader(
+                            config.getDatabaseHost(),
+                            config.getDatabasePort(),
+                            config.getDatabaseUser(),
+                            config.getDatabasePassword(),
+                            config.getDatabaseName()
+                    )
+            );
+            case SQLITE -> new DatabaseController(
+                    new SQLiteConfigLoader(
+                            service.getDataFile("easyadmin.db").toAbsolutePath().toString()
+                    )
+            );
+        };
+    }
 
     public static List<String> loadSchemaStatements(String schemaFile) throws IOException {
-        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("schema/" + schemaFile)) {
+        try (InputStream is = DatabaseUtil.class.getResourceAsStream("/schema/" + schemaFile)) {
 
             if (is == null) {
                 throw new FileNotFoundException("Schema file " + schemaFile + " not found");

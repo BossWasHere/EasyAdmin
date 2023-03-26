@@ -28,6 +28,7 @@ import com.backwardsnode.easyadmin.api.builder.CommentBuilder;
 import com.backwardsnode.easyadmin.api.record.CommentRecord;
 import com.backwardsnode.easyadmin.api.record.CommitResult;
 import com.backwardsnode.easyadmin.api.record.CommitStatus;
+import com.backwardsnode.easyadmin.core.commit.Committer;
 import com.backwardsnode.easyadmin.core.record.CommentRecordImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,13 +39,15 @@ import java.util.UUID;
 
 public final class CommentBuilderImpl implements CommentBuilder {
 
+    private final Committer committer;
     private final UUID playerUUID;
     private final String comment;
     private UUID staffUUID;
     private LocalDateTime commentDate;
     private boolean isWarning;
 
-    public CommentBuilderImpl(UUID playerUUID, String comment) {
+    public CommentBuilderImpl(final Committer committer, final UUID playerUUID, final String comment) {
+        this.committer = committer;
         this.playerUUID = Objects.requireNonNull(playerUUID);
         this.comment = Objects.requireNonNull(comment);
         this.commentDate = LocalDateTime.now();
@@ -69,16 +72,12 @@ public final class CommentBuilderImpl implements CommentBuilder {
     }
 
     @Override
-    public @NotNull CommentRecord build() {
+    public @NotNull CommentRecordImpl build() {
         return new CommentRecordImpl(playerUUID, staffUUID, commentDate, isWarning, comment);
     }
 
     @Override
     public @NotNull CommitResult<CommentRecord> buildAndCommit() {
-        CommentRecord record = build();
-
-        // TODO commit it
-
-        return new CommitResult<>(record, CommitStatus.COMMITTED);
+        return committer.commit(build());
     }
 }

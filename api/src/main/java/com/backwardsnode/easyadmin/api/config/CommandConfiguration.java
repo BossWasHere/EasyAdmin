@@ -29,146 +29,99 @@ import com.backwardsnode.easyadmin.api.data.ActionScope;
 /**
  * Holds configuration entries for managing the functionality of in-game commands
  */
-public final class CommandConfiguration {
-
-    private boolean banCommandEnabled;
-    private boolean commentCommandEnabled;
-    private boolean kickCommandEnabled;
-    private boolean muteCommandEnabled;
-    private boolean warningCommandEnabled;
-    private boolean lookupCommandEnabled;
-
-    private ActionScope enabledBanScopes;
-    private ActionScope enabledMuteScopes;
-    private boolean allowGlobalKicks;
-    private boolean allowLocalKicks;
-    private boolean notifyPlayerOnComment;
-    private boolean notifyPlayerOnWarning;
-    private boolean banRequiresReason;
-    private boolean kickRequiresReason;
-    private boolean muteRequiresReason;
+public interface CommandConfiguration {
 
     /**
      * Determines whether the ban command is enabled.
      * @return true if enabled.
      */
-    public boolean isBanCommandEnabled() {
-        return banCommandEnabled;
-    }
+    boolean isBanCommandEnabled();
 
     /**
      * Determines whether the comment command is enabled.
      * @return true if enabled.
      */
-    public boolean isCommentCommandEnabled() {
-        return commentCommandEnabled;
-    }
+    boolean isCommentCommandEnabled();
 
     /**
      * Determines whether the kick command is enabled.
      * @return true if enabled.
      */
-    public boolean isKickCommandEnabled() {
-        return kickCommandEnabled;
-    }
+    boolean isKickCommandEnabled();
 
     /**
      * Determines whether the mute command is enabled.
      * @return true if enabled.
      */
-    public boolean isMuteCommandEnabled() {
-        return muteCommandEnabled;
-    }
+    boolean isMuteCommandEnabled();
 
     /**
      * Determines whether the warning command is enabled.
      * @return true if enabled.
      */
-    public boolean isWarningCommandEnabled() {
-        return warningCommandEnabled;
-    }
+    boolean isWarningCommandEnabled();
 
     /**
      * Determines whether the lookup command is enabled.
      * @return true if enabled.
      */
-    public boolean isLookupCommandEnabled() {
-        return lookupCommandEnabled;
-    }
+    boolean isLookupCommandEnabled();
 
     /**
      * Gets the scopes which the ban command is enabled for.
      * @return the enabled {@link ActionScope}s for "ban".
      * @apiNote consumers should check {@link #isBanCommandEnabled()} first.
      */
-    public ActionScope getEnabledBanScopes() {
-        return enabledBanScopes;
-    }
+    ActionScope getEnabledBanScopes();
 
     /**
      * Gets the scopes which the mute command is enabled for.
      * @return the enabled {@link ActionScope}s for "mute".
      * @apiNote consumers should check {@link #isMuteCommandEnabled()} first.
      */
-    public ActionScope getEnabledMuteScopes() {
-        return enabledMuteScopes;
-    }
+    ActionScope getEnabledMuteScopes();
 
     /**
      * Determines whether global kicks should be allowed.
      * @return true if global kicks are allowed.
      * @apiNote consumers should check {@link #isKickCommandEnabled()} first.
      */
-    public boolean allowGlobalKicks() {
-        return allowGlobalKicks;
-    }
+    boolean allowGlobalKicks();
 
     /**
      * Determines whether local kicks should be allowed.
      * @return true if local kicks are allowed.
      * @apiNote consumers should check {@link #isKickCommandEnabled()} first.
      */
-    public boolean allowLocalKicks() {
-        return allowLocalKicks;
-    }
+    boolean allowLocalKicks();
 
     /**
      * Determines whether players should be notified when they are commented on.
      * @return true if players should be notified.
      */
-    public boolean notifyPlayerOnComment() {
-        return notifyPlayerOnComment;
-    }
+    boolean notifyPlayerOnComment();
 
     /**
      * Determines whether players should be notified when they are warned.
      * @return true if players should be notified.
      */
-    public boolean notifyPlayerOnWarning() {
-        return notifyPlayerOnWarning;
-    }
+    boolean notifyPlayerOnWarning();
 
     /**
      * Determines whether a reason must be provided when banning a player.
      * @return true if a reason is required.
      */
-    public boolean banRequiresReason() {
-        return banRequiresReason;
-    }
+    boolean banRequiresReason();
 
     /**
      * Determines whether a reason must be provided when kicking a player.
      * @return true if a reason is required.
      */
-    public boolean kickRequiresReason() {
-        return kickRequiresReason;
-    }
+    boolean kickRequiresReason();
 
     /**
      * Determines whether a reason must be provided when muting a player.
      * @return true if a reason is required.
      */
-    public boolean muteRequiresReason() {
-        return muteRequiresReason;
-    }
+    boolean muteRequiresReason();
 }

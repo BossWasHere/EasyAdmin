@@ -24,24 +24,9 @@
 
 package com.backwardsnode.easyadmin.api.config;
 
-public class FeatureConfiguration {
+public interface FeatureConfiguration {
 
-    private boolean mutePlatformEnabled;
-    private boolean banPlatformEnabled;
+    boolean isMutePlatformEnabled();
 
-    public boolean isMutePlatformEnabled() {
-        return mutePlatformEnabled;
-    }
-
-    public void setMutePlatformEnabled(boolean mutePlatformEnabled) {
-        this.mutePlatformEnabled = mutePlatformEnabled;
-    }
-
-    public boolean isBanPlatformEnabled() {
-        return banPlatformEnabled;
-    }
-
-    public void setBanPlatformEnabled(boolean banPlatformEnabled) {
-        this.banPlatformEnabled = banPlatformEnabled;
-    }
+    boolean isBanPlatformEnabled();
 }

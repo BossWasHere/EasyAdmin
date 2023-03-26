@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,28 +22,40 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin;
+package com.backwardsnode.easyadmin.core.commit;
 
-import com.backwardsnode.easyadmin.core.database.util.DatabaseUtil;
-import org.junit.jupiter.api.Test;
+import com.backwardsnode.easyadmin.api.record.*;
+import com.backwardsnode.easyadmin.core.EasyAdminService;
+import com.backwardsnode.easyadmin.core.record.BanRecordImpl;
+import com.backwardsnode.easyadmin.core.record.CommentRecordImpl;
+import com.backwardsnode.easyadmin.core.record.KickRecordImpl;
+import com.backwardsnode.easyadmin.core.record.MuteRecordImpl;
 
-import java.io.IOException;
-import java.util.List;
+public class APICommitter implements Committer {
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+    private final EasyAdminService service;
 
-public class SchemaLoadTest {
+    public APICommitter(EasyAdminService service) {
+        this.service = service;
+    }
 
-    @Test
-    public void loadTestSchema() {
-        List<String> statements;
-        try {
-            statements = DatabaseUtil.loadSchemaStatements("mysql.sql");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        assertEquals(5, statements.size());
-        assertTrue(statements.get(0).startsWith("CREATE TABLE"));
+    @Override
+    public CommitResult<BanRecord> commit(BanRecordImpl record) {
+        return null;
+    }
+
+    @Override
+    public CommitResult<MuteRecord> commit(MuteRecordImpl record) {
+        return null;
+    }
+
+    @Override
+    public CommitResult<CommentRecord> commit(CommentRecordImpl record) {
+        return null;
+    }
+
+    @Override
+    public CommitResult<KickRecord> commit(KickRecordImpl record) {
+        return null;
     }
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,28 +22,12 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin;
+package com.backwardsnode.easyadmin.core.config;
 
-import com.backwardsnode.easyadmin.core.database.util.DatabaseUtil;
-import org.junit.jupiter.api.Test;
+import com.backwardsnode.easyadmin.core.exception.ConfigurationException;
 
-import java.io.IOException;
-import java.util.List;
+public interface ConfigChecker {
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+    void validate(String parentPath) throws ConfigurationException;
 
-public class SchemaLoadTest {
-
-    @Test
-    public void loadTestSchema() {
-        List<String> statements;
-        try {
-            statements = DatabaseUtil.loadSchemaStatements("mysql.sql");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        assertEquals(5, statements.size());
-        assertTrue(statements.get(0).startsWith("CREATE TABLE"));
-    }
 }

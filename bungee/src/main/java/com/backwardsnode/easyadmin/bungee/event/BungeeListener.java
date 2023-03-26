@@ -73,7 +73,7 @@ public class BungeeListener implements Listener {
 
             if (muteRecord.isPresent()) {
                 e.setCancelled(true);
-                plugin.getMessageProvider().sendMessage(player, CommonMessages.PLAYER.MUTE.MUTE_TITLE);
+                player.sendMessage(CommonMessages.PLAYER.MUTE.MUTE_TITLE);
 
                 plugin.getInstance().getAdminDynamo().recordAttemptedChatMessage(player, message, context);
             } else {
@@ -128,7 +128,7 @@ public class BungeeListener implements Listener {
             // TODO fallback server if not global ban
             e.setCancelled(true);
             // TODO ban reason message styleize
-            e.setCancelReason(TextComponent.fromLegacyText(plugin.getMessageProvider().getMessageDefault(CommonMessages.PLAYER.BAN.BAN_TITLE)));
+            e.setCancelReason(TextComponent.fromLegacyText(plugin.getInstance().getMessageFactory().getMessageDefault(CommonMessages.PLAYER.BAN.BAN_TITLE)));
 
             plugin.getInstance().getAdminDynamo().recordAttemptedJoin(player, null);
         }
@@ -163,7 +163,7 @@ public class BungeeListener implements Listener {
             // TODO fallback server
             e.setCancelled(true);
             // TODO ban reason message styleize
-            e.getPlayer().disconnect(TextComponent.fromLegacyText(plugin.getMessageProvider().getMessageDefault(CommonMessages.PLAYER.BAN.BAN_TITLE)));
+            e.getPlayer().disconnect(TextComponent.fromLegacyText(plugin.getInstance().getMessageFactory().getMessageDefault(CommonMessages.PLAYER.BAN.BAN_TITLE)));
 
             plugin.getInstance().getAdminDynamo().recordAttemptedJoin(player, e.getTarget().getName());
         }

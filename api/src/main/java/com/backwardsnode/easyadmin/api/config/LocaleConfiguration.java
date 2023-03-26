@@ -27,47 +27,23 @@ package com.backwardsnode.easyadmin.api.config;
 /**
  * Holds configuration entries for language and localization.
  */
-public final class LocaleConfiguration {
-
-    private String defaultLanguage;
-
-    private String dateFormat;
-
-    private String timeRangeFormat;
+public interface LocaleConfiguration {
 
     /**
      * Gets the default language for the plugin.
      * @return The default language.
      */
-    public String getDefaultLanguage() {
-        return defaultLanguage;
-    }
+    String getDefaultLanguage();
 
     /**
      * Gets the date format for the plugin.
      * @return an acceptable {@link java.text.SimpleDateFormat} format string
      */
-    public String getDateFormat() {
-        return dateFormat;
-    }
+    String getDateFormat();
 
     /**
      * Gets the time range format for the plugin.
      * @return a built-in formatting function, such as "dhms" or "wdhm".
      */
-    public String getTimeRangeFormat() {
-        return timeRangeFormat;
-    }
-
-    public void setDefaultLanguage(String defaultLanguage) {
-        this.defaultLanguage = defaultLanguage;
-    }
-
-    public void setDateFormat(String dateFormat) {
-        this.dateFormat = dateFormat;
-    }
-
-    public void setTimeRangeFormat(String timeRangeFormat) {
-        this.timeRangeFormat = timeRangeFormat;
-    }
+    String getTimeRangeFormat();
 }

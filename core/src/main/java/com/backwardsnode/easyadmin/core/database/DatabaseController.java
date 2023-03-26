@@ -32,6 +32,7 @@ import com.backwardsnode.easyadmin.api.record.modify.MuteRecordModifier;
 import com.backwardsnode.easyadmin.api.record.modify.PlayerRecordModifier;
 import com.backwardsnode.easyadmin.core.database.config.LocalConfigLoader;
 import com.backwardsnode.easyadmin.core.database.config.RemoteConfigLoader;
+import com.backwardsnode.easyadmin.core.database.util.DatabaseUtil;
 import com.backwardsnode.easyadmin.core.database.util.SQLBiFunction;
 import com.backwardsnode.easyadmin.core.database.util.SQLFunction;
 import com.backwardsnode.easyadmin.core.record.RecordLoader;
@@ -42,11 +43,9 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.sql.*;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.UUID;
+import java.util.*;
 
 public final class DatabaseController {
 
@@ -63,7 +62,6 @@ public final class DatabaseController {
 
     // Local
     private final LocalConfigLoader<?> localConfig;
-    private Connection localConnection;
 
     private boolean initialized = false;
 
@@ -106,6 +104,9 @@ public final class DatabaseController {
 
         try {
             localConfig.testConnection();
+            if (autoInit) {
+                initDatabase();
+            }
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Could not find required database driver", e);
         }
@@ -364,10 +365,10 @@ public final class DatabaseController {
             return dataSource.getConnection();
         }
 
-        if (localConnection == null) {
-            localConnection = localConfig.getConnection();
+        if (autoInit) {
+            initDatabase();
         }
-        return localConnection;
+        return localConfig.getConnection();
     }
 
     public void initDatabase() {
@@ -379,10 +380,13 @@ public final class DatabaseController {
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
 
-            // TODO run init scripts
-            //statementFactory.getSchemaInitScriptName();
+            List<String> initStatements = DatabaseUtil.loadSchemaStatements(statementFactory.getSchemaInitScriptName());
+            for (String initStatement : initStatements) {
+                statement.addBatch(initStatement);
+            }
+            statement.executeBatch();
 
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
             LOGGER.error("Failed to create tables", e);
         }
     }
@@ -392,15 +396,6 @@ public final class DatabaseController {
             if (dataSource != null) {
                 dataSource.close();
                 dataSource = null;
-            }
-        } else {
-            if (localConnection != null) {
-                try {
-                    localConnection.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Failed to close local connection", e);
-                }
-                localConnection = null;
             }
         }
         initialized = false;

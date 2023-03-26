@@ -28,7 +28,8 @@ import com.backwardsnode.easyadmin.api.EasyAdmin;
 import com.backwardsnode.easyadmin.api.EasyAdminPlugin;
 import com.backwardsnode.easyadmin.api.config.ConfigurationManager;
 import com.backwardsnode.easyadmin.api.config.LocaleConfiguration;
-import com.backwardsnode.easyadmin.api.internal.FileSystemProvider;
+import com.backwardsnode.easyadmin.core.EasyAdminService;
+import com.backwardsnode.easyadmin.core.config.RootConfig;
 import com.backwardsnode.easyadmin.core.i18n.CommonMessages;
 import com.backwardsnode.easyadmin.core.i18n.MessageProvider;
 import org.junit.jupiter.api.BeforeAll;
@@ -36,11 +37,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.stubbing.Answer;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyChar;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -51,26 +53,21 @@ public class LanguageTest {
     @BeforeAll
     public static void initConfig() {
         Yaml yaml = new Yaml();
-        configuration = yaml.loadAs("defaultLanguage: en_US\ndateFormat: dd/MM/yyyy\ntimeRangeFormat: dhms", LocaleConfiguration.class);
+        configuration = yaml.loadAs("defaultLanguage: en_US\ndateFormat: dd/MM/yyyy\ntimeRangeFormat: dhms", RootConfig.class);
     }
 
     @Test
-    public void loadLanguage() {
-        FileSystemProvider fsp = mock(FileSystemProvider.class);
-        when(fsp.getLanguageDirectory()).thenReturn(Paths.get("src", "test", "resources", "lang"));
+    public void loadLanguage() throws IOException {
+        EasyAdminService eas = mock(EasyAdminService.class);
+        when(eas.loadLanguageFile(anyString(), anyBoolean())).then((Answer<Path>) invocation -> Paths.get("src", "test", "resources", "lang", invocation.getArgument(0)));
 
         ConfigurationManager cm = mock(ConfigurationManager.class);
         when(cm.getLocaleConfiguration()).thenReturn(configuration);
 
-        EasyAdmin ea = mock(EasyAdmin.class);
-        when(ea.getConfigurationManager()).thenReturn(cm);
+        when(eas.getConfigurationManager()).thenReturn(cm);
+        when(eas.translateAlternateColorCodes(anyChar(), anyString())).then((Answer<String>) invocation -> invocation.getArgument(1));
 
-        EasyAdminPlugin plugin = mock(EasyAdminPlugin.class);
-        when(plugin.getFileSystemProvider()).thenReturn(fsp);
-        when(plugin.getInstance()).thenReturn(ea);
-        when(plugin.translateAlternateColorCodes(anyChar(), anyString())).then((Answer<String>) invocation -> invocation.getArgument(1));
-
-        MessageProvider mp = new MessageProvider(plugin, true, "en_US");
+        MessageProvider mp = new MessageProvider(eas, true, "en_US");
         assertEquals("EasyAdmin", mp.getMessage(CommonMessages.EASYADMIN.PREFIX, "en_US"));
     }
 

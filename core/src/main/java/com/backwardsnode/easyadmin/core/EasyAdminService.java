@@ -38,78 +38,215 @@ import com.backwardsnode.easyadmin.api.internal.ExternalDataSource;
 import com.backwardsnode.easyadmin.api.internal.MessageFactory;
 import com.backwardsnode.easyadmin.api.server.NetworkInfo;
 import com.backwardsnode.easyadmin.core.boot.Registration;
+import com.backwardsnode.easyadmin.core.builder.RecordBuilderImpl;
+import com.backwardsnode.easyadmin.core.commit.APICommitter;
+import com.backwardsnode.easyadmin.core.component.AdminManagerImpl;
+import com.backwardsnode.easyadmin.core.config.RootConfig;
+import com.backwardsnode.easyadmin.core.config.yaml.YamlRootConfig;
+import com.backwardsnode.easyadmin.core.database.DatabaseController;
+import com.backwardsnode.easyadmin.core.database.util.DatabaseUtil;
 import com.backwardsnode.easyadmin.core.event.CommonEventBus;
+import com.backwardsnode.easyadmin.core.exception.ConfigurationException;
+import com.backwardsnode.easyadmin.core.exception.ServiceInitializationException;
+import com.backwardsnode.easyadmin.core.i18n.MessageProvider;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class EasyAdminService implements EasyAdmin, AutoCloseable {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(EasyAdminService.class);
+
+    private static final String LANG_DIRECTORY = "lang";
+    private static final String CONFIG_YML = "config.yml";
+
     private final EasyAdminPlugin plugin;
 
-    private final CommonEventBus eventBus;
+    private final Path dataDirectory;
+    private final Path languageDirectory;
 
-    public EasyAdminService(EasyAdminPlugin plugin) {
+    private final APICommitter apiCommitter;
+
+    private final DatabaseController databaseController;
+    private final AdminManager adminManager;
+    private final RecordBuilder apiRecordBuilder;
+    private final RootConfig configurationManager;
+    private final EventBus eventBus;
+    private final MessageFactory messageFactory;
+
+    private boolean closed = false;
+
+    public EasyAdminService(EasyAdminPlugin plugin) throws ServiceInitializationException {
+        LOGGER.debug("Initializing EasyAdminService");
         this.plugin = plugin;
+        this.dataDirectory = plugin.getDataDirectory();
+        this.languageDirectory = dataDirectory.resolve(LANG_DIRECTORY);
 
+        try {
+            createDirectories();
+
+            try (InputStream is = Files.newInputStream(loadDataFile(CONFIG_YML, false))) {
+                configurationManager = YamlRootConfig.loadConfig(is);
+                configurationManager.validate("");
+            }
+        } catch (IOException e) {
+            throw new ServiceInitializationException("Failed to initialize plugin files", e);
+        } catch (ConfigurationException e) {
+            throw new ServiceInitializationException("Failed to load configuration", e);
+        }
+
+        LOGGER.debug("Attempting to initialize database " + configurationManager.getDatabaseConfiguration().getDatabasePlatform());
+        databaseController = DatabaseUtil.createController(this, configurationManager.getDatabaseConfiguration());
+        if (databaseController == null) {
+            throw new ServiceInitializationException("Failed to create database controller");
+        }
+
+        apiCommitter = new APICommitter(this);
+        adminManager = new AdminManagerImpl(this, databaseController);
+        apiRecordBuilder = new RecordBuilderImpl(apiCommitter);
+        messageFactory = new MessageProvider(this,true);
         eventBus = new CommonEventBus();
     }
 
     @Override
-    public void close() {
-        Registration.get().unregister();
-    }
-
-    @Override
     public @NotNull AdminDynamo getAdminDynamo() {
+        verifyOpen();
         return null;
     }
 
     @Override
     public @NotNull AdminManager getAdminManager() {
-        return null;
+        verifyOpen();
+        return adminManager;
     }
 
     @Override
     public @NotNull RecordBuilder getRecordBuilder() {
-        return null;
+        verifyOpen();
+        return apiRecordBuilder;
     }
 
     @Override
     public @NotNull ChatFilter getChatFilter() {
+        verifyOpen();
         return null;
     }
 
     @Override
     public @NotNull ConfigurationManager getConfigurationManager() {
-        return null;
+        verifyOpen();
+        return configurationManager;
     }
 
     @Override
     public @NotNull ContextTester getContextTester() {
+        verifyOpen();
         return null;
     }
 
     @Override
     public @NotNull EventBus getEventBus() {
+        verifyOpen();
         return eventBus;
     }
 
     @Override
     public @NotNull ExternalDataSource getExternalDataSource() {
+        verifyOpen();
         return null;
     }
 
     @Override
     public @NotNull MessageFactory getMessageFactory() {
-        return null;
+        verifyOpen();
+        return messageFactory;
     }
 
     @Override
     public @NotNull NetworkInfo getNetworkInformation() {
+        verifyOpen();
         return null;
     }
 
     @Override
     public @NotNull RecommendationEngine getRecommendationEngine() {
+        verifyOpen();
         return null;
+    }
+
+    @Override
+    public void close() {
+        if (closed) {
+            return;
+        }
+        closed = true;
+        databaseController.disconnect();
+        Registration.get().unregister();
+    }
+
+    public void resetConfig() throws IOException {
+        loadDataFile(CONFIG_YML, true);
+    }
+
+    public Path getDataFile(final String dataFile) {
+        return dataDirectory.resolve(dataFile);
+    }
+
+    public Path loadDataFile(final String dataFile, boolean reset) throws IOException {
+        Path dataFilePath = getDataFile(dataFile);
+
+        if (Files.notExists(dataFilePath) || reset) {
+            extractResource('/' + dataFile, dataFilePath);
+        }
+
+        return dataFilePath;
+    }
+
+    public void resetLanguage(final String languageFile) throws IOException {
+        loadLanguageFile(languageFile, true);
+    }
+
+    public Path getLanguageFile(final String languageFile) {
+        return languageDirectory.resolve(languageFile);
+    }
+
+    public Path loadLanguageFile(final String languageFile, boolean reset) throws IOException {
+        Path languageFilePath = getLanguageFile(languageFile);
+
+        if (Files.notExists(languageFilePath) || reset) {
+            extractResource('/' + LANG_DIRECTORY + '/' + languageFile, languageFilePath);
+        }
+
+        return languageFilePath;
+    }
+
+    public String translateAlternateColorCodes(char altColorChar, String text) {
+        return plugin.translateAlternateColorCodes(altColorChar, text);
+    }
+
+    private void verifyOpen() {
+        if (closed) {
+            throw new IllegalStateException("Service is closed");
+        }
+    }
+
+    private void createDirectories() throws IOException {
+        Files.createDirectories(dataDirectory);
+        Files.createDirectories(languageDirectory);
+    }
+
+    private void extractResource(final String internalName, final Path externalPath) throws IOException {
+        try (InputStream is = getClass().getResourceAsStream(internalName)) {
+            if (is == null) {
+                throw new IOException("Could not find internal resource " + internalName);
+            }
+            try (OutputStream os = Files.newOutputStream(externalPath)) {
+                is.transferTo(os);
+            }
+        }
     }
 }

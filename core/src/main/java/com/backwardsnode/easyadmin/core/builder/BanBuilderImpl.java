@@ -29,17 +29,20 @@ import com.backwardsnode.easyadmin.api.builder.BuilderException;
 import com.backwardsnode.easyadmin.api.record.BanRecord;
 import com.backwardsnode.easyadmin.api.record.CommitResult;
 import com.backwardsnode.easyadmin.api.record.CommitStatus;
+import com.backwardsnode.easyadmin.core.commit.Committer;
 import com.backwardsnode.easyadmin.core.record.BanRecordImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 public final class BanBuilderImpl implements BanBuilder {
 
+    private final Committer committer;
     private final UUID playerUUID;
     private final String address;
     private UUID staffUUID;
@@ -48,10 +51,11 @@ public final class BanBuilderImpl implements BanBuilder {
     private String banReason;
     private String context;
 
-    public BanBuilderImpl(UUID playerUUID, String address) {
+    public BanBuilderImpl(final Committer committer, final UUID playerUUID, final String address) {
         if (playerUUID == null && address == null) {
             throw new NullPointerException("Player UUID and address cannot both be null");
         }
+        this.committer = committer;
         this.playerUUID = playerUUID;
         this.address = address;
         this.banDate = LocalDateTime.now();
@@ -94,7 +98,7 @@ public final class BanBuilderImpl implements BanBuilder {
     }
 
     @Override
-    public @NotNull BanRecord build() throws BuilderException {
+    public @NotNull BanRecordImpl build() throws BuilderException {
         if (unbanDate != null && unbanDate.isBefore(banDate)) {
             throw new BuilderException("Unban date cannot be before ban date");
         }
@@ -103,11 +107,7 @@ public final class BanBuilderImpl implements BanBuilder {
 
     @Override
     public @NotNull CommitResult<BanRecord> buildAndCommit() throws BuilderException {
-        BanRecord record = build();
-
-        // TODO commit it
-
-        return new CommitResult<>(record, CommitStatus.COMMITTED);
+        return committer.commit(build());
     }
 
 }

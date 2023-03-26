@@ -29,6 +29,7 @@ import com.backwardsnode.easyadmin.api.config.LocaleConfiguration;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.internal.MessageFactory;
 import com.backwardsnode.easyadmin.api.internal.MessageKey;
+import com.backwardsnode.easyadmin.core.EasyAdminService;
 import com.backwardsnode.easyadmin.core.i18n.time.CustomTimeUnit;
 import com.backwardsnode.easyadmin.core.i18n.time.TimeRangeFormat;
 import org.slf4j.Logger;
@@ -56,7 +57,7 @@ public class MessageProvider implements MessageFactory {
 
     private final Logger logger = LoggerFactory.getLogger(MessageProvider.class);
 
-    private final EasyAdminPlugin plugin;
+    private final EasyAdminService service;
     private final String defaultLanguage;
     private final Map<String, LanguageGroup> loadedLanguages;
 
@@ -64,12 +65,12 @@ public class MessageProvider implements MessageFactory {
     private DateTimeFormatter dateFormat;
     private TimeRangeFormat timeRangeFormat;
 
-    public MessageProvider(EasyAdminPlugin plugin, boolean loadDefault) {
-        this(plugin, loadDefault, DEFAULT_LANGUAGE);
+    public MessageProvider(EasyAdminService service, boolean loadDefault) {
+        this(service, loadDefault, DEFAULT_LANGUAGE);
     }
 
-    public MessageProvider(EasyAdminPlugin plugin, boolean loadDefault, String defaultLanguage) {
-        this.plugin = plugin;
+    public MessageProvider(EasyAdminService service, boolean loadDefault, String defaultLanguage) {
+        this.service = service;
         this.defaultLanguage = defaultLanguage;
         loadedLanguages = new HashMap<>();
 
@@ -77,7 +78,7 @@ public class MessageProvider implements MessageFactory {
             defaultLanguageGroup = loadLanguage(defaultLanguage, false);
         }
 
-        LocaleConfiguration localeConfig = plugin.getInstance().getConfigurationManager().getLocaleConfiguration();
+        LocaleConfiguration localeConfig = service.getConfigurationManager().getLocaleConfiguration();
 
         try {
             dateFormat = DateTimeFormatter.ofPattern(localeConfig.getDateFormat(), Locale.ROOT);
@@ -106,7 +107,13 @@ public class MessageProvider implements MessageFactory {
 
         logger.debug("Loading language: " + language);
 
-        Path langFilePath = plugin.getFileSystemProvider().getLanguageDirectory().resolve(language + ".yml");
+        Path langFilePath;
+        try {
+            langFilePath = service.loadLanguageFile(language + ".yml", false);
+        } catch (IOException e) {
+            logger.error("Failed to load language file: " + language, e);
+            return null;
+        }
 
         Yaml yaml = new Yaml();
         try (InputStream is = Files.newInputStream(langFilePath)) {
@@ -116,7 +123,7 @@ public class MessageProvider implements MessageFactory {
             loadedLanguages.put(language, newLanguage);
             return newLanguage;
         } catch (IOException e) {
-            logger.warn("Failed to load language: " + language, e);
+            logger.error("Failed to load language: " + language, e);
             return null;
         }
     }
@@ -170,7 +177,7 @@ public class MessageProvider implements MessageFactory {
         if (key.addPrefix()) {
             msg = lg.getMessage(EASYADMIN.PREFIX) + msg;
         }
-        return plugin.translateAlternateColorCodes('&', msg);
+        return service.translateAlternateColorCodes('&', msg);
     }
 
     @Override

@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS players (
     totalJoins      int             NOT NULL DEFAULT 1,
     PRIMARY KEY (uuid)
 );
-CREATE INDEX IF NOT EXISTS ON players (username);
+CREATE INDEX IF NOT EXISTS players_username ON players (username);
 
 CREATE TABLE IF NOT EXISTS bans (
     id              int             AUTO_INCREMENT,
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS bans (
     FOREIGN KEY (staffUuid)         REFERENCES players(uuid),
     FOREIGN KEY (unbanStaffUuid)    REFERENCES players(uuid)
 );
-CREATE INDEX IF NOT EXISTS ON bans (playerUuid);
+CREATE INDEX IF NOT EXISTS bans_playerUuid ON bans (playerUuid);
 
 CREATE TABLE IF NOT EXISTS comments (
     id              int             AUTO_INCREMENT,
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS comments (
     FOREIGN KEY (playerUuid)        REFERENCES players(uuid),
     FOREIGN KEY (staffUuid)         REFERENCES players(uuid)
 );
-CREATE INDEX IF NOT EXISTS ON comments (playerUuid);
+CREATE INDEX IF NOT EXISTS comments_playerUuid ON comments (playerUuid);
 
 CREATE TABLE IF NOT EXISTS kicks (
     id              int             AUTO_INCREMENT,
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS kicks (
     FOREIGN KEY (playerUuid)        REFERENCES players(uuid),
     FOREIGN KEY (staffUuid)         REFERENCES players(uuid)
 );
-CREATE INDEX IF NOT EXISTS ON kicks (playerUuid);
+CREATE INDEX IF NOT EXISTS kicks_playerUuid ON kicks (playerUuid);
 
 CREATE TABLE IF NOT EXISTS mutes (
     id              int             AUTO_INCREMENT,
@@ -99,4 +99,4 @@ CREATE TABLE IF NOT EXISTS mutes (
     FOREIGN KEY (staffUuid)         REFERENCES players(uuid),
     FOREIGN KEY (unmuteStaffUuid)   REFERENCES players(uuid)
 );
-CREATE INDEX IF NOT EXISTS ON mutes (playerUuid);
+CREATE INDEX IF NOT EXISTS mutes_playerUuid ON mutes (playerUuid);

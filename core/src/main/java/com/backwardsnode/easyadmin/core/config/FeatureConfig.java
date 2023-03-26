@@ -22,38 +22,30 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.internal;
+package com.backwardsnode.easyadmin.core.config;
 
-import java.io.IOException;
+import com.backwardsnode.easyadmin.api.config.FeatureConfiguration;
 
-/**
- * Enables the initial creation and verification of EasyAdmin plugin files.
- */
-public interface FileSystemInitializer {
+public class FeatureConfig implements FeatureConfiguration {
 
-    /**
-     * Creates the necessary directories for the plugin if they do not exist.
-     * @throws IOException if the directories could not be created.
-     */
-    void createDirectories() throws IOException;
+    private boolean mutePlatformEnabled;
+    private boolean banPlatformEnabled;
 
-    /**
-     * Initializes all plugin files if they do not exist.
-     * @throws IOException if an error occurs while creating the files.
-     */
-    void initialize() throws IOException;
+    @Override
+    public boolean isMutePlatformEnabled() {
+        return mutePlatformEnabled;
+    }
 
-    /**
-     * Re-extracts the main configuration file for the plugin.
-     * @throws IOException if the file could not be extracted.
-     */
-    void resetConfig() throws IOException;
+    public void setMutePlatformEnabled(boolean mutePlatformEnabled) {
+        this.mutePlatformEnabled = mutePlatformEnabled;
+    }
 
-    /**
-     * Re-extracts the given language file from within the plugin.
-     * @param languageFile the language file to re-extract.
-     * @throws IOException if the file could not be extracted.
-     */
-    void resetLanguage(String languageFile) throws IOException;
+    @Override
+    public boolean isBanPlatformEnabled() {
+        return banPlatformEnabled;
+    }
 
+    public void setBanPlatformEnabled(boolean banPlatformEnabled) {
+        this.banPlatformEnabled = banPlatformEnabled;
+    }
 }

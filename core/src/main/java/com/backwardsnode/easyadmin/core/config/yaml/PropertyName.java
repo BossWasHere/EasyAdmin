@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,28 +22,17 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin;
+package com.backwardsnode.easyadmin.core.config.yaml;
 
-import com.backwardsnode.easyadmin.core.database.util.DatabaseUtil;
-import org.junit.jupiter.api.Test;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.io.IOException;
-import java.util.List;
+@Target({ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface PropertyName {
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+    String name();
 
-public class SchemaLoadTest {
-
-    @Test
-    public void loadTestSchema() {
-        List<String> statements;
-        try {
-            statements = DatabaseUtil.loadSchemaStatements("mysql.sql");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        assertEquals(5, statements.size());
-        assertTrue(statements.get(0).startsWith("CREATE TABLE"));
-    }
 }

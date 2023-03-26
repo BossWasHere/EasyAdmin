@@ -28,12 +28,12 @@ import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
 import com.backwardsnode.easyadmin.api.data.Platform;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
 import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
-import com.backwardsnode.easyadmin.api.internal.FileSystemProvider;
 import com.backwardsnode.easyadmin.api.internal.InternalServiceProviderType;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.UUID;
 
 /**
@@ -70,11 +70,11 @@ public interface EasyAdminPlugin {
     @NotNull Platform getPlatform();
 
     /**
-     * Gets the file system provider for this plugin instance.
-     * @return the {@link FileSystemProvider} for this plugin instance.
+     * Gets the data folder for this plugin.
+     * @return the {@link Path} to this plugin's data folder.
      */
     @ApiStatus.Internal
-    @NotNull FileSystemProvider getFileSystemProvider();
+    @NotNull Path getDataDirectory();
 
     /**
      * Gets details about a player by their username.

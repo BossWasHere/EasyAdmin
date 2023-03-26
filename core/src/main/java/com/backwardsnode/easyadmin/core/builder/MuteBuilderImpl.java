@@ -29,6 +29,7 @@ import com.backwardsnode.easyadmin.api.builder.MuteBuilder;
 import com.backwardsnode.easyadmin.api.record.CommitResult;
 import com.backwardsnode.easyadmin.api.record.CommitStatus;
 import com.backwardsnode.easyadmin.api.record.MuteRecord;
+import com.backwardsnode.easyadmin.core.commit.Committer;
 import com.backwardsnode.easyadmin.core.record.MuteRecordImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,6 +41,7 @@ import java.util.UUID;
 
 public final class MuteBuilderImpl implements MuteBuilder {
 
+    private final Committer committer;
     private final UUID playerUUID;
     private final String address;
     private UUID staffUUID;
@@ -48,10 +50,11 @@ public final class MuteBuilderImpl implements MuteBuilder {
     private String muteReason;
     private String context;
 
-    public MuteBuilderImpl(UUID playerUUID, String address) {
+    public MuteBuilderImpl(final Committer committer, final UUID playerUUID, final String address) {
         if (playerUUID == null && address == null) {
             throw new NullPointerException("Player UUID and address cannot both be null");
         }
+        this.committer = committer;
         this.playerUUID = playerUUID;
         this.address = address;
         this.muteDate = LocalDateTime.now();
@@ -94,7 +97,7 @@ public final class MuteBuilderImpl implements MuteBuilder {
     }
 
     @Override
-    public @NotNull MuteRecord build() throws BuilderException {
+    public @NotNull MuteRecordImpl build() throws BuilderException {
         if (unmuteDate != null && unmuteDate.isBefore(muteDate)) {
             throw new BuilderException("Unmute date cannot be before mute date");
         }
@@ -103,11 +106,7 @@ public final class MuteBuilderImpl implements MuteBuilder {
 
     @Override
     public @NotNull CommitResult<MuteRecord> buildAndCommit() throws BuilderException {
-        MuteRecord record = build();
-
-        // TODO commit it
-
-        return new CommitResult<>(record, CommitStatus.COMMITTED);
+        return committer.commit(build());
     }
 
 }

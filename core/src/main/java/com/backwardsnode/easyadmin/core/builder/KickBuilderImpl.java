@@ -28,6 +28,7 @@ import com.backwardsnode.easyadmin.api.builder.KickBuilder;
 import com.backwardsnode.easyadmin.api.record.CommitResult;
 import com.backwardsnode.easyadmin.api.record.CommitStatus;
 import com.backwardsnode.easyadmin.api.record.KickRecord;
+import com.backwardsnode.easyadmin.core.commit.Committer;
 import com.backwardsnode.easyadmin.core.record.KickRecordImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,6 +39,7 @@ import java.util.UUID;
 
 public final class KickBuilderImpl implements KickBuilder {
 
+    private final Committer committer;
     private final UUID playerUUID;
     private UUID staffUUID;
     private LocalDateTime kickDate;
@@ -45,7 +47,8 @@ public final class KickBuilderImpl implements KickBuilder {
     private String kickReason;
     private boolean shouldPerform;
 
-    public KickBuilderImpl(UUID playerUUID) {
+    public KickBuilderImpl(final Committer committer, final UUID playerUUID) {
+        this.committer = committer;
         this.playerUUID = Objects.requireNonNull(playerUUID);
         this.kickDate = LocalDateTime.now();
     }
@@ -81,16 +84,12 @@ public final class KickBuilderImpl implements KickBuilder {
     }
 
     @Override
-    public @NotNull KickRecord build() {
+    public @NotNull KickRecordImpl build() {
         return new KickRecordImpl(playerUUID, staffUUID, kickDate, isGlobal, kickReason);
     }
 
     @Override
     public @NotNull CommitResult<KickRecord> buildAndCommit() {
-        KickRecord record = build();
-
-        // TODO commit it
-
-        return new CommitResult<>(record, CommitStatus.COMMITTED);
+        return committer.commit(build());
     }
 }
