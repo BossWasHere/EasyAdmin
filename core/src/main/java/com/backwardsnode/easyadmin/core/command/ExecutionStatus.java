@@ -30,6 +30,6 @@ public enum ExecutionStatus {
     SILENT_FAILURE,
     NO_PERMISSION,
     INVALID_ARGUMENTS,
-    ERROR;
+    ERROR
 
 }

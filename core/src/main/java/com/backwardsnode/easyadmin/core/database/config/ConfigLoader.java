@@ -28,7 +28,7 @@ import com.backwardsnode.easyadmin.core.database.DatabaseStatementFactory;
 
 public interface ConfigLoader<T extends DatabaseStatementFactory> {
 
-    public T getStatementFactory();
-    public boolean isStatementFactoryCompatible(DatabaseStatementFactory factory);
+    T getStatementFactory();
+    boolean isStatementFactoryCompatible(DatabaseStatementFactory factory);
 
 }

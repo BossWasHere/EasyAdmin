@@ -52,6 +52,4 @@ public interface EventHandle<T extends EasyAdminEvent> extends AutoCloseable {
      */
     boolean ignoreCancelled();
 
-    //boolean isActive();
-    //@NotNull Class<T> getEventClass();
 }

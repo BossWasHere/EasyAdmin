@@ -25,6 +25,7 @@
 package com.backwardsnode.easyadmin.api.annotation;
 
 import com.backwardsnode.easyadmin.api.data.CacheBehavior;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -36,6 +37,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.METHOD})
+@ApiStatus.Internal
 public @interface Caching {
 
     /**

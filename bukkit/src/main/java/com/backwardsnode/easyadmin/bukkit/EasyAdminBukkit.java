@@ -120,12 +120,12 @@ public class EasyAdminBukkit extends JavaPlugin implements EasyAdminPlugin {
     }
 
     @Override
-    public @Nullable OfflinePlayer getOfflinePlayer(String username) {
+    public @Nullable OfflinePlayer getOfflinePlayer(@NotNull String username) {
         return OfflinePlayerWrapper.byUsername(username);
     }
 
     @Override
-    public @Nullable OfflinePlayer getOfflinePlayer(UUID uuid) {
+    public @Nullable OfflinePlayer getOfflinePlayer(@NotNull UUID uuid) {
         return OfflinePlayerWrapper.byUUID(uuid);
     }
 
