@@ -50,6 +50,12 @@ public enum CommitStatus {
     CANCELLED_IMMUNE,
 
     /**
+     * Indicates that the record was not committed because the target is not tracked by this plugin,
+     * and tracking unknown players is disabled.
+     */
+    CANCELLED_NOEXIST,
+
+    /**
      * Indicates that the record was not committed because it its effect is currently impossible.
      */
     IMPOSSIBLE,

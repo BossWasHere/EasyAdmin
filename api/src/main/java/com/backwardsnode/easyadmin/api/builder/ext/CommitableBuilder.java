@@ -25,6 +25,7 @@
 package com.backwardsnode.easyadmin.api.builder.ext;
 
 import com.backwardsnode.easyadmin.api.builder.BuilderException;
+import com.backwardsnode.easyadmin.api.commit.CommitException;
 import com.backwardsnode.easyadmin.api.commit.CommitResult;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,6 +47,6 @@ public interface CommitableBuilder<T> {
      * @return The built object.
      * @throws BuilderException If the builder fails to build the object.
      */
-    @NotNull CommitResult<T> buildAndCommit() throws BuilderException;
+    @NotNull CommitResult<T> buildAndCommit() throws BuilderException, CommitException;
 
 }

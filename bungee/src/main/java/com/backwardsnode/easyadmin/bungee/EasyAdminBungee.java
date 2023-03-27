@@ -147,7 +147,7 @@ public class EasyAdminBungee extends Plugin implements EasyAdminPlugin {
     }
 
     @Override
-    public @Nullable OfflinePlayer getOfflinePlayer(@NotNull UUID uuid) {
+    public @NotNull OfflinePlayer getOfflinePlayer(@NotNull UUID uuid) {
         return OfflinePlayerWrapper.byUUID(uuid);
     }
 

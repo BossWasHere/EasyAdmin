@@ -29,6 +29,7 @@ import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
 import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import net.md_5.bungee.api.ProxyServer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -38,7 +39,7 @@ public class OfflinePlayerWrapper implements OfflinePlayer {
     private final UUID playerUUID;
     private final String username;
 
-    public OfflinePlayerWrapper(@NotNull UUID playerUUID, @NotNull String username) {
+    public OfflinePlayerWrapper(@NotNull UUID playerUUID, @Nullable String username) {
         this.playerUUID = playerUUID;
         this.username = username;
     }
@@ -49,7 +50,10 @@ public class OfflinePlayerWrapper implements OfflinePlayer {
     }
 
     @Override
-    public @NotNull String getUsername() {
+    public @NotNull String getUsername() throws IllegalStateException {
+        if (username == null) {
+            throw new IllegalStateException("Could not resolve username for player " + getUUID());
+        }
         return username;
     }
 
@@ -67,7 +71,7 @@ public class OfflinePlayerWrapper implements OfflinePlayer {
             return onlinePlayer;
         }
         String username = EasyAdminProvider.get().getExternalDataSource().getUsernameForUUID(uuid);
-        return username == null ? null : new OfflinePlayerWrapper(uuid, username);
+        return new OfflinePlayerWrapper(uuid, username);
     }
 
     public static OfflinePlayerWrapper byUsername(@NotNull String username) {

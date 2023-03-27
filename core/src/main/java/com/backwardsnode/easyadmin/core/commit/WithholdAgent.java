@@ -24,22 +24,19 @@
 
 package com.backwardsnode.easyadmin.core.commit;
 
-import com.backwardsnode.easyadmin.api.commit.CommitResult;
-import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
-import com.backwardsnode.easyadmin.api.record.*;
-import com.backwardsnode.easyadmin.core.record.BanRecordImpl;
-import com.backwardsnode.easyadmin.core.record.CommentRecordImpl;
-import com.backwardsnode.easyadmin.core.record.KickRecordImpl;
-import com.backwardsnode.easyadmin.core.record.MuteRecordImpl;
+import com.backwardsnode.easyadmin.api.record.BanRecord;
+import com.backwardsnode.easyadmin.api.record.CommentRecord;
+import com.backwardsnode.easyadmin.api.record.KickRecord;
+import com.backwardsnode.easyadmin.api.record.MuteRecord;
 
-public interface Committer {
+public interface WithholdAgent {
 
-    CommitResult<BanRecord> commit(BanRecordImpl record, CommandExecutor executor);
+    boolean withholdBan(BanRecord record);
 
-    CommitResult<MuteRecord> commit(MuteRecordImpl record, CommandExecutor executor);
+    boolean withholdMute(MuteRecord record);
 
-    CommitResult<CommentRecord> commit(CommentRecordImpl record, CommandExecutor executor);
+    boolean withholdKick(KickRecord record);
 
-    CommitResult<KickRecord> commit(KickRecordImpl record, CommandExecutor executor);
+    boolean withholdComment(CommentRecord record);
 
 }

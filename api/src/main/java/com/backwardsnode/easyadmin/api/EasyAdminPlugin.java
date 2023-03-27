@@ -79,16 +79,16 @@ public interface EasyAdminPlugin {
     /**
      * Gets details about a player by their username.
      * @param username the username of the player.
-     * @return {@link OfflinePlayer} if the player is recognized by the server, otherwise null.
+     * @return {@link OfflinePlayer} if the player's username can be resolved, otherwise null.
      */
     @Nullable OfflinePlayer getOfflinePlayer(@NotNull String username);
 
     /**
      * Gets details about a player by their UUID.
      * @param uuid the UUID of the player.
-     * @return {@link OfflinePlayer} if the player is recognized by the server, otherwise null.
+     * @return {@link OfflinePlayer} for the specified UUID.
      */
-    @Nullable OfflinePlayer getOfflinePlayer(@NotNull UUID uuid);
+    @NotNull OfflinePlayer getOfflinePlayer(@NotNull UUID uuid);
 
     /**
      * Gets details about an online player by their username.

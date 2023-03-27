@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public final class MutablePlayerRecordImpl extends PlayerRecordImpl implements MutablePlayerRecord {
+public final class MutablePlayerRecordImpl extends PlayerRecordImpl implements MutablePlayerRecord, ImmutableRecordProvider<PlayerRecordImpl> {
 
     private final PlayerRecordImpl source;
 

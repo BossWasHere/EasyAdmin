@@ -33,9 +33,11 @@ import java.util.UUID;
 
 public interface MutableCommentRecord extends CommentRecord, MutableRecord<CommentRecord> {
 
+    boolean canSwitchWarningMode();
+
     void setComment(@NotNull String comment);
 
-    void setWarning(boolean warning);
+    void setWarning(boolean warning) throws IllegalStateException;
 
     void setAuthor(@Nullable UUID author);
 

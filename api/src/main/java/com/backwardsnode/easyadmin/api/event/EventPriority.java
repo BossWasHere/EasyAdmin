@@ -46,9 +46,15 @@ public enum EventPriority {
      */
     HIGH(3),
     /**
-     * The highest priority, called last.
+     * The highest priority that allows for the event to be modified or cancelled, called last.
      */
-    HIGHEST(4);
+    HIGHEST(4),
+
+    /**
+     * The monitor priority, called last and only if no other handlers have cancelled the event.
+     * The event can not be modified by handlers.
+     */
+    MONITOR(5);
 
     private final int ordinal;
 

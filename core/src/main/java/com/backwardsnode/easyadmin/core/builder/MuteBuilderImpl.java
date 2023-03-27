@@ -26,9 +26,10 @@ package com.backwardsnode.easyadmin.core.builder;
 
 import com.backwardsnode.easyadmin.api.builder.BuilderException;
 import com.backwardsnode.easyadmin.api.builder.MuteBuilder;
+import com.backwardsnode.easyadmin.api.commit.CommitException;
 import com.backwardsnode.easyadmin.api.commit.CommitResult;
+import com.backwardsnode.easyadmin.api.commit.Committer;
 import com.backwardsnode.easyadmin.api.record.MuteRecord;
-import com.backwardsnode.easyadmin.core.commit.Committer;
 import com.backwardsnode.easyadmin.core.record.MuteRecordImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -104,8 +105,8 @@ public final class MuteBuilderImpl implements MuteBuilder {
     }
 
     @Override
-    public @NotNull CommitResult<MuteRecord> buildAndCommit() throws BuilderException {
-        return committer.commit(build(), null);
+    public @NotNull CommitResult<MuteRecord> buildAndCommit() throws BuilderException, CommitException {
+        return committer.commit(build());
     }
 
 }

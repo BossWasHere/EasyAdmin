@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.UUID;
 
-public final class MutableKickRecordImpl extends KickRecordImpl implements MutableKickRecord {
+public final class MutableKickRecordImpl extends KickRecordImpl implements MutableKickRecord, ImmutableRecordProvider<KickRecordImpl> {
 
     private final KickRecordImpl source;
 

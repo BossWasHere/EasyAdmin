@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,15 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.event.admin;
+package com.backwardsnode.easyadmin.api.commit;
 
-import com.backwardsnode.easyadmin.api.event.Cancellable;
-import com.backwardsnode.easyadmin.api.event.Mutable;
-import com.backwardsnode.easyadmin.api.event.staff.CommandEvent;
-import com.backwardsnode.easyadmin.api.record.MuteRecord;
-import com.backwardsnode.easyadmin.api.record.mutable.MutableMuteRecord;
-import org.jetbrains.annotations.NotNull;
+import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
+import com.backwardsnode.easyadmin.api.record.base.LiveRecord;
 
-public interface MuteEvent extends AdministrationEvent, Cancellable, CommandEvent, Mutable<MuteRecord>, MutableMuteRecord { }
+public interface Committer {
+
+    <T extends LiveRecord<?>> CommitResult<T> commit(T record) throws CommitException;
+
+    <T extends LiveRecord<?>> CommitResult<T> commitByExecutor(T record, CommandExecutor executor) throws CommitException;
+
+}

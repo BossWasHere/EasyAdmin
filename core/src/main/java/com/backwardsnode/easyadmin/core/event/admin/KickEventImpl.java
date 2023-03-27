@@ -37,6 +37,9 @@ import com.backwardsnode.easyadmin.core.record.MutableKickRecordImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 public final class KickEventImpl extends CancellableEvent implements KickEvent {
 
     private final AdminEventSource source;
@@ -61,11 +64,6 @@ public final class KickEventImpl extends CancellableEvent implements KickEvent {
     }
 
     @Override
-    public @NotNull KickRecordImpl getKickRecord() {
-        return isModified() ? mutableRecord.asImmutable() : kickRecord;
-    }
-
-    @Override
     public @Nullable CommandExecutor getExecutor() {
         return executor;
     }
@@ -77,7 +75,7 @@ public final class KickEventImpl extends CancellableEvent implements KickEvent {
 
     @Override
     public boolean canModify() {
-        return modifiable;
+        return modifiable && !sealed;
     }
 
     @Override
@@ -86,8 +84,62 @@ public final class KickEventImpl extends CancellableEvent implements KickEvent {
     }
 
     @Override
-    public MutableKickRecord getSharedMutable() {
-        if (!modifiable) {
+    public @NotNull KickRecordImpl getCurrent() {
+        return isModified() ? mutableRecord.asImmutable() : kickRecord;
+    }
+
+    @Override
+    public boolean isGlobal() {
+        return getCurrent().isGlobal();
+    }
+
+    @Override
+    public @NotNull String getServerName() {
+        return getCurrent().getServerName();
+    }
+
+    @Override
+    public @NotNull UUID getPlayer() {
+        return getCurrent().getPlayer();
+    }
+
+    @Override
+    public @Nullable UUID getAuthor() {
+        return getCurrent().getAuthor();
+    }
+
+    @Override
+    public @NotNull LocalDateTime getDateAdded() {
+        return getCurrent().getDateAdded();
+    }
+
+    @Override
+    public @NotNull Integer getId() {
+        return getCurrent().getId();
+    }
+
+    @Override
+    public boolean isLoaded() {
+        return getCurrent().isLoaded();
+    }
+
+    @Override
+    public @Nullable String getReason() {
+        return getCurrent().getReason();
+    }
+
+    @Override
+    public void setReason(@NotNull String reason) {
+        getMutable().setReason(reason);
+    }
+
+    @Override
+    public void setAuthor(@Nullable UUID author) {
+        getMutable().setAuthor(author);
+    }
+
+    private MutableKickRecord getMutable() {
+        if (!modifiable || sealed) {
             throw new ImmutableEventException();
         }
         if (mutableRecord == null) {

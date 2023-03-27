@@ -25,6 +25,7 @@
 package com.backwardsnode.easyadmin.bukkit.wrapper;
 
 import com.backwardsnode.easyadmin.api.EasyAdminProvider;
+import com.backwardsnode.easyadmin.api.data.AdminAction;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
 import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import org.bukkit.Bukkit;
@@ -48,12 +49,12 @@ public class OfflinePlayerWrapper implements OfflinePlayer {
     }
 
     @Override
-    public @NotNull String getUsername() {
+    public @NotNull String getUsername() throws IllegalStateException {
         String username = player.getName();
         if (username == null) {
             username = EasyAdminProvider.get().getExternalDataSource().getUsernameForUUID(getUUID());
             if (username == null) {
-                throw new IllegalStateException("Could not find username for player " + getUUID());
+                throw new IllegalStateException("Could not resolve username for player " + getUUID());
             }
         }
 

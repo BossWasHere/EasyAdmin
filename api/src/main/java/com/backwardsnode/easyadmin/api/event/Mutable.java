@@ -24,7 +24,7 @@
 
 package com.backwardsnode.easyadmin.api.event;
 
-public interface Mutable<T, M> {
+public interface Mutable<T> {
 
     boolean isModified();
 
@@ -32,6 +32,6 @@ public interface Mutable<T, M> {
 
     T getOriginal();
 
-    M getSharedMutable();
+    T getCurrent();
 
 }

@@ -52,4 +52,10 @@ public interface EventHandle<T extends EasyAdminEvent> extends AutoCloseable {
      */
     boolean ignoreCancelled();
 
+    /**
+     * Gets the priority of this event handler.
+     * @return the {@link EventPriority}.
+     */
+    EventPriority getPriority();
+
 }

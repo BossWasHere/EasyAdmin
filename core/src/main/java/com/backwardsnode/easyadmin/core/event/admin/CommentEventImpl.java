@@ -37,32 +37,32 @@ import com.backwardsnode.easyadmin.core.record.MutableCommentRecordImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 public final class CommentEventImpl extends CancellableEvent implements CommentEvent {
 
     private final AdminEventSource source;
     private final CommentRecordImpl commentRecord;
     private final CommandExecutor executor;
     private final boolean modifiable;
+    private final boolean typeChangable;
 
     private MutableCommentRecordImpl mutableRecord;
 
     public CommentEventImpl(EasyAdmin instance,  AdminEventSource source, CommentRecordImpl commentRecord,
-                            CommandExecutor executor, boolean cancellable, boolean modifiable) {
+                            CommandExecutor executor, boolean cancellable, boolean modifiable, boolean typeChangable) {
         super(instance, CommentEvent.class, cancellable);
         this.source = source;
         this.commentRecord = commentRecord;
         this.executor = executor;
         this.modifiable = modifiable;
+        this.typeChangable = typeChangable;
     }
 
     @Override
     public @NotNull AdminEventSource getSource() {
         return source;
-    }
-
-    @Override
-    public @NotNull CommentRecordImpl getCommentRecord() {
-        return isModified() ? mutableRecord.asImmutable() : commentRecord;
     }
 
     @Override
@@ -77,7 +77,7 @@ public final class CommentEventImpl extends CancellableEvent implements CommentE
 
     @Override
     public boolean canModify() {
-        return modifiable;
+        return modifiable && !sealed;
     }
 
     @Override
@@ -86,8 +86,70 @@ public final class CommentEventImpl extends CancellableEvent implements CommentE
     }
 
     @Override
-    public MutableCommentRecord getSharedMutable() {
-        if (!modifiable) {
+    public @NotNull CommentRecordImpl getCurrent() {
+        return isModified() ? mutableRecord.asImmutable() : commentRecord;
+    }
+
+    @Override
+    public boolean isWarning() {
+        return getCurrent().isWarning();
+    }
+
+    @Override
+    public @NotNull String getComment() {
+        return getCurrent().getComment();
+    }
+
+    @Override
+    public @NotNull UUID getPlayer() {
+        return getCurrent().getPlayer();
+    }
+
+    @Override
+    public @Nullable UUID getAuthor() {
+        return getCurrent().getAuthor();
+    }
+
+    @Override
+    public @NotNull LocalDateTime getDateAdded() {
+        return getCurrent().getDateAdded();
+    }
+
+    @Override
+    public @NotNull Integer getId() {
+        return getCurrent().getId();
+    }
+
+    @Override
+    public boolean isLoaded() {
+        return getCurrent().isLoaded();
+    }
+
+    @Override
+    public boolean canSwitchWarningMode() {
+        return typeChangable;
+    }
+
+    @Override
+    public void setComment(@NotNull String comment) {
+        getMutable().setComment(comment);
+    }
+
+    @Override
+    public void setWarning(boolean warning) throws IllegalStateException {
+        if (!typeChangable) {
+            throw new IllegalStateException("Cannot change the type of this comment");
+        }
+        getMutable().setWarning(warning);
+    }
+
+    @Override
+    public void setAuthor(@Nullable UUID author) {
+        getMutable().setAuthor(author);
+    }
+
+    private MutableCommentRecord getMutable() {
+        if (!modifiable || sealed) {
             throw new ImmutableEventException();
         }
         if (mutableRecord == null) {

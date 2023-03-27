@@ -25,7 +25,7 @@
 package com.backwardsnode.easyadmin.core.builder;
 
 import com.backwardsnode.easyadmin.api.builder.*;
-import com.backwardsnode.easyadmin.core.commit.Committer;
+import com.backwardsnode.easyadmin.api.commit.Committer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;

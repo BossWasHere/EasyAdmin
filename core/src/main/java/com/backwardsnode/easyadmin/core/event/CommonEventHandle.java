@@ -26,6 +26,7 @@ package com.backwardsnode.easyadmin.core.event;
 
 import com.backwardsnode.easyadmin.api.event.EasyAdminEvent;
 import com.backwardsnode.easyadmin.api.event.EventHandle;
+import com.backwardsnode.easyadmin.api.event.EventPriority;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -36,12 +37,14 @@ public class CommonEventHandle<T extends EasyAdminEvent> implements EventHandle<
     private final Class<T> eventClass;
     private final Consumer<? super T> handle;
     private final boolean ignoreCancelled;
+    private final EventPriority priority;
 
-    protected CommonEventHandle(CommonEventBus eventBus, Class<T> eventClass, Consumer<? super T> handle, boolean ignoreCancelled) {
+    protected CommonEventHandle(CommonEventBus eventBus, Class<T> eventClass, Consumer<? super T> handle, boolean ignoreCancelled, EventPriority priority) {
         this.eventBus = eventBus;
         this.eventClass = eventClass;
         this.handle = handle;
         this.ignoreCancelled = ignoreCancelled;
+        this.priority = priority;
     }
 
     @Override
@@ -52,6 +55,11 @@ public class CommonEventHandle<T extends EasyAdminEvent> implements EventHandle<
     @Override
     public boolean ignoreCancelled() {
         return ignoreCancelled;
+    }
+
+    @Override
+    public EventPriority getPriority() {
+        return priority;
     }
 
     @Override

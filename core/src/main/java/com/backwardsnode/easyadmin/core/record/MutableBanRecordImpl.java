@@ -33,7 +33,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-public final class MutableBanRecordImpl extends BanRecordImpl implements MutableBanRecord {
+public final class MutableBanRecordImpl extends BanRecordImpl implements MutableBanRecord, ImmutableRecordProvider<BanRecordImpl> {
 
     private final BanRecordImpl source;
 

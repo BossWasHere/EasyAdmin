@@ -25,9 +25,10 @@
 package com.backwardsnode.easyadmin.core.builder;
 
 import com.backwardsnode.easyadmin.api.builder.CommentBuilder;
+import com.backwardsnode.easyadmin.api.commit.CommitException;
+import com.backwardsnode.easyadmin.api.commit.Committer;
 import com.backwardsnode.easyadmin.api.record.CommentRecord;
 import com.backwardsnode.easyadmin.api.commit.CommitResult;
-import com.backwardsnode.easyadmin.core.commit.Committer;
 import com.backwardsnode.easyadmin.core.record.CommentRecordImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -76,7 +77,7 @@ public final class CommentBuilderImpl implements CommentBuilder {
     }
 
     @Override
-    public @NotNull CommitResult<CommentRecord> buildAndCommit() {
-        return committer.commit(build(), null);
+    public @NotNull CommitResult<CommentRecord> buildAndCommit() throws CommitException {
+        return committer.commit(build());
     }
 }

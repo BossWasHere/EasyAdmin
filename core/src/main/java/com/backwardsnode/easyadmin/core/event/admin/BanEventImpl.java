@@ -25,6 +25,7 @@
 package com.backwardsnode.easyadmin.core.event.admin;
 
 import com.backwardsnode.easyadmin.api.EasyAdmin;
+import com.backwardsnode.easyadmin.api.data.PunishmentStatus;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.event.admin.AdminEventSource;
 import com.backwardsnode.easyadmin.api.event.admin.BanEvent;
@@ -36,6 +37,9 @@ import com.backwardsnode.easyadmin.core.record.BanRecordImpl;
 import com.backwardsnode.easyadmin.core.record.MutableBanRecordImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 public final class BanEventImpl extends CancellableEvent implements BanEvent {
 
@@ -61,11 +65,6 @@ public final class BanEventImpl extends CancellableEvent implements BanEvent {
     }
 
     @Override
-    public @NotNull BanRecordImpl getBanRecord() {
-        return isModified() ? mutableRecord.asImmutable() : banRecord;
-    }
-
-    @Override
     public @Nullable CommandExecutor getExecutor() {
         return executor;
     }
@@ -77,7 +76,7 @@ public final class BanEventImpl extends CancellableEvent implements BanEvent {
 
     @Override
     public boolean canModify() {
-        return modifiable;
+        return modifiable && !sealed;
     }
 
     @Override
@@ -86,8 +85,102 @@ public final class BanEventImpl extends CancellableEvent implements BanEvent {
     }
 
     @Override
-    public MutableBanRecord getSharedMutable() {
-        if (!modifiable) {
+    public @NotNull BanRecordImpl getCurrent() {
+        return isModified() ? mutableRecord.asImmutable() : banRecord;
+    }
+
+    @Override
+    public @Nullable String getContext() {
+        return getCurrent().getContext();
+    }
+
+    @Override
+    public @NotNull UUID getPlayer() {
+        return getCurrent().getPlayer();
+    }
+
+    @Override
+    public @Nullable UUID getAuthor() {
+        return getCurrent().getAuthor();
+    }
+
+    @Override
+    public @NotNull LocalDateTime getDateAdded() {
+        return getCurrent().getDateAdded();
+    }
+
+    @Override
+    public @NotNull Integer getId() {
+        return getCurrent().getId();
+    }
+
+    @Override
+    public boolean isLoaded() {
+        return getCurrent().isLoaded();
+    }
+
+    @Override
+    public @Nullable String getReason() {
+        return getCurrent().getReason();
+    }
+
+    @Override
+    public @NotNull PunishmentStatus getStatus() {
+        return getCurrent().getStatus();
+    }
+
+    @Override
+    public @Nullable UUID getTerminatingStaff() {
+        return getCurrent().getTerminatingStaff();
+    }
+
+    @Override
+    public @Nullable LocalDateTime getTerminationDate() {
+        return getCurrent().getTerminationDate();
+    }
+
+    @Override
+    public @Nullable String getIpAddress() {
+        return getCurrent().getIpAddress();
+    }
+
+    @Override
+    public @Nullable String getTerminationReason() {
+        return getCurrent().getTerminationReason();
+    }
+
+    @Override
+    public void setAuthor(@Nullable UUID author) {
+        getMutable().setAuthor(author);
+    }
+
+    @Override
+    public void setIpAddress(@Nullable String ipAddress) {
+        getMutable().setIpAddress(ipAddress);
+    }
+
+    @Override
+    public void setReason(@Nullable String reason) {
+        getMutable().setReason(reason);
+    }
+
+    @Override
+    public void setContext(@Nullable String context) {
+        getMutable().setContext(context);
+    }
+
+    @Override
+    public void setAutoUnbanDate(@NotNull LocalDateTime unbanDate) {
+        getMutable().setAutoUnbanDate(unbanDate);
+    }
+
+    @Override
+    public void unbanNow(@Nullable UUID unbanStaff, @Nullable String unbanReason) {
+        getMutable().unbanNow(unbanStaff, unbanReason);
+    }
+
+    private MutableBanRecord getMutable() {
+        if (!modifiable || sealed) {
             throw new ImmutableEventException();
         }
         if (mutableRecord == null) {

@@ -41,7 +41,9 @@ import com.backwardsnode.easyadmin.core.boot.Registration;
 import com.backwardsnode.easyadmin.core.builder.RecordBuilderImpl;
 import com.backwardsnode.easyadmin.core.commit.CommitterMode;
 import com.backwardsnode.easyadmin.core.commit.EventFiringCommitter;
+import com.backwardsnode.easyadmin.core.commit.WithholdAgent;
 import com.backwardsnode.easyadmin.core.component.AdminManagerImpl;
+import com.backwardsnode.easyadmin.core.component.PermissionsPlatform;
 import com.backwardsnode.easyadmin.core.config.RootConfig;
 import com.backwardsnode.easyadmin.core.config.yaml.YamlRootConfig;
 import com.backwardsnode.easyadmin.core.database.DatabaseController;
@@ -74,6 +76,8 @@ public class EasyAdminService implements EasyAdmin, AutoCloseable {
     private final Path languageDirectory;
 
     private final EventFiringCommitter apiCommitter;
+    private final PermissionsPlatform permissionsPlatform;
+    private final WithholdAgent withholdAgent;
 
     private final DatabaseController databaseController;
     private final AdminManager adminManager;
@@ -109,6 +113,12 @@ public class EasyAdminService implements EasyAdmin, AutoCloseable {
             throw new ServiceInitializationException("Failed to create database controller");
         }
         databaseController.logMetadata();
+
+        // TODO permissions platform
+        permissionsPlatform = new PermissionsPlatform();
+        // TODO withhold agent
+        withholdAgent = null;
+
 
         apiCommitter = new EventFiringCommitter(this, AdminEventSource.API, EnumSet.of(CommitterMode.EVENT_ALLOW_CANCELLATIONS));
         adminManager = new AdminManagerImpl(this, databaseController);
@@ -195,6 +205,14 @@ public class EasyAdminService implements EasyAdmin, AutoCloseable {
 
     public EasyAdminPlugin getPlugin() {
         return plugin;
+    }
+
+    public PermissionsPlatform getPermissionsPlatform() {
+        return permissionsPlatform;
+    }
+
+    public WithholdAgent getWithholdAgent() {
+        return withholdAgent;
     }
 
     public void resetConfig() throws IOException {

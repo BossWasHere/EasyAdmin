@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,20 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.event.admin;
+package com.backwardsnode.easyadmin.api.commit;
 
-import com.backwardsnode.easyadmin.api.event.Cancellable;
-import com.backwardsnode.easyadmin.api.event.Mutable;
-import com.backwardsnode.easyadmin.api.event.staff.CommandEvent;
-import com.backwardsnode.easyadmin.api.record.MuteRecord;
-import com.backwardsnode.easyadmin.api.record.mutable.MutableMuteRecord;
-import org.jetbrains.annotations.NotNull;
+public class CommitException extends Exception {
 
-public interface MuteEvent extends AdministrationEvent, Cancellable, CommandEvent, Mutable<MuteRecord>, MutableMuteRecord { }
+    public CommitException(String message) {
+        super(message);
+    }
+
+    public CommitException(Class<?> unknownClass) {
+        super("Committer does not support the class " + unknownClass.getName());
+    }
+
+    public CommitException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+}

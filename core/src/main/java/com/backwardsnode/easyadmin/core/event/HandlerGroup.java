@@ -76,9 +76,8 @@ public class HandlerGroup<T extends EasyAdminEvent> implements Iterable<CommonEv
         return handles;
     }
 
-    @NotNull
     @Override
-    public Iterator<CommonEventHandle<T>> iterator() {
+    public @NotNull Iterator<CommonEventHandle<T>> iterator() {
         return new Iterator<>() {
 
             private int currentGroup = 0;

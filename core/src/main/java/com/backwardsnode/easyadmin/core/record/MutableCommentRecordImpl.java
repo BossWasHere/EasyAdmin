@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.UUID;
 
-public final class MutableCommentRecordImpl extends CommentRecordImpl implements MutableCommentRecord {
+public final class MutableCommentRecordImpl extends CommentRecordImpl implements MutableCommentRecord, ImmutableRecordProvider<CommentRecordImpl> {
 
     private final CommentRecordImpl source;
 
@@ -43,6 +43,11 @@ public final class MutableCommentRecordImpl extends CommentRecordImpl implements
     }
 
     @Override
+    public boolean canSwitchWarningMode() {
+        return !isLoaded();
+    }
+
+    @Override
     public void setComment(@NotNull String comment) {
         if (!Objects.equals(this.comment, comment)) {
             this.comment = Objects.requireNonNull(comment);
@@ -51,7 +56,10 @@ public final class MutableCommentRecordImpl extends CommentRecordImpl implements
     }
 
     @Override
-    public void setWarning(boolean warning) {
+    public void setWarning(boolean warning) throws IllegalStateException {
+        if (!canSwitchWarningMode()) {
+            throw new IllegalStateException("Cannot switch comment type of a loaded record");
+        }
         if (this.isWarning != warning) {
             this.isWarning = warning;
             isModified = true;

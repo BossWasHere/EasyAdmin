@@ -30,6 +30,4 @@ public interface MutableRecord<T> {
 
     T getOriginal();
 
-    T asImmutable();
-
 }

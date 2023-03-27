@@ -25,6 +25,7 @@
 package com.backwardsnode.easyadmin.core.event.admin;
 
 import com.backwardsnode.easyadmin.api.EasyAdmin;
+import com.backwardsnode.easyadmin.api.data.PunishmentStatus;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.event.admin.AdminEventSource;
 import com.backwardsnode.easyadmin.api.event.admin.MuteEvent;
@@ -36,6 +37,9 @@ import com.backwardsnode.easyadmin.core.record.MutableMuteRecordImpl;
 import com.backwardsnode.easyadmin.core.record.MuteRecordImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 public final class MuteEventImpl extends CancellableEvent implements MuteEvent {
 
@@ -61,7 +65,7 @@ public final class MuteEventImpl extends CancellableEvent implements MuteEvent {
     }
 
     @Override
-    public @NotNull MuteRecordImpl getMuteRecord() {
+    public @NotNull MuteRecordImpl getCurrent() {
         return isModified() ? mutableRecord.asImmutable() : muteRecord;
     }
 
@@ -77,7 +81,7 @@ public final class MuteEventImpl extends CancellableEvent implements MuteEvent {
 
     @Override
     public boolean canModify() {
-        return modifiable;
+        return modifiable && !sealed;
     }
 
     @Override
@@ -86,8 +90,97 @@ public final class MuteEventImpl extends CancellableEvent implements MuteEvent {
     }
 
     @Override
-    public MutableMuteRecord getSharedMutable() {
-        if (!modifiable) {
+    public @Nullable String getContext() {
+        return getCurrent().getContext();
+    }
+
+    @Override
+    public @NotNull UUID getPlayer() {
+        return getCurrent().getPlayer();
+    }
+
+    @Override
+    public @Nullable UUID getAuthor() {
+        return getCurrent().getAuthor();
+    }
+
+    @Override
+    public @NotNull LocalDateTime getDateAdded() {
+        return getCurrent().getDateAdded();
+    }
+
+    @Override
+    public @NotNull Integer getId() {
+        return getCurrent().getId();
+    }
+
+    @Override
+    public boolean isLoaded() {
+        return getCurrent().isLoaded();
+    }
+
+    @Override
+    public @Nullable String getReason() {
+        return getCurrent().getReason();
+    }
+
+    @Override
+    public @NotNull PunishmentStatus getStatus() {
+        return getCurrent().getStatus();
+    }
+
+    @Override
+    public @Nullable UUID getTerminatingStaff() {
+        return getCurrent().getTerminatingStaff();
+    }
+
+    @Override
+    public @Nullable LocalDateTime getTerminationDate() {
+        return getCurrent().getTerminationDate();
+    }
+
+    @Override
+    public @Nullable String getIpAddress() {
+        return getCurrent().getIpAddress();
+    }
+
+    @Override
+    public @Nullable String getTerminationReason() {
+        return getCurrent().getTerminationReason();
+    }
+
+    @Override
+    public void setAuthor(@Nullable UUID author) {
+        getMutable().setAuthor(author);
+    }
+
+    @Override
+    public void setIpAddress(@Nullable String ipAddress) {
+        getMutable().setIpAddress(ipAddress);
+    }
+
+    @Override
+    public void setReason(@Nullable String reason) {
+        getMutable().setReason(reason);
+    }
+
+    @Override
+    public void setContext(@Nullable String context) {
+        getMutable().setContext(context);
+    }
+
+    @Override
+    public void setAutoUnmuteDate(@NotNull LocalDateTime unmuteDate) {
+        getMutable().setAutoUnmuteDate(unmuteDate);
+    }
+
+    @Override
+    public void unmuteNow(@Nullable UUID unmuteStaff, @Nullable String unmuteReason) {
+        getMutable().unmuteNow(unmuteStaff, unmuteReason);
+    }
+
+    private MutableMuteRecord getMutable() {
+        if (!modifiable || sealed) {
             throw new ImmutableEventException();
         }
         if (mutableRecord == null) {

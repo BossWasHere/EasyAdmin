@@ -33,7 +33,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-public final class MutableMuteRecordImpl extends MuteRecordImpl implements MutableMuteRecord {
+public final class MutableMuteRecordImpl extends MuteRecordImpl implements MutableMuteRecord, ImmutableRecordProvider<MuteRecordImpl> {
 
     private final MuteRecordImpl source;
 

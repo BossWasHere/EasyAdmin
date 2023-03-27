@@ -25,6 +25,7 @@
 package com.backwardsnode.easyadmin.core.event;
 
 import com.backwardsnode.easyadmin.api.event.*;
+import com.backwardsnode.easyadmin.core.event.base.Sealable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -59,7 +60,7 @@ public class CommonEventBus implements EventBus, AutoCloseable {
             throw new IllegalArgumentException("Event class must be an interface that extends EasyAdminEvent");
         }
 
-        CommonEventHandle<T> eventHandle = new CommonEventHandle<>(this, eventClass, handler, ignoreCancelled);
+        CommonEventHandle<T> eventHandle = new CommonEventHandle<>(this, eventClass, handler, ignoreCancelled, priority);
 
         HandlerGroup<T> handlerGroup = (HandlerGroup<T>) handlers.get(eventClass);
         if (handlerGroup == null) {
@@ -83,16 +84,25 @@ public class CommonEventBus implements EventBus, AutoCloseable {
     @SuppressWarnings("unchecked")
     public <T extends EasyAdminEvent> void call(T event) {
         HandlerGroup<T> handlerGroup = (HandlerGroup<T>) handlers.get(event.getEventClass());
+        boolean sealed = false;
 
         if (handlerGroup != null) {
             if (event instanceof Cancellable cancellable) {
                 for (EventHandle<T> handle : handlerGroup) {
+                    if (handle.getPriority().equals(EventPriority.MONITOR) && !sealed && event instanceof Sealable sealable) {
+                        sealable.seal();
+                        sealed = true;
+                    }
                     if (handle.ignoreCancelled() || !cancellable.isCancelled()) {
                         handle.getHandler().accept(event);
                     }
                 }
             } else {
                 for (EventHandle<T> handle : handlerGroup) {
+                    if (handle.getPriority().equals(EventPriority.MONITOR) && !sealed && event instanceof Sealable sealable) {
+                        sealable.seal();
+                        sealed = true;
+                    }
                     handle.getHandler().accept(event);
                 }
             }

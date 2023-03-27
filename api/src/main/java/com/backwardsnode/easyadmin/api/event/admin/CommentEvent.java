@@ -31,8 +31,4 @@ import com.backwardsnode.easyadmin.api.record.CommentRecord;
 import com.backwardsnode.easyadmin.api.record.mutable.MutableCommentRecord;
 import org.jetbrains.annotations.NotNull;
 
-public interface CommentEvent extends AdministrationEvent, Cancellable, CommandEvent, Mutable<CommentRecord, MutableCommentRecord> {
-
-    @NotNull CommentRecord getCommentRecord();
-
-}
+public interface CommentEvent extends AdministrationEvent, Cancellable, CommandEvent, Mutable<CommentRecord>, MutableCommentRecord { }

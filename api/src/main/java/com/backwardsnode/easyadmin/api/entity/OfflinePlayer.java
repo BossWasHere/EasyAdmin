@@ -24,6 +24,8 @@
 
 package com.backwardsnode.easyadmin.api.entity;
 
+import com.backwardsnode.easyadmin.api.EasyAdminProvider;
+import com.backwardsnode.easyadmin.api.data.AdminAction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -44,12 +46,20 @@ public interface OfflinePlayer {
      * Gets the username for this player.
      * @return The player's username.
      */
-    @NotNull String getUsername();
+    @NotNull String getUsername() throws IllegalStateException;
 
     /**
      * Gets the online player object for this player, if they are online.
      * @return An optional possibly containing an {@link OnlinePlayer} object.
      */
     @NotNull Optional<OnlinePlayer> getOnlinePlayer();
+
+    /**
+     * Determines if this target has ever been seen by the server.
+     * @return true if the target has been seen, false otherwise.
+     */
+    default boolean isRegistered() {
+        return EasyAdminProvider.get().getAdminManager().getPlayerRecord(getUUID()).isPresent();
+    }
 
 }
