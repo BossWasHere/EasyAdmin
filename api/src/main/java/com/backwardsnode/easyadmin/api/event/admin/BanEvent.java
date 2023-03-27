@@ -25,11 +25,11 @@
 package com.backwardsnode.easyadmin.api.event.admin;
 
 import com.backwardsnode.easyadmin.api.event.Cancellable;
-import com.backwardsnode.easyadmin.api.event.staff.StaffEvent;
+import com.backwardsnode.easyadmin.api.event.staff.CommandEvent;
 import com.backwardsnode.easyadmin.api.record.BanRecord;
 import org.jetbrains.annotations.NotNull;
 
-public interface BanEvent extends AdministrationEvent, Cancellable, StaffEvent {
+public interface BanEvent extends AdministrationEvent, Cancellable, CommandEvent {
 
     @NotNull BanRecord getBanRecord();
 

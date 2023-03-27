@@ -24,6 +24,7 @@
 
 package com.backwardsnode.easyadmin.core.commit;
 
+import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.record.*;
 import com.backwardsnode.easyadmin.core.record.BanRecordImpl;
 import com.backwardsnode.easyadmin.core.record.CommentRecordImpl;
@@ -32,12 +33,12 @@ import com.backwardsnode.easyadmin.core.record.MuteRecordImpl;
 
 public interface Committer {
 
-    CommitResult<BanRecord> commit(BanRecordImpl record);
+    CommitResult<BanRecord> commit(BanRecordImpl record, CommandExecutor executor);
 
-    CommitResult<MuteRecord> commit(MuteRecordImpl record);
+    CommitResult<MuteRecord> commit(MuteRecordImpl record, CommandExecutor executor);
 
-    CommitResult<CommentRecord> commit(CommentRecordImpl record);
+    CommitResult<CommentRecord> commit(CommentRecordImpl record, CommandExecutor executor);
 
-    CommitResult<KickRecord> commit(KickRecordImpl record);
+    CommitResult<KickRecord> commit(KickRecordImpl record, CommandExecutor executor);
 
 }

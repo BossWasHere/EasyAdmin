@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,9 +24,9 @@
 
 package com.backwardsnode.easyadmin.api.event.admin;
 
-import com.backwardsnode.easyadmin.api.event.Cancellable;
-import com.backwardsnode.easyadmin.api.event.staff.StaffEvent;
-
-public interface BanPardonEvent extends BanEndEvent, Cancellable, StaffEvent {
-
+public enum AdminEventSource {
+    NATURAL,
+    COMMAND,
+    API,
+    WEB_API
 }

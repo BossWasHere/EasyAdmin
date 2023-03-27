@@ -34,12 +34,14 @@ import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
 import com.backwardsnode.easyadmin.api.config.ConfigurationManager;
 import com.backwardsnode.easyadmin.api.contextual.ContextTester;
 import com.backwardsnode.easyadmin.api.event.EventBus;
+import com.backwardsnode.easyadmin.api.event.admin.AdminEventSource;
 import com.backwardsnode.easyadmin.api.internal.ExternalDataSource;
 import com.backwardsnode.easyadmin.api.internal.MessageFactory;
 import com.backwardsnode.easyadmin.api.server.NetworkInfo;
 import com.backwardsnode.easyadmin.core.boot.Registration;
 import com.backwardsnode.easyadmin.core.builder.RecordBuilderImpl;
-import com.backwardsnode.easyadmin.core.commit.APICommitter;
+import com.backwardsnode.easyadmin.core.commit.CommitterMode;
+import com.backwardsnode.easyadmin.core.commit.EventFiringCommitter;
 import com.backwardsnode.easyadmin.core.component.AdminManagerImpl;
 import com.backwardsnode.easyadmin.core.config.RootConfig;
 import com.backwardsnode.easyadmin.core.config.yaml.YamlRootConfig;
@@ -56,6 +58,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.EnumSet;
 
 public class EasyAdminService implements EasyAdmin, AutoCloseable {
 
@@ -69,13 +72,13 @@ public class EasyAdminService implements EasyAdmin, AutoCloseable {
     private final Path dataDirectory;
     private final Path languageDirectory;
 
-    private final APICommitter apiCommitter;
+    private final EventFiringCommitter apiCommitter;
 
     private final DatabaseController databaseController;
     private final AdminManager adminManager;
     private final RecordBuilder apiRecordBuilder;
     private final RootConfig configurationManager;
-    private final EventBus eventBus;
+    private final CommonEventBus eventBus;
     private final MessageFactory messageFactory;
 
     private boolean closed = false;
@@ -106,7 +109,7 @@ public class EasyAdminService implements EasyAdmin, AutoCloseable {
         }
         databaseController.logMetadata();
 
-        apiCommitter = new APICommitter(this);
+        apiCommitter = new EventFiringCommitter(this, AdminEventSource.API, EnumSet.of(CommitterMode.EVENT_ALLOW_CANCELLATIONS));
         adminManager = new AdminManagerImpl(this, databaseController);
         apiRecordBuilder = new RecordBuilderImpl(apiCommitter);
         messageFactory = new MessageProvider(this,true);
@@ -150,7 +153,7 @@ public class EasyAdminService implements EasyAdmin, AutoCloseable {
     }
 
     @Override
-    public @NotNull EventBus getEventBus() {
+    public @NotNull CommonEventBus getEventBus() {
         verifyOpen();
         return eventBus;
     }
@@ -187,6 +190,10 @@ public class EasyAdminService implements EasyAdmin, AutoCloseable {
         closed = true;
         databaseController.disconnect();
         Registration.get().unregister();
+    }
+
+    public EasyAdminPlugin getPlugin() {
+        return plugin;
     }
 
     public void resetConfig() throws IOException {

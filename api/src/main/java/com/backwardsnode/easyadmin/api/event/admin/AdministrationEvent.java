@@ -30,15 +30,6 @@ import org.jetbrains.annotations.NotNull;
 
 public interface AdministrationEvent extends EasyAdminEvent {
 
-    @NotNull OfflinePlayer getPlayer();
-
     @NotNull AdminEventSource getSource();
-
-    enum AdminEventSource {
-        NATURAL,
-        COMMAND,
-        API,
-        WEB_API
-    }
 
 }

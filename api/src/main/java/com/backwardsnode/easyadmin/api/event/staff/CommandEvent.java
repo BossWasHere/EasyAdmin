@@ -22,8 +22,13 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.event.admin;
+package com.backwardsnode.easyadmin.api.event.staff;
 
-public interface BanExpireEvent extends BanEndEvent {
+import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
+import org.jetbrains.annotations.Nullable;
+
+public interface CommandEvent {
+
+    @Nullable CommandExecutor getExecutor();
 
 }

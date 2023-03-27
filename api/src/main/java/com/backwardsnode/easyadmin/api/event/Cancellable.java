@@ -41,4 +41,10 @@ public interface Cancellable {
      */
     boolean isCancelled();
 
+    /**
+     * Returns whether this API allows the event to be cancelled.
+     * @return whether the event can be cancelled.
+     */
+    boolean isCancellable();
+
 }

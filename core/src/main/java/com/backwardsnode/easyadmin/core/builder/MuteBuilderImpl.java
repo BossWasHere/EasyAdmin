@@ -106,7 +106,7 @@ public final class MuteBuilderImpl implements MuteBuilder {
 
     @Override
     public @NotNull CommitResult<MuteRecord> buildAndCommit() throws BuilderException {
-        return committer.commit(build());
+        return committer.commit(build(), null);
     }
 
 }

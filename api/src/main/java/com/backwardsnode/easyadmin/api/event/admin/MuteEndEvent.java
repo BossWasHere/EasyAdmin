@@ -24,11 +24,8 @@
 
 package com.backwardsnode.easyadmin.api.event.admin;
 
-import com.backwardsnode.easyadmin.api.record.MuteRecord;
-import org.jetbrains.annotations.NotNull;
+public interface MuteEndEvent extends MuteEvent {
 
-public interface MuteEndEvent extends AdministrationEvent {
-
-    @NotNull MuteRecord getMuteRecord();
+    boolean hasExpired();
 
 }

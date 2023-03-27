@@ -78,6 +78,6 @@ public final class CommentBuilderImpl implements CommentBuilder {
 
     @Override
     public @NotNull CommitResult<CommentRecord> buildAndCommit() {
-        return committer.commit(build());
+        return committer.commit(build(), null);
     }
 }

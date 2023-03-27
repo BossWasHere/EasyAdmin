@@ -30,15 +30,17 @@ import com.backwardsnode.easyadmin.api.event.EasyAdminEvent;
 
 public abstract class CancellableEvent extends BaseEvent implements Cancellable {
 
+    private final boolean cancellable;
     private boolean cancelled = false;
 
-    protected CancellableEvent(final EasyAdmin instance, final Class<? extends EasyAdminEvent> eventClass) {
+    protected CancellableEvent(final EasyAdmin instance, final Class<? extends EasyAdminEvent> eventClass, final boolean cancellable) {
         super(instance, eventClass);
+        this.cancellable = cancellable;
     }
 
     @Override
     public void setCancelled(boolean cancel) {
-        cancelled = cancel;
+        cancelled = cancellable && cancel;
     }
 
     @Override
@@ -46,4 +48,8 @@ public abstract class CancellableEvent extends BaseEvent implements Cancellable 
         return cancelled;
     }
 
+    @Override
+    public boolean isCancellable() {
+        return false;
+    }
 }

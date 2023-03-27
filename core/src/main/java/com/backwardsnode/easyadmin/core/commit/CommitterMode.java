@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,15 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.event.staff;
+package com.backwardsnode.easyadmin.core.commit;
 
-import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
-import org.jetbrains.annotations.NotNull;
+public enum CommitterMode {
 
-public interface StaffEvent {
-
-    @NotNull CommandExecutor getStaff();
+    DUMMY,
+    CHECK_EXISTING,
+    CHECK_WITHHOLD,
+    SKIP_EVENTS,
+    EVENT_ALLOW_CANCELLATIONS,
+    EVENT_ALLOW_MODIFICATIONS
 
 }

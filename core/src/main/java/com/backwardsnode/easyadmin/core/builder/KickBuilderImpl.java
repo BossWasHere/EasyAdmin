@@ -90,6 +90,6 @@ public final class KickBuilderImpl implements KickBuilder {
 
     @Override
     public @NotNull CommitResult<KickRecord> buildAndCommit() {
-        return committer.commit(build());
+        return committer.commit(build(), null);
     }
 }

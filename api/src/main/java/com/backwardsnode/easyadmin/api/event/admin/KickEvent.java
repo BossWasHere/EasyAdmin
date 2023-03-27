@@ -25,11 +25,11 @@
 package com.backwardsnode.easyadmin.api.event.admin;
 
 import com.backwardsnode.easyadmin.api.event.Cancellable;
-import com.backwardsnode.easyadmin.api.event.staff.StaffEvent;
+import com.backwardsnode.easyadmin.api.event.staff.CommandEvent;
 import com.backwardsnode.easyadmin.api.record.KickRecord;
 import org.jetbrains.annotations.NotNull;
 
-public interface KickEvent extends AdministrationEvent, Cancellable, StaffEvent {
+public interface KickEvent extends AdministrationEvent, Cancellable, CommandEvent {
 
     @NotNull KickRecord getKickRecord();
 

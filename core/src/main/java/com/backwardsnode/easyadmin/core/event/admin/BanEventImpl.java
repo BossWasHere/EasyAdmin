@@ -27,23 +27,23 @@ package com.backwardsnode.easyadmin.core.event.admin;
 import com.backwardsnode.easyadmin.api.EasyAdmin;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.event.admin.AdminEventSource;
-import com.backwardsnode.easyadmin.api.event.admin.CommentEvent;
-import com.backwardsnode.easyadmin.api.record.CommentRecord;
+import com.backwardsnode.easyadmin.api.event.admin.BanEvent;
+import com.backwardsnode.easyadmin.api.record.BanRecord;
 import com.backwardsnode.easyadmin.core.event.base.CancellableEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CommentEventImpl extends CancellableEvent implements CommentEvent {
+public class BanEventImpl extends CancellableEvent implements BanEvent {
 
     private final AdminEventSource source;
-    private final CommentRecord commentRecord;
+    private final BanRecord banRecord;
     private final CommandExecutor executor;
 
-    public CommentEventImpl(EasyAdmin instance,  AdminEventSource source, CommentRecord commentRecord,
-                            CommandExecutor executor, boolean cancellable) {
-        super(instance, CommentEventImpl.class, cancellable);
+    public BanEventImpl(EasyAdmin instance, AdminEventSource source, BanRecord banRecord,
+                        CommandExecutor executor, boolean cancellable) {
+        super(instance, BanEventImpl.class, cancellable);
         this.source = source;
-        this.commentRecord = commentRecord;
+        this.banRecord = banRecord;
         this.executor = executor;
     }
 
@@ -53,8 +53,8 @@ public class CommentEventImpl extends CancellableEvent implements CommentEvent {
     }
 
     @Override
-    public @NotNull CommentRecord getCommentRecord() {
-        return commentRecord;
+    public @NotNull BanRecord getBanRecord() {
+        return banRecord;
     }
 
     @Override

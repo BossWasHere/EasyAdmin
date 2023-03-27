@@ -107,7 +107,7 @@ public final class BanBuilderImpl implements BanBuilder {
 
     @Override
     public @NotNull CommitResult<BanRecord> buildAndCommit() throws BuilderException {
-        return committer.commit(build());
+        return committer.commit(build(), null);
     }
 
 }

@@ -27,23 +27,23 @@ package com.backwardsnode.easyadmin.core.event.admin;
 import com.backwardsnode.easyadmin.api.EasyAdmin;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.event.admin.AdminEventSource;
-import com.backwardsnode.easyadmin.api.event.admin.CommentEvent;
-import com.backwardsnode.easyadmin.api.record.CommentRecord;
+import com.backwardsnode.easyadmin.api.event.admin.MuteEvent;
+import com.backwardsnode.easyadmin.api.record.MuteRecord;
 import com.backwardsnode.easyadmin.core.event.base.CancellableEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CommentEventImpl extends CancellableEvent implements CommentEvent {
+public class MuteEventImpl extends CancellableEvent implements MuteEvent {
 
     private final AdminEventSource source;
-    private final CommentRecord commentRecord;
+    private final MuteRecord muteRecord;
     private final CommandExecutor executor;
 
-    public CommentEventImpl(EasyAdmin instance,  AdminEventSource source, CommentRecord commentRecord,
-                            CommandExecutor executor, boolean cancellable) {
-        super(instance, CommentEventImpl.class, cancellable);
+    public MuteEventImpl(EasyAdmin instance, AdminEventSource source, MuteRecord muteRecord,
+                         CommandExecutor executor, boolean cancellable) {
+        super(instance, MuteEventImpl.class, cancellable);
         this.source = source;
-        this.commentRecord = commentRecord;
+        this.muteRecord = muteRecord;
         this.executor = executor;
     }
 
@@ -53,8 +53,8 @@ public class CommentEventImpl extends CancellableEvent implements CommentEvent {
     }
 
     @Override
-    public @NotNull CommentRecord getCommentRecord() {
-        return commentRecord;
+    public @NotNull MuteRecord getMuteRecord() {
+        return muteRecord;
     }
 
     @Override

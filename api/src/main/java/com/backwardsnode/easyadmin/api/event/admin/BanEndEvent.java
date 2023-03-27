@@ -24,11 +24,12 @@
 
 package com.backwardsnode.easyadmin.api.event.admin;
 
+import com.backwardsnode.easyadmin.api.event.Cancellable;
 import com.backwardsnode.easyadmin.api.record.BanRecord;
 import org.jetbrains.annotations.NotNull;
 
-public interface BanEndEvent extends AdministrationEvent {
+public interface BanEndEvent extends BanEvent {
 
-    @NotNull BanRecord getBanRecord();
+    boolean hasExpired();
 
 }
