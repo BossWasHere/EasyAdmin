@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,27 +22,16 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.record;
+package com.backwardsnode.easyadmin.api.event;
 
-import com.backwardsnode.easyadmin.api.record.modify.RecordModifier;
-import org.jetbrains.annotations.NotNull;
+public interface Mutable<T, M> {
 
-/**
- * Represents a record that can be modified and then saved.
- * @param <S> the wrapper responsible for making modifications to the record.
- * @param <T> the type the wrapper should need to copy.
- */
-public interface ModifiableRecord<S extends RecordModifier, T extends LiveRecord<?>> {
+    boolean isModified();
 
-    /**
-     * Creates a new {@link RecordModifier} wrapper around the current record for modifications.
-     * @return the new wrapper.
-     */
-    @NotNull S getModifiableRecord();
+    boolean canModify();
 
-    /**
-     * Copies the current record object into a new one to make modifications to.
-     * @return a copy of the current record.
-     */
-    @NotNull T copy();
+    T getOriginal();
+
+    M getSharedMutable();
+
 }

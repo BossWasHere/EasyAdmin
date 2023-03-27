@@ -29,22 +29,30 @@ import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.event.admin.AdminEventSource;
 import com.backwardsnode.easyadmin.api.event.admin.BanEvent;
 import com.backwardsnode.easyadmin.api.record.BanRecord;
+import com.backwardsnode.easyadmin.api.record.mutable.MutableBanRecord;
 import com.backwardsnode.easyadmin.core.event.base.CancellableEvent;
+import com.backwardsnode.easyadmin.core.exception.ImmutableEventException;
+import com.backwardsnode.easyadmin.core.record.BanRecordImpl;
+import com.backwardsnode.easyadmin.core.record.MutableBanRecordImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class BanEventImpl extends CancellableEvent implements BanEvent {
+public final class BanEventImpl extends CancellableEvent implements BanEvent {
 
     private final AdminEventSource source;
-    private final BanRecord banRecord;
+    private final BanRecordImpl banRecord;
     private final CommandExecutor executor;
+    private final boolean modifiable;
 
-    public BanEventImpl(EasyAdmin instance, AdminEventSource source, BanRecord banRecord,
-                        CommandExecutor executor, boolean cancellable) {
-        super(instance, BanEventImpl.class, cancellable);
+    private MutableBanRecordImpl mutableRecord;
+
+    public BanEventImpl(EasyAdmin instance, AdminEventSource source, BanRecordImpl banRecord,
+                        CommandExecutor executor, boolean cancellable, boolean modifiable) {
+        super(instance, BanEvent.class, cancellable);
         this.source = source;
         this.banRecord = banRecord;
         this.executor = executor;
+        this.modifiable = modifiable;
     }
 
     @Override
@@ -53,8 +61,8 @@ public class BanEventImpl extends CancellableEvent implements BanEvent {
     }
 
     @Override
-    public @NotNull BanRecord getBanRecord() {
-        return banRecord;
+    public @NotNull BanRecordImpl getBanRecord() {
+        return isModified() ? mutableRecord.asImmutable() : banRecord;
     }
 
     @Override
@@ -62,4 +70,29 @@ public class BanEventImpl extends CancellableEvent implements BanEvent {
         return executor;
     }
 
+    @Override
+    public boolean isModified() {
+        return mutableRecord != null && mutableRecord.isModified();
+    }
+
+    @Override
+    public boolean canModify() {
+        return modifiable;
+    }
+
+    @Override
+    public BanRecord getOriginal() {
+        return banRecord;
+    }
+
+    @Override
+    public MutableBanRecord getSharedMutable() {
+        if (!modifiable) {
+            throw new ImmutableEventException();
+        }
+        if (mutableRecord == null) {
+            mutableRecord = banRecord.asMutable();
+        }
+        return mutableRecord;
+    }
 }

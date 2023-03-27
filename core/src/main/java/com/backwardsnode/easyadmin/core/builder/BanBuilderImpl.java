@@ -28,7 +28,6 @@ import com.backwardsnode.easyadmin.api.builder.BanBuilder;
 import com.backwardsnode.easyadmin.api.builder.BuilderException;
 import com.backwardsnode.easyadmin.api.record.BanRecord;
 import com.backwardsnode.easyadmin.api.record.CommitResult;
-import com.backwardsnode.easyadmin.api.record.CommitStatus;
 import com.backwardsnode.easyadmin.core.commit.Committer;
 import com.backwardsnode.easyadmin.core.record.BanRecordImpl;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +35,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 

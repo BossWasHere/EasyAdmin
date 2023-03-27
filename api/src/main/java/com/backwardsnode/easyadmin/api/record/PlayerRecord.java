@@ -24,7 +24,6 @@
 
 package com.backwardsnode.easyadmin.api.record;
 
-import com.backwardsnode.easyadmin.api.record.modify.PlayerRecordModifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +33,7 @@ import java.util.UUID;
 /**
  * Represents and stores statistics for a player.
  */
-public interface PlayerRecord extends LiveRecord<UUID>, ModifiableRecord<PlayerRecordModifier, PlayerRecord> {
+public interface PlayerRecord extends LiveRecord<UUID> {
 
     /**
      * Gets the username associated with this record. This may not be up-to-date.

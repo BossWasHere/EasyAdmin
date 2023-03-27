@@ -29,22 +29,30 @@ import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.event.admin.AdminEventSource;
 import com.backwardsnode.easyadmin.api.event.admin.CommentEvent;
 import com.backwardsnode.easyadmin.api.record.CommentRecord;
+import com.backwardsnode.easyadmin.api.record.mutable.MutableCommentRecord;
 import com.backwardsnode.easyadmin.core.event.base.CancellableEvent;
+import com.backwardsnode.easyadmin.core.exception.ImmutableEventException;
+import com.backwardsnode.easyadmin.core.record.CommentRecordImpl;
+import com.backwardsnode.easyadmin.core.record.MutableCommentRecordImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CommentEventImpl extends CancellableEvent implements CommentEvent {
+public final class CommentEventImpl extends CancellableEvent implements CommentEvent {
 
     private final AdminEventSource source;
-    private final CommentRecord commentRecord;
+    private final CommentRecordImpl commentRecord;
     private final CommandExecutor executor;
+    private final boolean modifiable;
 
-    public CommentEventImpl(EasyAdmin instance,  AdminEventSource source, CommentRecord commentRecord,
-                            CommandExecutor executor, boolean cancellable) {
-        super(instance, CommentEventImpl.class, cancellable);
+    private MutableCommentRecordImpl mutableRecord;
+
+    public CommentEventImpl(EasyAdmin instance,  AdminEventSource source, CommentRecordImpl commentRecord,
+                            CommandExecutor executor, boolean cancellable, boolean modifiable) {
+        super(instance, CommentEvent.class, cancellable);
         this.source = source;
         this.commentRecord = commentRecord;
         this.executor = executor;
+        this.modifiable = modifiable;
     }
 
     @Override
@@ -53,8 +61,8 @@ public class CommentEventImpl extends CancellableEvent implements CommentEvent {
     }
 
     @Override
-    public @NotNull CommentRecord getCommentRecord() {
-        return commentRecord;
+    public @NotNull CommentRecordImpl getCommentRecord() {
+        return isModified() ? mutableRecord.asImmutable() : commentRecord;
     }
 
     @Override
@@ -62,4 +70,29 @@ public class CommentEventImpl extends CancellableEvent implements CommentEvent {
         return executor;
     }
 
+    @Override
+    public boolean isModified() {
+        return mutableRecord != null && mutableRecord.isModified();
+    }
+
+    @Override
+    public boolean canModify() {
+        return modifiable;
+    }
+
+    @Override
+    public CommentRecord getOriginal() {
+        return commentRecord;
+    }
+
+    @Override
+    public MutableCommentRecord getSharedMutable() {
+        if (!modifiable) {
+            throw new ImmutableEventException();
+        }
+        if (mutableRecord == null) {
+            mutableRecord = commentRecord.asMutable();
+        }
+        return mutableRecord;
+    }
 }

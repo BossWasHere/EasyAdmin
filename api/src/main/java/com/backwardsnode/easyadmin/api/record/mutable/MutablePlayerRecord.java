@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,18 +22,16 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.record.modify;
+package com.backwardsnode.easyadmin.api.record.mutable;
 
+import com.backwardsnode.easyadmin.api.record.MutableRecord;
 import com.backwardsnode.easyadmin.api.record.PlayerRecord;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
 
-/**
- * Modification wrapper for {@link PlayerRecord}.
- */
-public interface PlayerRecordModifier extends RecordModifier<PlayerRecord> {
+public interface MutablePlayerRecord extends PlayerRecord, MutableRecord<PlayerRecord> {
 
     /**
      * Checks if any stats which are updated when a player connects to the server have changed.

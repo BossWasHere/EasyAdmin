@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,38 +22,39 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.record.modify;
+package com.backwardsnode.easyadmin.api.record.mutable;
 
-import com.backwardsnode.easyadmin.api.record.MuteRecord;
+import com.backwardsnode.easyadmin.api.record.BanRecord;
+import com.backwardsnode.easyadmin.api.record.MutableRecord;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-/**
- * Modification wrapper for {@link MuteRecord}.
- */
-public interface MuteRecordModifier extends RecordModifier<MuteRecord> {
+public interface MutableBanRecord extends BanRecord, MutableRecord<BanRecord> {
+
+    void setAuthor(@Nullable UUID author);
+
+    void setIpAddress(@Nullable String ipAddress);
+
+    void setReason(@Nullable String reason);
+
+    void setContext(@Nullable String context);
 
     /**
-     * Sets the date at which the mute will automatically expire.
+     * Sets the date at which the ban will automatically expire.
      * <p>Setting a date in the <b>past</b> will immediately expire this record.</p>
      * <p>Setting a date in the <b>future</b> will reinstate this record, even if it had previously ended.</p>
-     * @param unmuteDate the date and time at which the record will expire.
+     * @param unbanDate the date and time at which the record will expire.
      */
-    void setAutoUnmuteDate(@NotNull LocalDateTime unmuteDate);
+    void setAutoUnbanDate(@NotNull LocalDateTime unbanDate);
 
     /**
-     * Reinstates this mute record, clearing any previous expiration date and cancellation details.
+     * Updates this ban record to end at this instant, overwriting unban details even if this record has already ended.
+     * @param unbanStaff the UUID of the staff member who cancelled this record, or null for console.
+     * @param unbanReason the reason for cancelling this record.
      */
-    void reinstateMute();
-
-    /**
-     * Immediately ends this mute record at this current time instant, overwriting unmute details even if this record has already ended.
-     * @param unmuteStaff the UUID of the staff member who cancelled this record, or null for console.
-     * @param unmuteReason the reason for cancelling this record.
-     */
-    void unmuteNow(@Nullable UUID unmuteStaff, @Nullable String unmuteReason);
+    void unbanNow(@Nullable UUID unbanStaff, @Nullable String unbanReason);
 
 }

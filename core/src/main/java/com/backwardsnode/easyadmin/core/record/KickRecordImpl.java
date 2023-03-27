@@ -32,17 +32,17 @@ import org.jetbrains.annotations.Nullable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public final class KickRecordImpl implements KickRecord {
+public class KickRecordImpl implements KickRecord, MutableRecordProvider<MutableKickRecordImpl> {
 
-    private transient boolean _loaded;
+    protected transient boolean _loaded;
 
-    private int id;
-    private UUID player;
-    private UUID staff;
-    private LocalDateTime kickDate;
-    private boolean isGlobal;
-    private String reason;
-    private String serverName;
+    protected int id;
+    protected UUID player;
+    protected UUID staff;
+    protected LocalDateTime kickDate;
+    protected boolean isGlobal;
+    protected String reason;
+    protected String serverName;
 
     KickRecordImpl(boolean loaded, int id, UUID player, UUID staff, LocalDateTime kickDate, boolean isGlobal, String serverName, String reason) {
         this._loaded = loaded;
@@ -53,6 +53,10 @@ public final class KickRecordImpl implements KickRecord {
         this.isGlobal = isGlobal;
         this.serverName = serverName;
         this.reason = reason;
+    }
+
+    protected KickRecordImpl(KickRecordImpl source) {
+        this(source._loaded, source.id, source.player, source.staff, source.kickDate, source.isGlobal, source.serverName, source.reason);
     }
 
     public KickRecordImpl(UUID player, UUID staff, LocalDateTime kickDate, boolean isGlobal, String reason) {
@@ -75,7 +79,7 @@ public final class KickRecordImpl implements KickRecord {
     }
 
     @Override
-    public @Nullable UUID getStaff() {
+    public @Nullable UUID getAuthor() {
         return staff;
     }
 
@@ -103,4 +107,8 @@ public final class KickRecordImpl implements KickRecord {
         return reason;
     }
 
+    @Override
+    public @NotNull MutableKickRecordImpl asMutable() {
+        return new MutableKickRecordImpl(this);
+    }
 }

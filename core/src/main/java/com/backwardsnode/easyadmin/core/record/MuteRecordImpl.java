@@ -26,28 +26,27 @@ package com.backwardsnode.easyadmin.core.record;
 
 import com.backwardsnode.easyadmin.api.data.PunishmentStatus;
 import com.backwardsnode.easyadmin.api.record.MuteRecord;
-import com.backwardsnode.easyadmin.api.record.modify.MuteRecordModifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public final class MuteRecordImpl implements MuteRecord {
+public class MuteRecordImpl implements MuteRecord, MutableRecordProvider<MutableMuteRecordImpl> {
 
-    private transient boolean _loaded;
+    protected transient boolean _loaded;
 
-    private int id;
-    private PunishmentStatus status;
-    private UUID player;
-    private UUID staff;
-    private UUID unmuteStaff;
-    private LocalDateTime muteDate;
-    private LocalDateTime unmuteDate;
-    private String ipAddress;
-    private String contexts;
-    private String reason;
-    private String unmuteReason;
+    protected int id;
+    protected PunishmentStatus status;
+    protected UUID player;
+    protected UUID staff;
+    protected UUID unmuteStaff;
+    protected LocalDateTime muteDate;
+    protected LocalDateTime unmuteDate;
+    protected String ipAddress;
+    protected String context;
+    protected String reason;
+    protected String unmuteReason;
 
     MuteRecordImpl(boolean loaded, int id, PunishmentStatus status, UUID player, UUID staff, UUID unmuteStaff, LocalDateTime muteDate, LocalDateTime unmuteDate, String ipAddress, String contexts, String reason, String unmuteReason) {
         this._loaded = loaded;
@@ -59,9 +58,13 @@ public final class MuteRecordImpl implements MuteRecord {
         this.muteDate = muteDate;
         this.unmuteDate = unmuteDate;
         this.ipAddress = ipAddress;
-        this.contexts = contexts;
+        this.context = contexts;
         this.reason = reason;
         this.unmuteReason = unmuteReason;
+    }
+
+    protected MuteRecordImpl(MuteRecordImpl source) {
+        this(source._loaded, source.id, source.status, source.player, source.staff, source.unmuteStaff, source.muteDate, source.unmuteDate, source.ipAddress, source.context, source.reason, source.unmuteReason);
     }
 
     public MuteRecordImpl(UUID player, UUID staff, LocalDateTime muteDate, LocalDateTime unmuteDate, String ipAddress, String contexts, String reason) {
@@ -89,7 +92,7 @@ public final class MuteRecordImpl implements MuteRecord {
     }
 
     @Override
-    public @Nullable UUID getStaff() {
+    public @Nullable UUID getAuthor() {
         return staff;
     }
 
@@ -115,7 +118,7 @@ public final class MuteRecordImpl implements MuteRecord {
 
     @Override
     public @Nullable String getContext() {
-        return contexts;
+        return context;
     }
 
     @Override
@@ -129,65 +132,7 @@ public final class MuteRecordImpl implements MuteRecord {
     }
 
     @Override
-    public @NotNull MuteRecordModifier getModifiableRecord() {
-        return new MuteRecordModification(this);
-    }
-
-    @Override
-    public @NotNull MuteRecordImpl copy() {
-        return new MuteRecordImpl(this._loaded, this.id, this.status, this.player, this.staff, this.unmuteStaff, this.muteDate, this.unmuteDate, this.ipAddress, this.contexts, this.reason, this.unmuteReason);
-    }
-
-    private static final class MuteRecordModification implements MuteRecordModifier {
-
-        private final MuteRecordImpl record;
-
-        private boolean changed = false;
-
-        MuteRecordModification(MuteRecordImpl record) {
-            this.record = record.copy();
-        }
-
-        @Override
-        public @NotNull MuteRecordImpl getUpdatedRecord() {
-            return record;
-        }
-
-        @Override
-        public boolean hasChanged() {
-            return changed;
-        }
-
-        @Override
-        public void push() {
-
-        }
-
-        @Override
-        public void setAutoUnmuteDate(@NotNull LocalDateTime unmuteDate) {
-            record.status = unmuteDate.isBefore(LocalDateTime.now()) ? PunishmentStatus.EXPIRED : PunishmentStatus.ACTIVE;
-            record.unmuteStaff = null;
-            record.unmuteDate = unmuteDate;
-            record.unmuteReason = null;
-            changed = record._loaded;
-        }
-
-        @Override
-        public void reinstateMute() {
-            record.status = PunishmentStatus.ACTIVE;
-            record.unmuteStaff = null;
-            record.unmuteDate = null;
-            record.unmuteReason = null;
-            changed = record._loaded;
-        }
-
-        @Override
-        public void unmuteNow(@Nullable UUID unmuteStaff, @Nullable String unmuteReason) {
-            record.status = PunishmentStatus.ENDED;
-            record.unmuteStaff = unmuteStaff;
-            record.unmuteDate = LocalDateTime.now();
-            record.unmuteReason = unmuteReason;
-            changed = record._loaded;
-        }
+    public @NotNull MutableMuteRecordImpl asMutable() {
+        return new MutableMuteRecordImpl(this);
     }
 }

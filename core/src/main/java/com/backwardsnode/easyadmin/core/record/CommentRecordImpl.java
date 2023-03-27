@@ -31,16 +31,16 @@ import org.jetbrains.annotations.Nullable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public final class CommentRecordImpl implements CommentRecord {
+public class CommentRecordImpl implements CommentRecord, MutableRecordProvider<MutableCommentRecordImpl> {
 
-    private transient boolean _loaded;
+    protected transient boolean _loaded;
 
-    private int id;
-    private UUID player;
-    private UUID staff;
-    private LocalDateTime commentDate;
-    private boolean isWarning;
-    private String comment;
+    protected int id;
+    protected UUID player;
+    protected UUID staff;
+    protected LocalDateTime commentDate;
+    protected boolean isWarning;
+    protected String comment;
 
     CommentRecordImpl(boolean loaded, int id, UUID player, UUID staff, LocalDateTime commentDate, boolean isWarning, String comment) {
         this._loaded = loaded;
@@ -50,6 +50,10 @@ public final class CommentRecordImpl implements CommentRecord {
         this.commentDate = commentDate;
         this.isWarning = isWarning;
         this.comment = comment;
+    }
+
+    protected CommentRecordImpl(CommentRecordImpl source) {
+        this(source._loaded, source.id, source.player, source.staff, source.commentDate, source.isWarning, source.comment);
     }
 
     public CommentRecordImpl(@NotNull UUID player, @Nullable UUID staff, @NotNull LocalDateTime commentDate, boolean isWarning, @NotNull String comment) {
@@ -72,7 +76,7 @@ public final class CommentRecordImpl implements CommentRecord {
     }
 
     @Override
-    public @Nullable UUID getStaff() {
+    public @Nullable UUID getAuthor() {
         return staff;
     }
 
@@ -87,6 +91,11 @@ public final class CommentRecordImpl implements CommentRecord {
 
     public @NotNull String getComment() {
         return comment;
+    }
+
+    @Override
+    public @NotNull MutableCommentRecordImpl asMutable() {
+        return new MutableCommentRecordImpl(this);
     }
 
 }

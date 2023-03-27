@@ -33,12 +33,13 @@ import com.backwardsnode.easyadmin.api.data.PunishmentStatus;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
 import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import com.backwardsnode.easyadmin.api.record.*;
-import com.backwardsnode.easyadmin.api.record.modify.BanRecordModifier;
-import com.backwardsnode.easyadmin.api.record.modify.MuteRecordModifier;
+import com.backwardsnode.easyadmin.api.record.mutable.MutableBanRecord;
+import com.backwardsnode.easyadmin.api.record.mutable.MutableMuteRecord;
 import com.backwardsnode.easyadmin.core.cache.CacheGroupType;
 import com.backwardsnode.easyadmin.core.cache.CacheLoader;
 import com.backwardsnode.easyadmin.core.cache.RecordCache;
 import com.backwardsnode.easyadmin.core.database.DatabaseController;
+import com.backwardsnode.easyadmin.core.record.MutableRecordProvider;
 import com.backwardsnode.easyadmin.core.record.PlayerRecordImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -439,10 +440,14 @@ public class AdminManagerImpl implements AdminManager {
                 // TODO where are we updating the status here!?!?!?!
                 continue;
             }
-            BanRecordModifier mod = record.getModifiableRecord();
-            mod.unbanNow(staffUUID, unbanReason);
-            mod.push();
-            count++;
+            if (record instanceof MutableRecordProvider<?> mrp) {
+                MutableBanRecord mbr = (MutableBanRecord) mrp.asMutable();
+                mbr.unbanNow(staffUUID, unbanReason);
+
+                // TODO commit it with API committer
+
+                count++;
+            }
         }
         return count;
     }
@@ -458,10 +463,12 @@ public class AdminManagerImpl implements AdminManager {
                 continue;
             }
             for (String context : contexts) {
-                if (contextTester.testContext(record, context)) {
-                    BanRecordModifier mod = record.getModifiableRecord();
-                    mod.unbanNow(staffUUID, unbanReason);
-                    mod.push();
+                if (record instanceof MutableRecordProvider<?> mrp && contextTester.testContext(record, context)) {
+                    MutableBanRecord mbr = (MutableBanRecord) mrp.asMutable();
+                    mbr.unbanNow(staffUUID, unbanReason);
+
+                    // TODO commit it with API committer
+
                     count++;
                     break;
                 }
@@ -473,10 +480,11 @@ public class AdminManagerImpl implements AdminManager {
     @Override
     public boolean unbanPlayerInGlobalContextOnly(@NotNull UUID playerUUID, @Nullable UUID staffUUID, @Nullable String unbanReason) {
         Optional<BanRecord> record = getActiveBanRecord(playerUUID, null, true);
-        if (record.isPresent()) {
-            BanRecordModifier mod = record.get().getModifiableRecord();
-            mod.unbanNow(staffUUID, unbanReason);
-            mod.push();
+        if (record.isPresent() && record.get() instanceof MutableRecordProvider<?> mrp) {
+            MutableBanRecord mbr = (MutableBanRecord) mrp.asMutable();
+            mbr.unbanNow(staffUUID, unbanReason);
+
+            // TODO commit it with API committer
             return true;
         }
         return false;
@@ -491,10 +499,14 @@ public class AdminManagerImpl implements AdminManager {
                 // TODO where are we updating the status here!?!?!?!
                 continue;
             }
-            MuteRecordModifier mod = record.getModifiableRecord();
-            mod.unmuteNow(staffUUID, unmuteReason);
-            mod.push();
-            count++;
+            if (record instanceof MutableRecordProvider<?> mrp) {
+                MutableMuteRecord mmr = (MutableMuteRecord) mrp.asMutable();
+                mmr.unmuteNow(staffUUID, unmuteReason);
+
+                // TODO commit it with API committer
+
+                count++;
+            }
         }
         return count;
     }
@@ -510,10 +522,12 @@ public class AdminManagerImpl implements AdminManager {
                 continue;
             }
             for (String context : contexts) {
-                if (contextTester.testContext(record, context)) {
-                    MuteRecordModifier mod = record.getModifiableRecord();
-                    mod.unmuteNow(staffUUID, unmuteReason);
-                    mod.push();
+                if (record instanceof MutableRecordProvider<?> mrp && contextTester.testContext(record, context)) {
+                    MutableMuteRecord mmr = (MutableMuteRecord) mrp.asMutable();
+                    mmr.unmuteNow(staffUUID, unmuteReason);
+
+                    // TODO commit it with API committer
+
                     count++;
                     break;
                 }
@@ -525,10 +539,11 @@ public class AdminManagerImpl implements AdminManager {
     @Override
     public boolean unmutePlayerInGlobalContextOnly(@NotNull UUID playerUUID, @Nullable UUID staffUUID, @Nullable String unmuteReason) {
         Optional<MuteRecord> record = getActiveMuteRecord(playerUUID, null, true);
-        if (record.isPresent()) {
-            MuteRecordModifier mod = record.get().getModifiableRecord();
-            mod.unmuteNow(staffUUID, unmuteReason);
-            mod.push();
+        if (record.isPresent() && record.get() instanceof MutableRecordProvider<?> mrp) {
+            MutableMuteRecord mmr = (MutableMuteRecord) mrp.asMutable();
+            mmr.unmuteNow(staffUUID, unmuteReason);
+
+            // TODO commit it with API committer
             return true;
         }
         return false;

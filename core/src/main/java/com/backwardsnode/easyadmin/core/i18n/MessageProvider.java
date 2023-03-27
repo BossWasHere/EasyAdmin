@@ -24,7 +24,6 @@
 
 package com.backwardsnode.easyadmin.core.i18n;
 
-import com.backwardsnode.easyadmin.api.EasyAdminPlugin;
 import com.backwardsnode.easyadmin.api.config.LocaleConfiguration;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.internal.MessageFactory;

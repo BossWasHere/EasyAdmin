@@ -22,35 +22,53 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.record;
+package com.backwardsnode.easyadmin.core.record;
 
-import org.jetbrains.annotations.NotNull;
+import com.backwardsnode.easyadmin.api.record.mutable.MutableKickRecord;
 import org.jetbrains.annotations.Nullable;
 
-import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
-/**
- * Represents an administrative action taking place between a player and staff member.
- */
-public interface AdminRecord {
+public final class MutableKickRecordImpl extends KickRecordImpl implements MutableKickRecord {
 
-    /**
-     * Gets the {@link UUID} of the player involved in this action.
-     * @return the player's UUID.
-     */
-    @NotNull UUID getPlayer();
+    private final KickRecordImpl source;
 
-    /**
-     * Gets the {@link UUID} of the staff member who authored this action, or null if on behalf of the console.
-     * @return the author's UUID, or null for the console.
-     */
-    @Nullable UUID getAuthor();
+    private boolean isModified = false;
 
-    /**
-     * Gets the {@link LocalDateTime} of when this action took place.
-     * @return the time of this action.
-     */
-    @NotNull LocalDateTime getDateAdded();
+    MutableKickRecordImpl(KickRecordImpl source) {
+        super(source);
+        this.source = source;
+    }
 
+    @Override
+    public void setAuthor(@Nullable UUID author) {
+        if (!Objects.equals(this.staff, author)) {
+            this.staff = author;
+            isModified = true;
+        }
+    }
+
+    @Override
+    public void setReason(@Nullable String reason) {
+        if (!Objects.equals(this.reason, reason)) {
+            this.reason = reason;
+            isModified = true;
+        }
+    }
+
+    @Override
+    public boolean isModified() {
+        return isModified;
+    }
+
+    @Override
+    public KickRecordImpl getOriginal() {
+        return source;
+    }
+
+    @Override
+    public KickRecordImpl asImmutable() {
+        return isModified ? new KickRecordImpl(this) : source;
+    }
 }

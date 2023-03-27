@@ -24,8 +24,6 @@
 
 package com.backwardsnode.easyadmin;
 
-import com.backwardsnode.easyadmin.api.EasyAdmin;
-import com.backwardsnode.easyadmin.api.EasyAdminPlugin;
 import com.backwardsnode.easyadmin.api.config.ConfigurationManager;
 import com.backwardsnode.easyadmin.api.config.LocaleConfiguration;
 import com.backwardsnode.easyadmin.core.EasyAdminService;

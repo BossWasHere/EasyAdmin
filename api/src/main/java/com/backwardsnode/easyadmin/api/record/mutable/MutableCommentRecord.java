@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,21 @@
  * SOFTWARE.
  */
 
-/**
- * Package containing record modification wrappers for EasyAdmin.
- */
-package com.backwardsnode.easyadmin.api.record.modify;
+package com.backwardsnode.easyadmin.api.record.mutable;
+
+import com.backwardsnode.easyadmin.api.record.CommentRecord;
+import com.backwardsnode.easyadmin.api.record.MutableRecord;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
+
+public interface MutableCommentRecord extends CommentRecord, MutableRecord<CommentRecord> {
+
+    void setComment(@NotNull String comment);
+
+    void setWarning(boolean warning);
+
+    void setAuthor(@Nullable UUID author);
+
+}

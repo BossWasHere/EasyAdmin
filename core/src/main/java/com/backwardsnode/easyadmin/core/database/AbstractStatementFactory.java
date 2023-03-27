@@ -27,9 +27,9 @@ package com.backwardsnode.easyadmin.core.database;
 import com.backwardsnode.easyadmin.api.data.LookupOptions;
 import com.backwardsnode.easyadmin.api.data.PunishmentStatus;
 import com.backwardsnode.easyadmin.api.record.*;
-import com.backwardsnode.easyadmin.api.record.modify.BanRecordModifier;
-import com.backwardsnode.easyadmin.api.record.modify.MuteRecordModifier;
-import com.backwardsnode.easyadmin.api.record.modify.PlayerRecordModifier;
+import com.backwardsnode.easyadmin.api.record.mutable.MutableBanRecord;
+import com.backwardsnode.easyadmin.api.record.mutable.MutableMuteRecord;
+import com.backwardsnode.easyadmin.api.record.mutable.MutablePlayerRecord;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -264,7 +264,7 @@ public abstract class AbstractStatementFactory implements DatabaseStatementFacto
         PreparedStatement statement = initCreateCommentSql(connection);
 
         statement.setString(1, notNull(record.getPlayer()));
-        statement.setString(2, maybeNull(record.getStaff()));
+        statement.setString(2, maybeNull(record.getAuthor()));
         statement.setTimestamp(3, Timestamp.valueOf(record.getDateAdded()));
         statement.setBoolean(4, record.isWarning());
         statement.setString(5, notNull(record.getComment()));
@@ -277,7 +277,7 @@ public abstract class AbstractStatementFactory implements DatabaseStatementFacto
         PreparedStatement statement = initCreateKickSql(connection);
 
         statement.setString(1, notNull(record.getPlayer()));
-        statement.setString(2, maybeNull(record.getStaff()));
+        statement.setString(2, maybeNull(record.getAuthor()));
         statement.setTimestamp(3, Timestamp.valueOf(record.getDateAdded()));
         statement.setBoolean(4, record.isGlobal());
         statement.setString(5, record.getServerName());
@@ -298,7 +298,7 @@ public abstract class AbstractStatementFactory implements DatabaseStatementFacto
         int index = 1;
         statement.setString(index++, notNull(record.getStatus()));
         statement.setString(index++, notNull(record.getPlayer()));
-        statement.setString(index++, maybeNull(record.getStaff()));
+        statement.setString(index++, maybeNull(record.getAuthor()));
         if (record.getIpAddress() != null) {
             statement.setString(index++, record.getIpAddress());
         }
@@ -573,13 +573,12 @@ public abstract class AbstractStatementFactory implements DatabaseStatementFacto
     }
 
     @Override
-    public PreparedStatement getUpdatePlayerRecordStatement(Connection connection, PlayerRecordModifier recordModification) throws SQLException {
-        PlayerRecord record = recordModification.getUpdatedRecord();
-        if (recordModification.hasChanged()) {
-            byte count = 0;
-            if (recordModification.hasPlayerJoinStatsChanged()) count++;
-            if (recordModification.hasPlayerLeaveStatsChanged()) count++;
-            if (recordModification.hasPlayerDynamicStatsChanged()) count++;
+    public PreparedStatement getUpdatePlayerRecordStatement(Connection connection, MutablePlayerRecord record) throws SQLException {
+        if (record.isLoaded() && record.isModified()) {
+            int count = 0;
+            if (record.hasPlayerJoinStatsChanged()) count++;
+            if (record.hasPlayerLeaveStatsChanged()) count++;
+            if (record.hasPlayerDynamicStatsChanged()) count++;
 
             PreparedStatement statement;
             LocalDateTime lastLeave = record.getLastLeave();
@@ -594,7 +593,7 @@ public abstract class AbstractStatementFactory implements DatabaseStatementFacto
                 statement.setInt(7, record.getTotalJoins());
                 statement.setString(8, notNull(record.getId()));
 
-            } else if (recordModification.hasPlayerJoinStatsChanged()) {
+            } else if (record.hasPlayerJoinStatsChanged()) {
                 statement = initUpdatePlayerJoiningRecordSql(connection);
                 statement.setString(1, notNull(record.getUsername()));
                 statement.setTimestamp(2, Timestamp.valueOf(record.getLastJoin()));
@@ -602,7 +601,7 @@ public abstract class AbstractStatementFactory implements DatabaseStatementFacto
                 statement.setInt(4, record.getTotalJoins());
                 statement.setString(5, notNull(record.getId()));
 
-            } else if (recordModification.hasPlayerLeaveStatsChanged()) {
+            } else if (record.hasPlayerLeaveStatsChanged()) {
                 statement = initUpdatePlayerLeavingRecordSql(connection);
                 statement.setTimestamp(1, lastLeave == null ? null : Timestamp.valueOf(lastLeave));
                 statement.setString(2, record.getLastServer());
@@ -621,9 +620,8 @@ public abstract class AbstractStatementFactory implements DatabaseStatementFacto
     }
 
     @Override
-    public PreparedStatement getUpdatePlayerBanStatement(Connection connection, BanRecordModifier recordModification) throws SQLException {
-        BanRecord record = recordModification.getUpdatedRecord();
-        if (recordModification.hasChanged()) {
+    public PreparedStatement getUpdatePlayerBanStatement(Connection connection, MutableBanRecord record) throws SQLException {
+        if (record.isModified()) {
             PreparedStatement statement = initUpdatePlayerBanSql(connection);
 
             statement.setString(1, notNull(record.getStatus()));
@@ -638,9 +636,8 @@ public abstract class AbstractStatementFactory implements DatabaseStatementFacto
     }
 
     @Override
-    public PreparedStatement getUpdatePlayerMuteStatement(Connection connection, MuteRecordModifier recordModification) throws SQLException {
-        MuteRecord record = recordModification.getUpdatedRecord();
-        if (recordModification.hasChanged()) {
+    public PreparedStatement getUpdatePlayerMuteStatement(Connection connection, MutableMuteRecord record) throws SQLException {
+        if (record.isModified()) {
             PreparedStatement statement = initUpdatePlayerMuteSql(connection);
 
             statement.setString(1, notNull(record.getStatus()));

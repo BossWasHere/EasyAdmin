@@ -27,9 +27,9 @@ package com.backwardsnode.easyadmin.core.database;
 import com.backwardsnode.easyadmin.api.data.LookupOptions;
 import com.backwardsnode.easyadmin.api.data.PunishmentStatus;
 import com.backwardsnode.easyadmin.api.record.*;
-import com.backwardsnode.easyadmin.api.record.modify.BanRecordModifier;
-import com.backwardsnode.easyadmin.api.record.modify.MuteRecordModifier;
-import com.backwardsnode.easyadmin.api.record.modify.PlayerRecordModifier;
+import com.backwardsnode.easyadmin.api.record.mutable.MutableBanRecord;
+import com.backwardsnode.easyadmin.api.record.mutable.MutableMuteRecord;
+import com.backwardsnode.easyadmin.api.record.mutable.MutablePlayerRecord;
 import com.backwardsnode.easyadmin.core.database.config.LocalConfigLoader;
 import com.backwardsnode.easyadmin.core.database.config.RemoteConfigLoader;
 import com.backwardsnode.easyadmin.core.database.util.DatabaseUtil;
@@ -120,16 +120,16 @@ public final class DatabaseController {
         insertOrUpdate(statementFactory::getCreatePlayerRecordStatement, playerRecord);
     }
 
-    public boolean updatePlayerRecord(@NotNull PlayerRecordModifier recordModification) {
-        if (recordModification.hasChanged()) {
-            updateOrInsertPlayerRecord(recordModification);
+    public boolean updatePlayerRecord(@NotNull MutablePlayerRecord playerRecord) {
+        if (playerRecord.isModified()) {
+            updateOrInsertPlayerRecord(playerRecord);
             return true;
         }
         return false;
     }
 
-    public void updateOrInsertPlayerRecord(@NotNull PlayerRecordModifier recordModification) {
-        insertOrUpdate(statementFactory::getUpdatePlayerRecordStatement, recordModification);
+    public void updateOrInsertPlayerRecord(@NotNull MutablePlayerRecord playerRecord) {
+        insertOrUpdate(statementFactory::getUpdatePlayerRecordStatement, playerRecord);
     }
 
     public Collection<BanRecord> getPlayerBans(@NotNull UUID playerUUID, LookupOptions lookupOptions) {
@@ -160,16 +160,16 @@ public final class DatabaseController {
         insertOrUpdate(statementFactory::getCreateBanStatement, banRecord);
     }
 
-    public boolean updateBan(@NotNull BanRecordModifier recordModification) {
-        if (recordModification.hasChanged()) {
-            updateOrInsertBan(recordModification);
+    public boolean updateBan(@NotNull MutableBanRecord banRecord) {
+        if (banRecord.isModified()) {
+            updateOrInsertBan(banRecord);
             return true;
         }
         return false;
     }
 
-    public void updateOrInsertBan(@NotNull BanRecordModifier recordModification) {
-        insertOrUpdate(statementFactory::getUpdatePlayerBanStatement, recordModification);
+    public void updateOrInsertBan(@NotNull MutableBanRecord banRecord) {
+        insertOrUpdate(statementFactory::getUpdatePlayerBanStatement, banRecord);
     }
 
     public Collection<CommentRecord> getPlayerComments(@NotNull UUID playerUUID, LookupOptions lookupOptions) {
@@ -220,16 +220,16 @@ public final class DatabaseController {
         insertOrUpdate(statementFactory::getCreateMuteStatement, muteRecord);
     }
 
-    public boolean updateMute(@NotNull MuteRecordModifier recordModification) {
-        if (recordModification.hasChanged()) {
-            updateOrInsertMute(recordModification);
+    public boolean updateMute(@NotNull MutableMuteRecord muteRecord) {
+        if (muteRecord.isModified()) {
+            updateOrInsertMute(muteRecord);
             return true;
         }
         return false;
     }
 
-    public void updateOrInsertMute(@NotNull MuteRecordModifier recordModification) {
-        insertOrUpdate(statementFactory::getUpdatePlayerMuteStatement, recordModification);
+    public void updateOrInsertMute(@NotNull MutableMuteRecord muteRecord) {
+        insertOrUpdate(statementFactory::getUpdatePlayerMuteStatement, muteRecord);
     }
 
     public Collection<BanRecord> getStaffBans(@NotNull UUID staffUUID, LookupOptions lookupOptions) {

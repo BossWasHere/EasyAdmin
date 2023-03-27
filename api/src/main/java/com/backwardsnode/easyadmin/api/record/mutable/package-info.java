@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2022-2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,28 +22,7 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.record;
-
-import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
-import com.backwardsnode.easyadmin.api.record.mutable.MutableCommentRecord;
-import org.jetbrains.annotations.NotNull;
-
 /**
- * Represents a comment for a specific player
- * <p>A new record can be created through the {@link RecordBuilder}</p>
+ * Package containing mutable record wrappers for EasyAdmin.
  */
-public interface CommentRecord extends LiveRecord<Integer>, AdminRecord {
-
-    /**
-     * Gets the type of comment this is.
-     * @return true if this is a warning comment, false if it is a regular comment.
-     */
-    boolean isWarning();
-
-    /**
-     * Gets the comment itself.
-     * @return the comment.
-     */
-    @NotNull String getComment();
-
-}
+package com.backwardsnode.easyadmin.api.record.mutable;

@@ -27,9 +27,9 @@ package com.backwardsnode.easyadmin.core.database;
 import com.backwardsnode.easyadmin.api.data.LookupOptions;
 import com.backwardsnode.easyadmin.api.data.PunishmentStatus;
 import com.backwardsnode.easyadmin.api.record.*;
-import com.backwardsnode.easyadmin.api.record.modify.BanRecordModifier;
-import com.backwardsnode.easyadmin.api.record.modify.MuteRecordModifier;
-import com.backwardsnode.easyadmin.api.record.modify.PlayerRecordModifier;
+import com.backwardsnode.easyadmin.api.record.mutable.MutableBanRecord;
+import com.backwardsnode.easyadmin.api.record.mutable.MutableMuteRecord;
+import com.backwardsnode.easyadmin.api.record.mutable.MutablePlayerRecord;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -108,10 +108,10 @@ public interface DatabaseStatementFactory {
 
     PreparedStatement getRetrievePlayerMutesOrIPMutesByStatusStatement(Connection connection, UUID player, String ipAddress, PunishmentStatus status, LookupOptions options) throws SQLException;
 
-    PreparedStatement getUpdatePlayerRecordStatement(Connection connection, PlayerRecordModifier recordModification) throws SQLException;
+    PreparedStatement getUpdatePlayerRecordStatement(Connection connection, MutablePlayerRecord playerRecord) throws SQLException;
 
-    PreparedStatement getUpdatePlayerBanStatement(Connection connection, BanRecordModifier recordModification) throws SQLException;
+    PreparedStatement getUpdatePlayerBanStatement(Connection connection, MutableBanRecord banRecord) throws SQLException;
 
-    PreparedStatement getUpdatePlayerMuteStatement(Connection connection, MuteRecordModifier recordModification) throws SQLException;
+    PreparedStatement getUpdatePlayerMuteStatement(Connection connection, MutableMuteRecord muteRecord) throws SQLException;
 
 }

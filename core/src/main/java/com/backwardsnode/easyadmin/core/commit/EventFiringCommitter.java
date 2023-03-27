@@ -25,7 +25,6 @@
 package com.backwardsnode.easyadmin.core.commit;
 
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
-import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
 import com.backwardsnode.easyadmin.api.event.admin.AdminEventSource;
 import com.backwardsnode.easyadmin.api.record.*;
 import com.backwardsnode.easyadmin.core.EasyAdminService;
@@ -60,9 +59,11 @@ public class EventFiringCommitter implements Committer {
 
         if (!modes.contains(CommitterMode.SKIP_EVENTS)) {
             BanEventImpl event = new BanEventImpl(service, source, record, executor,
-                    modes.contains(CommitterMode.EVENT_ALLOW_CANCELLATIONS));
+                    modes.contains(CommitterMode.EVENT_ALLOW_CANCELLATIONS),
+                    modes.contains(CommitterMode.EVENT_ALLOW_MODIFICATIONS));
 
             service.getEventBus().call(event);
+            record = event.getBanRecord();
 
             if (event.isCancelled()) {
                 return new CommitResult<>(record, CommitStatus.CANCELLED);
@@ -82,9 +83,11 @@ public class EventFiringCommitter implements Committer {
 
         if (!modes.contains(CommitterMode.SKIP_EVENTS)) {
             MuteEventImpl event = new MuteEventImpl(service, source, record, executor,
-                    modes.contains(CommitterMode.EVENT_ALLOW_CANCELLATIONS));
+                    modes.contains(CommitterMode.EVENT_ALLOW_CANCELLATIONS),
+                    modes.contains(CommitterMode.EVENT_ALLOW_MODIFICATIONS));
 
             service.getEventBus().call(event);
+            record = event.getMuteRecord();
 
             if (event.isCancelled()) {
                 return new CommitResult<>(record, CommitStatus.CANCELLED);
@@ -104,9 +107,11 @@ public class EventFiringCommitter implements Committer {
 
         if (!modes.contains(CommitterMode.SKIP_EVENTS)) {
             CommentEventImpl event = new CommentEventImpl(service, source, record, executor,
-                    modes.contains(CommitterMode.EVENT_ALLOW_CANCELLATIONS));
+                    modes.contains(CommitterMode.EVENT_ALLOW_CANCELLATIONS),
+                    modes.contains(CommitterMode.EVENT_ALLOW_MODIFICATIONS));
 
             service.getEventBus().call(event);
+            record = event.getCommentRecord();
 
             if (event.isCancelled()) {
                 return new CommitResult<>(record, CommitStatus.CANCELLED);
@@ -126,9 +131,11 @@ public class EventFiringCommitter implements Committer {
 
         if (!modes.contains(CommitterMode.SKIP_EVENTS)) {
             KickEventImpl event = new KickEventImpl(service, source, record, executor,
-                    modes.contains(CommitterMode.EVENT_ALLOW_CANCELLATIONS));
+                    modes.contains(CommitterMode.EVENT_ALLOW_CANCELLATIONS),
+                    modes.contains(CommitterMode.EVENT_ALLOW_MODIFICATIONS));
 
             service.getEventBus().call(event);
+            record = event.getKickRecord();
 
             if (event.isCancelled()) {
                 return new CommitResult<>(record, CommitStatus.CANCELLED);

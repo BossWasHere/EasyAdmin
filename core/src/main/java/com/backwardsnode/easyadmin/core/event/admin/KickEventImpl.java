@@ -29,22 +29,30 @@ import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.event.admin.AdminEventSource;
 import com.backwardsnode.easyadmin.api.event.admin.KickEvent;
 import com.backwardsnode.easyadmin.api.record.KickRecord;
+import com.backwardsnode.easyadmin.api.record.mutable.MutableKickRecord;
 import com.backwardsnode.easyadmin.core.event.base.CancellableEvent;
+import com.backwardsnode.easyadmin.core.exception.ImmutableEventException;
+import com.backwardsnode.easyadmin.core.record.KickRecordImpl;
+import com.backwardsnode.easyadmin.core.record.MutableKickRecordImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class KickEventImpl extends CancellableEvent implements KickEvent {
+public final class KickEventImpl extends CancellableEvent implements KickEvent {
 
     private final AdminEventSource source;
-    private final KickRecord kickRecord;
+    private final KickRecordImpl kickRecord;
     private final CommandExecutor executor;
+    private final boolean modifiable;
 
-    public KickEventImpl(EasyAdmin instance, AdminEventSource source, KickRecord kickRecord,
-                         CommandExecutor executor, boolean cancellable) {
-        super(instance, KickEventImpl.class, cancellable);
+    private MutableKickRecordImpl mutableRecord;
+
+    public KickEventImpl(EasyAdmin instance, AdminEventSource source, KickRecordImpl kickRecord,
+                         CommandExecutor executor, boolean cancellable, boolean modifiable) {
+        super(instance, KickEvent.class, cancellable);
         this.source = source;
         this.kickRecord = kickRecord;
         this.executor = executor;
+        this.modifiable = modifiable;
     }
 
     @Override
@@ -53,13 +61,39 @@ public class KickEventImpl extends CancellableEvent implements KickEvent {
     }
 
     @Override
-    public @NotNull KickRecord getKickRecord() {
-        return kickRecord;
+    public @NotNull KickRecordImpl getKickRecord() {
+        return isModified() ? mutableRecord.asImmutable() : kickRecord;
     }
 
     @Override
     public @Nullable CommandExecutor getExecutor() {
         return executor;
+    }
+
+    @Override
+    public boolean isModified() {
+        return mutableRecord != null && mutableRecord.isModified();
+    }
+
+    @Override
+    public boolean canModify() {
+        return modifiable;
+    }
+
+    @Override
+    public KickRecord getOriginal() {
+        return kickRecord;
+    }
+
+    @Override
+    public MutableKickRecord getSharedMutable() {
+        if (!modifiable) {
+            throw new ImmutableEventException();
+        }
+        if (mutableRecord == null) {
+            mutableRecord = kickRecord.asMutable();
+        }
+        return mutableRecord;
     }
 
 }

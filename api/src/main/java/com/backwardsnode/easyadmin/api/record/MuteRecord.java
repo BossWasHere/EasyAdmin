@@ -25,10 +25,10 @@
 package com.backwardsnode.easyadmin.api.record;
 
 import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
-import com.backwardsnode.easyadmin.api.record.modify.MuteRecordModifier;
+import com.backwardsnode.easyadmin.api.record.mutable.MutableMuteRecord;
 
 /**
  * Represents a mute entry for a specific player (and sometimes IP address).
  * <p>A new record can be created through the {@link RecordBuilder}</p>
  */
-public interface MuteRecord extends LiveRecord<Integer>, SpecialAdminRecord, ModifiableRecord<MuteRecordModifier, MuteRecord> { }
+public interface MuteRecord extends LiveRecord<Integer>, SpecialAdminRecord { }

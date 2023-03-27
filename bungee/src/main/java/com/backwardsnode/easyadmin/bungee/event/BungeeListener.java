@@ -31,12 +31,13 @@ import com.backwardsnode.easyadmin.api.data.RecommendationReason;
 import com.backwardsnode.easyadmin.api.record.BanRecord;
 import com.backwardsnode.easyadmin.api.record.MuteRecord;
 import com.backwardsnode.easyadmin.api.record.PlayerRecord;
-import com.backwardsnode.easyadmin.api.record.modify.PlayerRecordModifier;
+import com.backwardsnode.easyadmin.api.record.mutable.MutablePlayerRecord;
 import com.backwardsnode.easyadmin.bungee.EasyAdminBungee;
 import com.backwardsnode.easyadmin.bungee.wrapper.OfflinePlayerWrapper;
 import com.backwardsnode.easyadmin.bungee.wrapper.OnlinePlayerWrapper;
 import com.backwardsnode.easyadmin.core.BukkitPluginMode;
 import com.backwardsnode.easyadmin.core.i18n.CommonMessages;
+import com.backwardsnode.easyadmin.core.record.MutableRecordProvider;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -106,11 +107,14 @@ public class BungeeListener implements Listener {
             return;
         }
 
-        PlayerRecordModifier modifier = record.get().getModifiableRecord();
-        modifier.setLastServer(e.getPlayer().getServer().getInfo().getName());
-        modifier.setLastLeft(LocalDateTime.now());
-        //TODO set playtime (need to cache this somehow)
-        modifier.push();
+        // TODO extract this into core module?
+        if (record.get() instanceof MutableRecordProvider<?> mrp) {
+            MutablePlayerRecord mpr = (MutablePlayerRecord) mrp.asMutable();
+            mpr.setLastServer(e.getPlayer().getServer().getInfo().getName());
+            mpr.setLastLeft(LocalDateTime.now());
+            //TODO set playtime (need to cache this somehow)
+            //TODO commit to API committer
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -140,11 +144,15 @@ public class BungeeListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPostLoginEvent(PostLoginEvent e) {
         OnlinePlayerWrapper player = new OnlinePlayerWrapper(e.getPlayer());
-        PlayerRecordModifier modifier = plugin.getInstance().getAdminManager().getOrInitPlayerRecord(player).getModifiableRecord();
-        modifier.setLastJoined(LocalDateTime.now());
-        modifier.setLastAddress(player.getSerializedIPAddress());
-        modifier.incrementTotalJoins();
-        modifier.push();
+        PlayerRecord playerRecord = plugin.getInstance().getAdminManager().getOrInitPlayerRecord(player);
+
+        if (playerRecord instanceof MutableRecordProvider<?> mrp) {
+            MutablePlayerRecord mpr = (MutablePlayerRecord) mrp.asMutable();
+            mpr.setLastJoined(LocalDateTime.now());
+            mpr.setLastAddress(player.getSerializedIPAddress());
+            mpr.incrementTotalJoins();
+            //TODO commit to API committer
+        }
     }
 
     /*
@@ -174,9 +182,17 @@ public class BungeeListener implements Listener {
      */
     @EventHandler(priority = EventPriority.NORMAL)
     public void onServerConnectedEvent(ServerConnectedEvent e) {
-        PlayerRecordModifier modifier = plugin.getInstance().getAdminManager().getPlayerRecord(e.getPlayer().getUniqueId()).orElseThrow().getModifiableRecord();
-        modifier.setLastServer(e.getServer().getInfo().getName());
-        modifier.push();
+        Optional<PlayerRecord> record = plugin.getInstance().getAdminManager().getPlayerRecord(e.getPlayer().getUniqueId());
+        if (record.isEmpty()) {
+            plugin.getLogger().severe("Player record not found for player " + e.getPlayer().getName() + "[ + " + e.getPlayer().getUniqueId() + "]");
+            return;
+        }
+
+        if (record.get() instanceof MutableRecordProvider<?> mrp) {
+            MutablePlayerRecord mpr = (MutablePlayerRecord) mrp.asMutable();
+            mpr.setLastServer(e.getPlayer().getServer().getInfo().getName());
+            //TODO commit to API committer
+        }
     }
 
 }

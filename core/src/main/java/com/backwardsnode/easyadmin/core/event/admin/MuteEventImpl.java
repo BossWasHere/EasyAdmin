@@ -29,22 +29,30 @@ import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.event.admin.AdminEventSource;
 import com.backwardsnode.easyadmin.api.event.admin.MuteEvent;
 import com.backwardsnode.easyadmin.api.record.MuteRecord;
+import com.backwardsnode.easyadmin.api.record.mutable.MutableMuteRecord;
 import com.backwardsnode.easyadmin.core.event.base.CancellableEvent;
+import com.backwardsnode.easyadmin.core.exception.ImmutableEventException;
+import com.backwardsnode.easyadmin.core.record.MutableMuteRecordImpl;
+import com.backwardsnode.easyadmin.core.record.MuteRecordImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class MuteEventImpl extends CancellableEvent implements MuteEvent {
+public final class MuteEventImpl extends CancellableEvent implements MuteEvent {
 
     private final AdminEventSource source;
-    private final MuteRecord muteRecord;
+    private final MuteRecordImpl muteRecord;
     private final CommandExecutor executor;
+    private final boolean modifiable;
 
-    public MuteEventImpl(EasyAdmin instance, AdminEventSource source, MuteRecord muteRecord,
-                         CommandExecutor executor, boolean cancellable) {
+    private MutableMuteRecordImpl mutableRecord;
+
+    public MuteEventImpl(EasyAdmin instance, AdminEventSource source, MuteRecordImpl muteRecord,
+                         CommandExecutor executor, boolean cancellable, boolean modifiable) {
         super(instance, MuteEventImpl.class, cancellable);
         this.source = source;
         this.muteRecord = muteRecord;
         this.executor = executor;
+        this.modifiable = modifiable;
     }
 
     @Override
@@ -53,13 +61,39 @@ public class MuteEventImpl extends CancellableEvent implements MuteEvent {
     }
 
     @Override
-    public @NotNull MuteRecord getMuteRecord() {
-        return muteRecord;
+    public @NotNull MuteRecordImpl getMuteRecord() {
+        return isModified() ? mutableRecord.asImmutable() : muteRecord;
     }
 
     @Override
     public @Nullable CommandExecutor getExecutor() {
         return executor;
+    }
+
+    @Override
+    public boolean isModified() {
+        return mutableRecord != null && mutableRecord.isModified();
+    }
+
+    @Override
+    public boolean canModify() {
+        return modifiable;
+    }
+
+    @Override
+    public MuteRecord getOriginal() {
+        return muteRecord;
+    }
+
+    @Override
+    public MutableMuteRecord getSharedMutable() {
+        if (!modifiable) {
+            throw new ImmutableEventException();
+        }
+        if (mutableRecord == null) {
+            mutableRecord = muteRecord.asMutable();
+        }
+        return mutableRecord;
     }
 
 }

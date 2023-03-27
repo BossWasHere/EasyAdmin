@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,33 +22,12 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.record.modify;
+package com.backwardsnode.easyadmin.core.exception;
 
-import com.backwardsnode.easyadmin.api.record.LiveRecord;
-import org.jetbrains.annotations.NotNull;
+public class ImmutableEventException extends RuntimeException {
 
-/**
- * Represents a record modification wrapper that will eventually return a modified version of a record.
- * @param <T> the type of record this wrapper will return.
- */
-public interface RecordModifier<T extends LiveRecord<?>> {
-
-    /**
-     * Gets the modified version of the record.
-     * @return The modified record.
-     */
-    @NotNull T getUpdatedRecord();
-
-    /**
-     * Determines if any changes to this record were actually made.
-     * @implNote If the record was not initially loaded from a data store, this method will always return false.
-     * @return true if any changes were made, otherwise false.
-     */
-    boolean hasChanged();
-
-    /**
-     * Pushes changes to the record data store.
-     */
-    void push();
+    public ImmutableEventException() {
+        super("This event is immutable");
+    }
 
 }

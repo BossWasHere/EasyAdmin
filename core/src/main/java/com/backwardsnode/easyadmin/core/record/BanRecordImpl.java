@@ -26,31 +26,31 @@ package com.backwardsnode.easyadmin.core.record;
 
 import com.backwardsnode.easyadmin.api.data.PunishmentStatus;
 import com.backwardsnode.easyadmin.api.record.BanRecord;
-import com.backwardsnode.easyadmin.api.record.modify.BanRecordModifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public final class BanRecordImpl implements BanRecord {
+public class BanRecordImpl implements BanRecord, MutableRecordProvider<MutableBanRecordImpl> {
 
-    private transient boolean _loaded;
+    protected transient boolean _loaded;
 
-    private int id;
-    private PunishmentStatus status;
-    private UUID player;
-    private UUID staff;
-    private UUID unbanStaff;
-    private LocalDateTime banDate;
-    private LocalDateTime unbanDate;
-    private String ipAddress;
-    private String contexts;
-    private String reason;
-    private String unbanReason;
+    protected int id;
+    protected PunishmentStatus status;
+    protected UUID player;
+    protected UUID staff;
+    protected UUID unbanStaff;
+    protected LocalDateTime banDate;
+    protected LocalDateTime unbanDate;
+    protected String ipAddress;
+    protected String context;
+    protected String reason;
+    protected String unbanReason;
 
-    public BanRecordImpl(boolean loaded, int id, PunishmentStatus status, UUID player, UUID staff, UUID unbanStaff, LocalDateTime banDate, LocalDateTime unbanDate, String ipAddress, String contexts, String reason, String unbanReason) {
+    BanRecordImpl(boolean loaded, int id, PunishmentStatus status, UUID player, UUID staff, UUID unbanStaff, LocalDateTime banDate, LocalDateTime unbanDate, String ipAddress, String contexts, String reason, String unbanReason) {
         this._loaded = loaded;
+        this.id = id;
         this.status = status;
         this.player = player;
         this.staff = staff;
@@ -58,9 +58,13 @@ public final class BanRecordImpl implements BanRecord {
         this.banDate = banDate;
         this.unbanDate = unbanDate;
         this.ipAddress = ipAddress;
-        this.contexts = contexts;
+        this.context = contexts;
         this.reason = reason;
         this.unbanReason = unbanReason;
+    }
+
+    protected BanRecordImpl(BanRecordImpl source) {
+        this(source._loaded, source.id, source.status, source.player, source.staff, source.unbanStaff, source.banDate, source.unbanDate, source.ipAddress, source.context, source.reason, source.unbanReason);
     }
 
     public BanRecordImpl(@NotNull UUID player, @Nullable UUID staff, @NotNull LocalDateTime banDate, @Nullable LocalDateTime unbanDate, @Nullable String ipAddress, @Nullable String contexts, @Nullable String reason) {
@@ -87,7 +91,7 @@ public final class BanRecordImpl implements BanRecord {
     }
 
     @Override
-    public @Nullable UUID getStaff() {
+    public @Nullable UUID getAuthor() {
         return staff;
     }
 
@@ -113,7 +117,7 @@ public final class BanRecordImpl implements BanRecord {
 
     @Override
     public @Nullable String getContext() {
-        return contexts;
+        return context;
     }
 
     @Override
@@ -127,65 +131,7 @@ public final class BanRecordImpl implements BanRecord {
     }
 
     @Override
-    public @NotNull BanRecordModifier getModifiableRecord() {
-        return new BanRecordModification(this);
-    }
-
-    @Override
-    public @NotNull BanRecordImpl copy() {
-        return new BanRecordImpl(this._loaded, this.id, this.status, this.player, this.staff, this.unbanStaff, this.banDate, this.unbanDate, this.ipAddress, this.contexts, this.reason, this.unbanReason);
-    }
-
-    private static final class BanRecordModification implements BanRecordModifier {
-
-        private final BanRecordImpl record;
-
-        private boolean changed = false;
-
-        public BanRecordModification(BanRecordImpl record) {
-            this.record = record.copy();
-        }
-
-        @Override
-        public @NotNull BanRecordImpl getUpdatedRecord() {
-            return record;
-        }
-
-        @Override
-        public boolean hasChanged() {
-            return changed;
-        }
-
-        @Override
-        public void push() {
-
-        }
-
-        @Override
-        public void setAutoUnbanDate(@NotNull LocalDateTime unbanDate) {
-            record.status = unbanDate.isBefore(LocalDateTime.now()) ? PunishmentStatus.EXPIRED : PunishmentStatus.ACTIVE;
-            record.unbanStaff = null;
-            record.unbanDate = unbanDate;
-            record.unbanReason = null;
-            changed = record._loaded;
-        }
-
-        @Override
-        public void reinstateBan() {
-            record.status = PunishmentStatus.ACTIVE;
-            record.unbanStaff = null;
-            record.unbanDate = null;
-            record.unbanReason = null;
-            changed = record._loaded;
-        }
-
-        @Override
-        public void unbanNow(@Nullable UUID unbanStaff, @Nullable String unbanReason) {
-            record.status = PunishmentStatus.ENDED;
-            record.unbanStaff = unbanStaff;
-            record.unbanDate = LocalDateTime.now();
-            record.unbanReason = unbanReason;
-            changed = record._loaded;
-        }
+    public @NotNull MutableBanRecordImpl asMutable() {
+        return new MutableBanRecordImpl(this);
     }
 }

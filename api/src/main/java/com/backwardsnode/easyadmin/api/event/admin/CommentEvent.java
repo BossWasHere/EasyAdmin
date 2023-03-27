@@ -25,11 +25,13 @@
 package com.backwardsnode.easyadmin.api.event.admin;
 
 import com.backwardsnode.easyadmin.api.event.Cancellable;
+import com.backwardsnode.easyadmin.api.event.Mutable;
 import com.backwardsnode.easyadmin.api.event.staff.CommandEvent;
 import com.backwardsnode.easyadmin.api.record.CommentRecord;
+import com.backwardsnode.easyadmin.api.record.mutable.MutableCommentRecord;
 import org.jetbrains.annotations.NotNull;
 
-public interface CommentEvent extends AdministrationEvent, Cancellable, CommandEvent {
+public interface CommentEvent extends AdministrationEvent, Cancellable, CommandEvent, Mutable<CommentRecord, MutableCommentRecord> {
 
     @NotNull CommentRecord getCommentRecord();
 

@@ -25,10 +25,10 @@
 package com.backwardsnode.easyadmin.api.record;
 
 import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
-import com.backwardsnode.easyadmin.api.record.modify.BanRecordModifier;
+import com.backwardsnode.easyadmin.api.record.mutable.MutableBanRecord;
 
 /**
  * Represents a ban entry for a specific player (and sometimes IP address).
  * <p>A new record can be created through the {@link RecordBuilder}</p>
  */
-public interface BanRecord extends LiveRecord<Integer>, SpecialAdminRecord, ModifiableRecord<BanRecordModifier, BanRecord> { }
+public interface BanRecord extends LiveRecord<Integer>, SpecialAdminRecord { }

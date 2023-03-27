@@ -27,12 +27,12 @@ package com.backwardsnode.easyadmin.core.commands;
 import com.backwardsnode.easyadmin.api.EasyAdminPlugin;
 import com.backwardsnode.easyadmin.api.data.ActionScope;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
+import com.backwardsnode.easyadmin.api.internal.MessageKey;
 import com.backwardsnode.easyadmin.core.command.CommandData;
 import com.backwardsnode.easyadmin.core.command.ExecutionStatus;
 import com.backwardsnode.easyadmin.core.command.ScopedCommand;
 import com.backwardsnode.easyadmin.core.commands.data.TemporalScopedData;
 import com.backwardsnode.easyadmin.core.i18n.CommonMessages;
-import com.backwardsnode.easyadmin.api.internal.MessageKey;
 
 public class Unban extends ScopedCommand<TemporalScopedData> {
 

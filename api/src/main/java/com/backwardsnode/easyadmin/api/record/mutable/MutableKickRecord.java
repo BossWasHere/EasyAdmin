@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,28 +22,19 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.record;
+package com.backwardsnode.easyadmin.api.record.mutable;
 
-import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
-import com.backwardsnode.easyadmin.api.record.mutable.MutableCommentRecord;
+import com.backwardsnode.easyadmin.api.record.KickRecord;
+import com.backwardsnode.easyadmin.api.record.MutableRecord;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-/**
- * Represents a comment for a specific player
- * <p>A new record can be created through the {@link RecordBuilder}</p>
- */
-public interface CommentRecord extends LiveRecord<Integer>, AdminRecord {
+import java.util.UUID;
 
-    /**
-     * Gets the type of comment this is.
-     * @return true if this is a warning comment, false if it is a regular comment.
-     */
-    boolean isWarning();
+public interface MutableKickRecord extends KickRecord, MutableRecord<KickRecord> {
 
-    /**
-     * Gets the comment itself.
-     * @return the comment.
-     */
-    @NotNull String getComment();
+    void setReason(@NotNull String reason);
+
+    void setAuthor(@Nullable UUID author);
 
 }

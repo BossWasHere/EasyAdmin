@@ -25,26 +25,25 @@
 package com.backwardsnode.easyadmin.core.record;
 
 import com.backwardsnode.easyadmin.api.record.PlayerRecord;
-import com.backwardsnode.easyadmin.api.record.modify.PlayerRecordModifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public final class PlayerRecordImpl implements PlayerRecord {
+public class PlayerRecordImpl implements PlayerRecord, MutableRecordProvider<MutablePlayerRecordImpl> {
 
-    private transient boolean _loaded;
+    protected transient boolean _loaded;
 
-    private UUID uuid;
-    private String username;
-    private LocalDateTime firstJoin;
-    private LocalDateTime lastJoin;
-    private LocalDateTime lastLeave;
-    private long playtime;
-    private int totalJoins;
-    private String lastServer;
-    private String lastAddress;
+    protected UUID uuid;
+    protected String username;
+    protected LocalDateTime firstJoin;
+    protected LocalDateTime lastJoin;
+    protected LocalDateTime lastLeave;
+    protected long playtime;
+    protected int totalJoins;
+    protected String lastServer;
+    protected String lastAddress;
 
     PlayerRecordImpl(boolean loaded, UUID uuid, String username, LocalDateTime firstJoin, LocalDateTime lastJoin, LocalDateTime lastLeave, long playtime, int totalJoins, String lastServer, String lastAddress) {
         this._loaded = loaded;
@@ -57,6 +56,10 @@ public final class PlayerRecordImpl implements PlayerRecord {
         this.totalJoins = totalJoins;
         this.lastServer = lastServer;
         this.lastAddress = lastAddress;
+    }
+
+    protected PlayerRecordImpl(PlayerRecordImpl source) {
+        this(source._loaded, source.uuid, source.username, source.firstJoin, source.lastJoin, source.lastLeave, source.playtime, source.totalJoins, source.lastServer, source.lastAddress);
     }
 
     public PlayerRecordImpl(@NotNull UUID uuid, @NotNull String username, @NotNull LocalDateTime firstJoin, @Nullable String lastServer, @Nullable String lastAddress) {
@@ -110,97 +113,7 @@ public final class PlayerRecordImpl implements PlayerRecord {
     }
 
     @Override
-    public @NotNull PlayerRecordModifier getModifiableRecord() {
-        return new PlayerRecordModification(this);
-    }
-
-    @Override
-    public @NotNull PlayerRecordImpl copy() {
-        return new PlayerRecordImpl(this._loaded, this.uuid, this.username, this.firstJoin, this.lastJoin, this.lastLeave, this.playtime, this.totalJoins, this.lastServer, this.lastAddress);
-    }
-
-    private static final class PlayerRecordModification implements PlayerRecordModifier {
-
-        private final PlayerRecordImpl record;
-
-        private boolean playerJoiningStatsChanged = false;
-        private boolean playerLeavingStatsChanged = false;
-        private boolean playerDynamicStatsChanged = false;
-
-        PlayerRecordModification(PlayerRecordImpl record) {
-            this.record = record.copy();
-        }
-
-        @Override
-        public @NotNull PlayerRecordImpl getUpdatedRecord() {
-            return record;
-        }
-
-        @Override
-        public boolean hasChanged() {
-            return playerJoiningStatsChanged || playerLeavingStatsChanged || playerDynamicStatsChanged;
-        }
-
-        @Override
-        public void push() {
-
-        }
-
-        public boolean hasPlayerJoinStatsChanged() {
-            return playerJoiningStatsChanged;
-        }
-
-        public boolean hasPlayerLeaveStatsChanged() {
-            return playerLeavingStatsChanged;
-        }
-
-        public boolean hasPlayerDynamicStatsChanged() {
-            return playerDynamicStatsChanged;
-        }
-
-        public void setUsername(@NotNull String username) {
-            record.username = username;
-            playerJoiningStatsChanged = record._loaded;
-        }
-
-        public void setLastJoined(@NotNull LocalDateTime lastJoin) {
-            record.lastJoin = lastJoin;
-            playerJoiningStatsChanged = record._loaded;
-        }
-
-        public void setLastLeft(@Nullable LocalDateTime lastLeave) {
-            record.lastLeave = lastLeave;
-            playerLeavingStatsChanged = record._loaded;
-        }
-
-        public void setPlaytime(long playtime) {
-            record.playtime = playtime;
-            playerLeavingStatsChanged = record._loaded;
-        }
-
-        public void addPlaytime(long timeToAdd) {
-            record.playtime += timeToAdd;
-            playerLeavingStatsChanged = record._loaded;
-        }
-
-        public void setTotalJoins(int totalJoins) {
-            record.totalJoins = totalJoins;
-            playerJoiningStatsChanged = record._loaded;
-        }
-
-        public void incrementTotalJoins() {
-            record.totalJoins++;
-            playerJoiningStatsChanged = record._loaded;
-        }
-
-        public void setLastServer(@Nullable String lastServer) {
-            record.lastServer = lastServer;
-            playerDynamicStatsChanged = record._loaded;
-        }
-
-        public void setLastAddress(@Nullable String lastAddress) {
-            record.lastAddress = lastAddress;
-            playerJoiningStatsChanged = record._loaded;
-        }
+    public @NotNull MutablePlayerRecordImpl asMutable() {
+        return new MutablePlayerRecordImpl(this);
     }
 }

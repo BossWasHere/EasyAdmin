@@ -32,6 +32,7 @@ import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
 import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import com.backwardsnode.easyadmin.api.internal.InternalServiceProviderType;
+import com.backwardsnode.easyadmin.api.internal.MessageKey;
 import com.backwardsnode.easyadmin.api.record.BanRecord;
 import com.backwardsnode.easyadmin.api.record.CommitResult;
 import com.backwardsnode.easyadmin.core.command.CommandData;
@@ -40,7 +41,6 @@ import com.backwardsnode.easyadmin.core.command.ScopedCommand;
 import com.backwardsnode.easyadmin.core.command.args.ArgumentResult;
 import com.backwardsnode.easyadmin.core.command.args.ArgumentSelector;
 import com.backwardsnode.easyadmin.core.commands.data.TemporalScopedData;
-import com.backwardsnode.easyadmin.api.internal.MessageKey;
 import com.backwardsnode.easyadmin.core.i18n.CommonMessages;
 
 import java.time.Duration;
@@ -207,8 +207,8 @@ public class Ban extends ScopedCommand<TemporalScopedData> {
                 case CANCELLED_DUPLICATE -> {
                     BanRecord existing = result.existing();
                     Object staffUsername = CommonMessages.EASYADMIN.CONSOLE;
-                    if (existing.getStaff() == null) {
-                        OfflinePlayer staffPlayer = instance.getOfflinePlayer(existing.getStaff());
+                    if (existing.getAuthor() == null) {
+                        OfflinePlayer staffPlayer = instance.getOfflinePlayer(existing.getAuthor());
                         if (staffPlayer != null) {
                             staffUsername = staffPlayer.getUsername();
                         }

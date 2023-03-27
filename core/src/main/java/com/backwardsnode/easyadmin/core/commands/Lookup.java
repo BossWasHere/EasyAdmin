@@ -27,6 +27,7 @@ package com.backwardsnode.easyadmin.core.commands;
 import com.backwardsnode.easyadmin.api.EasyAdminPlugin;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
+import com.backwardsnode.easyadmin.api.internal.MessageKey;
 import com.backwardsnode.easyadmin.core.command.Command;
 import com.backwardsnode.easyadmin.core.command.CommandData;
 import com.backwardsnode.easyadmin.core.command.CommandRegistration;
@@ -35,7 +36,6 @@ import com.backwardsnode.easyadmin.core.command.args.ArgumentResult;
 import com.backwardsnode.easyadmin.core.command.args.ArgumentSelector;
 import com.backwardsnode.easyadmin.core.commands.data.LookupData;
 import com.backwardsnode.easyadmin.core.i18n.CommonMessages;
-import com.backwardsnode.easyadmin.api.internal.MessageKey;
 
 import java.util.Map;
 
