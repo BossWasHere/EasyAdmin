@@ -36,6 +36,7 @@ import com.backwardsnode.easyadmin.api.record.CommitResult;
 import com.backwardsnode.easyadmin.api.record.KickRecord;
 import com.backwardsnode.easyadmin.core.command.Command;
 import com.backwardsnode.easyadmin.core.command.CommandData;
+import com.backwardsnode.easyadmin.core.command.CommandRegistration;
 import com.backwardsnode.easyadmin.core.command.ExecutionStatus;
 import com.backwardsnode.easyadmin.core.command.args.ArgumentResult;
 import com.backwardsnode.easyadmin.core.command.args.ArgumentSelector;
@@ -43,6 +44,9 @@ import com.backwardsnode.easyadmin.core.commands.data.KickData;
 import com.backwardsnode.easyadmin.core.i18n.CommonMessages;
 import com.backwardsnode.easyadmin.api.internal.MessageKey;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class Kick implements Command<KickData> {
@@ -60,23 +64,15 @@ public class Kick implements Command<KickData> {
     }
 
     @Override
-    public String getCommand() {
-        return COMMAND;
-    }
-
-    @Override
-    public String getShorthandCommand() {
-        return SHORTHAND_COMMAND;
-    }
-
-    @Override
-    public String[] getAliases() {
-        return allowGlobal && allowLocal ? new String[] { COMMAND_GLOBAL } : new String[0];
-    }
-
-    @Override
-    public String[] getSubcommandAliases() {
-        return allowGlobal && allowLocal ? new String[] { SHORTHAND_COMMAND_GLOBAL } : new String[0];
+    public CommandRegistration getRegistration() {
+        Map<String, String[]> entries = new HashMap<>(2);
+        if (allowLocal) {
+            entries.put(COMMAND, new String[] { SHORTHAND_COMMAND });
+        }
+        if (allowGlobal) {
+            entries.put(COMMAND_GLOBAL, new String[] { SHORTHAND_COMMAND_GLOBAL });
+        }
+        return new CommandRegistration(COMMAND, Collections.unmodifiableMap(entries));
     }
 
     @Override

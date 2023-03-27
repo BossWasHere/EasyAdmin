@@ -387,7 +387,7 @@ public final class DatabaseController {
             statement.executeBatch();
 
         } catch (SQLException | IOException e) {
-            LOGGER.error("Failed to create tables", e);
+            LOGGER.error("Failed to run database initialization script", e);
         }
     }
 

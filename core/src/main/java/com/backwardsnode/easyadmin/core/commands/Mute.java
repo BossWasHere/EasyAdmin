@@ -60,12 +60,12 @@ public class Mute extends ScopedCommand<TemporalScopedData> {
     }
 
     @Override
-    public String getCommand() {
+    public String getRootCommandPart() {
         return COMMAND;
     }
 
     @Override
-    public String getShorthandCommand() {
+    public String getShorthandCommandPart() {
         return SHORTHAND_COMMAND;
     }
 
@@ -207,7 +207,7 @@ public class Mute extends ScopedCommand<TemporalScopedData> {
                 }
                 case CANCELLED_DUPLICATE -> {
                     MuteRecord existing = result.existing();
-                    Object staffUsername = CommonMessages.CHAT.CONSOLE;
+                    Object staffUsername = CommonMessages.EASYADMIN.CONSOLE;
                     if (existing.getStaff() == null) {
                         OfflinePlayer staffPlayer = instance.getOfflinePlayer(existing.getStaff());
                         if (staffPlayer != null) {

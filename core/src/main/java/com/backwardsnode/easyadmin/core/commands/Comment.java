@@ -34,6 +34,7 @@ import com.backwardsnode.easyadmin.api.record.CommentRecord;
 import com.backwardsnode.easyadmin.api.record.CommitResult;
 import com.backwardsnode.easyadmin.core.command.Command;
 import com.backwardsnode.easyadmin.core.command.CommandData;
+import com.backwardsnode.easyadmin.core.command.CommandRegistration;
 import com.backwardsnode.easyadmin.core.command.ExecutionStatus;
 import com.backwardsnode.easyadmin.core.command.args.ArgumentResult;
 import com.backwardsnode.easyadmin.core.command.args.ArgumentSelector;
@@ -41,6 +42,9 @@ import com.backwardsnode.easyadmin.core.commands.data.CommentData;
 import com.backwardsnode.easyadmin.api.internal.MessageKey;
 import com.backwardsnode.easyadmin.core.i18n.CommonMessages;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class Comment implements Command<CommentData> {
@@ -58,23 +62,15 @@ public class Comment implements Command<CommentData> {
     }
 
     @Override
-    public String getCommand() {
-        return registerComment ? COMMAND_COMMENT : COMMAND_WARNING;
-    }
-
-    @Override
-    public String getShorthandCommand() {
-        return registerComment ? SHORTHAND_COMMAND_COMMENT : SHORTHAND_COMMAND_WARNING;
-    }
-
-    @Override
-    public String[] getAliases() {
-        return registerComment && registerWarning ? new String[] { COMMAND_WARNING } : new String[0];
-    }
-
-    @Override
-    public String[] getSubcommandAliases() {
-        return registerComment && registerWarning ? new String[] { SHORTHAND_COMMAND_WARNING } : new String[0];
+    public CommandRegistration getRegistration() {
+        Map<String, String[]> entries = new HashMap<>(2);
+        if (registerComment) {
+            entries.put(COMMAND_COMMENT, new String[] { SHORTHAND_COMMAND_COMMENT });
+        }
+        if (registerWarning) {
+            entries.put(COMMAND_WARNING, new String[] { SHORTHAND_COMMAND_WARNING });
+        }
+        return new CommandRegistration(COMMAND_COMMENT, Collections.unmodifiableMap(entries));
     }
 
     @Override

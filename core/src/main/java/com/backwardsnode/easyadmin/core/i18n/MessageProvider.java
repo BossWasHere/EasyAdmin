@@ -129,6 +129,9 @@ public class MessageProvider implements MessageFactory {
     }
 
     private LanguageGroup loadLanguageOrDefault(String language) {
+        if (language == null) {
+            language = defaultLanguage;
+        }
         LanguageGroup lg = loadLanguage(language, false);
         if (lg == null) {
             if (defaultLanguageGroup == null) {

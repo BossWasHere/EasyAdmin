@@ -44,12 +44,12 @@ public class Unban extends ScopedCommand<TemporalScopedData> {
     }
 
     @Override
-    public String getCommand() {
+    public String getRootCommandPart() {
         return COMMAND;
     }
 
     @Override
-    public String getShorthandCommand() {
+    public String getShorthandCommandPart() {
         return SHORTHAND_COMMAND;
     }
 

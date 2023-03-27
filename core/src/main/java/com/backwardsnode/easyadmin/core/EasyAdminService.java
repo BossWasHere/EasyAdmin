@@ -104,6 +104,7 @@ public class EasyAdminService implements EasyAdmin, AutoCloseable {
         if (databaseController == null) {
             throw new ServiceInitializationException("Failed to create database controller");
         }
+        databaseController.logMetadata();
 
         apiCommitter = new APICommitter(this);
         adminManager = new AdminManagerImpl(this, databaseController);

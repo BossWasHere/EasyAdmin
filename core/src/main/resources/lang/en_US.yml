@@ -7,7 +7,9 @@ easyadmin:
   helpDescription: "&7&oModule: {/command} <player> [duration] [reason]"
   updateFound: "&aAn update has been found: &9Version {0}"
   noReason: "No reason specified"
+  noPermission: "&cYou do not have permission to use this command"
   staff: "staff"
+  console: "CONSOLE"
 admin:
   ban:
     description: "Bans a player from the current or specified server"
@@ -230,7 +232,6 @@ admin:
     comments: "&3Comments Issued: {0}"
     warnings: "&3Warnings Issued: {0}"
 chat:
-  console: "CONSOLE"
   messageWarning: "&cPlease follow chat rules. You have been warned."
 
 player:

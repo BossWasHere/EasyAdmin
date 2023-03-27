@@ -31,13 +31,10 @@ import com.backwardsnode.easyadmin.api.internal.MessageKey;
 
 public interface Command<S> {
 
-    String getCommand();
-    String getShorthandCommand();
-    String[] getAliases();
-    String[] getSubcommandAliases();
+    CommandRegistration getRegistration();
 
     default String getIdentifierNode() {
-        return EasyAdmin.NAMESPACE + "." + getCommand();
+        return EasyAdmin.NAMESPACE + "." + getRegistration().id();
     }
 
     default String getBasePermission() {
@@ -57,7 +54,9 @@ public interface Command<S> {
     MessageKey getUsageMessage(CommandExecutor executor, CommandData data, S state);
 
     default ExecutionStatus preExecute(EasyAdminPlugin instance, CommandExecutor executor, CommandData data, S state) {
-        return ExecutionStatus.SUCCESS;
+        return requiresBasePermission()
+                ? (executor.hasPermission(getBasePermission()) ? ExecutionStatus.SUCCESS : ExecutionStatus.NO_PERMISSION)
+                : ExecutionStatus.SUCCESS;
     }
 
     ExecutionStatus execute(EasyAdminPlugin instance, CommandExecutor executor, CommandData data, S state);

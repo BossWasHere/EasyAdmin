@@ -28,6 +28,7 @@ import com.backwardsnode.easyadmin.api.EasyAdminPlugin;
 import com.backwardsnode.easyadmin.api.data.ActionScope;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,65 +37,80 @@ import static com.backwardsnode.easyadmin.api.data.ActionScope.*;
 public abstract class ScopedCommand<S extends ScopedCommand.ScopedData> implements Command<S> {
 
     private final ActionScope enabledScopes;
-    private final Map<String, AliasType> commands;
-
-    private final String[] aliases;
-    private final String[] subcommandAliases;
+    private final Map<String, ActionScope> commands;
+    private final Map<String, String[]> nameAndAliases;
 
     public ScopedCommand(ActionScope enabledScopes) {
         this.enabledScopes = enabledScopes;
         this.commands = new HashMap<>();
+        Map<String, String[]> nameAndAliases = new HashMap<>();
 
-        final String command = getCommand();
-        final String shorthand = getShorthandCommand();
+        final String root = getRootCommandPart();
+        final String shorthand = getShorthandCommandPart();
 
         if (enabledScopes.isTemporary()) {
-            commands.put("temp" + command, AliasType.main(TEMPORARY));
-            commands.put("t" + shorthand, AliasType.sub(TEMPORARY));
+            commands.put("temp" + root, TEMPORARY);
+            commands.put("t" + shorthand, TEMPORARY);
+
+            nameAndAliases.put("temp" + root, new String[] { "t" + shorthand });
 
             if (enabledScopes.isGlobal()) {
-                commands.put("gtemp" + command, AliasType.main(TEMPORARY_GLOBAL));
-                commands.put("gt" + shorthand, AliasType.sub(TEMPORARY_GLOBAL));
+                commands.put("gtemp" + root, TEMPORARY_GLOBAL);
+                commands.put("gt" + shorthand, TEMPORARY_GLOBAL);
+
+                nameAndAliases.put("gtemp" + root, new String[] { "gt" + shorthand });
 
                 if (enabledScopes.isIP()) {
-                    commands.put("gtemp" + command + "ip", AliasType.main(TEMPORARY_GLOBAL_IP));
-                    commands.put("gt" + shorthand + "i", AliasType.sub(TEMPORARY_GLOBAL_IP));
+                    commands.put("gtemp" + root + "ip", TEMPORARY_GLOBAL_IP);
+                    commands.put("gt" + shorthand + "i", TEMPORARY_GLOBAL_IP);
+
+                    nameAndAliases.put("gtemp" + root + "ip", new String[] { "gt" + shorthand + "i" });
                 }
             }
             if (enabledScopes.isIP()) {
-                commands.put("temp" + command + "ip", AliasType.main(TEMPORARY_IP));
-                commands.put("gt" + shorthand + "i", AliasType.sub(TEMPORARY_GLOBAL_IP));
+                commands.put("temp" + root + "ip", TEMPORARY_IP);
+                commands.put("gt" + shorthand + "i", TEMPORARY_GLOBAL_IP);
+
+                nameAndAliases.put("temp" + root + "ip", new String[] { "t" + shorthand + "i" });
             }
         }
         if (enabledScopes.isGlobal()) {
-            commands.put("g" + command, AliasType.main(GLOBAL));
-            commands.put("g" + shorthand, AliasType.sub(GLOBAL));
+            commands.put("g" + root, GLOBAL);
+            commands.put("g" + shorthand, GLOBAL);
+
+            nameAndAliases.put("g" + root, new String[] { "g" + shorthand });
 
             if (enabledScopes.isIP()) {
-                commands.put("g" + command + "ip", AliasType.main(GLOBAL_IP));
-                commands.put("g" + shorthand + "i", AliasType.sub(GLOBAL_IP));
+                commands.put("g" + root + "ip", GLOBAL_IP);
+                commands.put("g" + shorthand + "i", GLOBAL_IP);
+
+                nameAndAliases.put("g" + root + "ip", new String[] { "g" + shorthand + "i" });
             }
         }
         if (enabledScopes.isIP()) {
-            commands.put(shorthand + "i", AliasType.sub(IP));
+            commands.put(root + "ip", IP);
+            commands.put(shorthand + "i", IP);
+
+            nameAndAliases.put(root + "ip", new String[] { shorthand + "i" });
         }
 
-        aliases = commands.entrySet().stream().filter(c -> !c.getValue().subcommandOnly()).map(Map.Entry::getKey).toArray(String[]::new);
-        subcommandAliases = commands.entrySet().stream().filter(c -> c.getValue().subcommandOnly()).map(Map.Entry::getKey).toArray(String[]::new);
+        commands.put(root, DEFAULT);
+        commands.put(shorthand, DEFAULT);
 
-        commands.put(command, AliasType.main(DEFAULT));
-        commands.put(shorthand, AliasType.sub(DEFAULT));
+        nameAndAliases.put(root, new String[] { shorthand });
+
+        this.nameAndAliases = Collections.unmodifiableMap(nameAndAliases);
     }
 
-    @Override
 
-    public String[] getAliases() {
-        return aliases;
-    }
+    public abstract String getRootCommandPart();
+
+
+    public abstract String getShorthandCommandPart();
 
     @Override
-    public String[] getSubcommandAliases() {
-        return subcommandAliases;
+    public CommandRegistration getRegistration() {
+        return new CommandRegistration(getRootCommandPart(), nameAndAliases);
     }
 
     @Override
@@ -111,12 +127,12 @@ public abstract class ScopedCommand<S extends ScopedCommand.ScopedData> implemen
     @Override
     public final S loadState(EasyAdminPlugin instance, CommandExecutor executor, CommandData data) {
         S state = createDefaultState();
-        AliasType type = commands.get(data.command());
-        if (type == null) {
+        ActionScope scope = commands.get(data.command());
+        if (scope == null) {
             state.setStatus(ExecutionStatus.ERROR);
         } else {
-            state.setScope(type.scope());
-            if (checkPermission(executor, type.scope())) {
+            state.setScope(scope);
+            if (checkPermission(executor, scope)) {
                 state.setStatus(ExecutionStatus.SUCCESS);
             } else {
                 state.setStatus(ExecutionStatus.NO_PERMISSION);
@@ -132,15 +148,6 @@ public abstract class ScopedCommand<S extends ScopedCommand.ScopedData> implemen
 
     protected boolean checkPermission(CommandExecutor executor, ActionScope scope) {
         return executor.hasPermission(getBasePermission() + "." + scope.getPermissionSuffix());
-    }
-
-    protected record AliasType(ActionScope scope, boolean subcommandOnly) {
-        private static AliasType main(ActionScope scope) {
-            return new AliasType(scope, false);
-        }
-        private static AliasType sub(ActionScope scope) {
-            return new AliasType(scope, true);
-        }
     }
 
     public static class ScopedData {

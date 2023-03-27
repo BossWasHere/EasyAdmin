@@ -29,10 +29,12 @@ import com.backwardsnode.easyadmin.bukkit.EasyAdminBukkit;
 import com.backwardsnode.easyadmin.bukkit.wrapper.CommandExecutorWrapper;
 import com.backwardsnode.easyadmin.core.command.Command;
 import com.backwardsnode.easyadmin.core.command.CommandData;
+import com.backwardsnode.easyadmin.core.command.CommandRegistration;
 import com.backwardsnode.easyadmin.core.command.ExecutionStatus;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BukkitCommand<S> extends org.bukkit.command.Command {
@@ -40,8 +42,8 @@ public class BukkitCommand<S> extends org.bukkit.command.Command {
     private final EasyAdminBukkit plugin;
     private final Command<S> source;
 
-    public BukkitCommand(EasyAdminBukkit plugin, Command<S> source) {
-        super(source.getCommand(), source.getIdentifierNode(), source.getIdentifierNode(), List.of(source.getAliases()));
+    public BukkitCommand(EasyAdminBukkit plugin, Command<S> source, String mainName, List<String> aliases) {
+        super(mainName, source.getIdentifierNode(), source.getIdentifierNode(), aliases);
         this.plugin = plugin;
         this.source = source;
     }

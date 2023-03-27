@@ -291,7 +291,6 @@ public final class CommonMessages {
 
     public static final class CHAT {
 
-        public static final MessageKey CONSOLE = new MessageKey("chat.console", false);
         public static final MessageKey MESSAGE_WARNING = new MessageKey("chat.messageWarning");
 
     }
@@ -315,6 +314,8 @@ public final class CommonMessages {
         public static final MessageKey STAFF = new MessageKey("easyadmin.staff", false);
         public static final MessageKey HELP =  new MessageKey("easyadmin.updateFound");
         public static final MessageKey HELP_DESCRIPTION = new MessageKey("easyadmin.helpDescription", false);
+        public static final MessageKey CONSOLE = new MessageKey("easyadmin.console", false);
+        public static final MessageKey NO_PERMISSION = new MessageKey("easyadmin.noPermission");
 
     }
 

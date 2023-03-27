@@ -29,6 +29,7 @@ import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
 import com.backwardsnode.easyadmin.core.command.Command;
 import com.backwardsnode.easyadmin.core.command.CommandData;
+import com.backwardsnode.easyadmin.core.command.CommandRegistration;
 import com.backwardsnode.easyadmin.core.command.ExecutionStatus;
 import com.backwardsnode.easyadmin.core.command.args.ArgumentResult;
 import com.backwardsnode.easyadmin.core.command.args.ArgumentSelector;
@@ -36,29 +37,16 @@ import com.backwardsnode.easyadmin.core.commands.data.LookupData;
 import com.backwardsnode.easyadmin.core.i18n.CommonMessages;
 import com.backwardsnode.easyadmin.api.internal.MessageKey;
 
+import java.util.Map;
+
 public class Lookup implements Command<LookupData> {
 
     private static final String COMMAND = "lookup";
     private static final String SHORTHAND_COMMAND = "l";
 
     @Override
-    public String getCommand() {
-        return COMMAND;
-    }
-
-    @Override
-    public String getShorthandCommand() {
-        return SHORTHAND_COMMAND;
-    }
-
-    @Override
-    public String[] getAliases() {
-        return new String[0];
-    }
-
-    @Override
-    public String[] getSubcommandAliases() {
-        return new String[0];
+    public CommandRegistration getRegistration() {
+        return new CommandRegistration(COMMAND, Map.of(COMMAND, new String[] { SHORTHAND_COMMAND }));
     }
 
     @Override

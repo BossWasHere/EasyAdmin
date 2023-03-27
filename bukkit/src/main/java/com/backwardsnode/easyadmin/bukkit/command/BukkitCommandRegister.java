@@ -27,12 +27,17 @@ package com.backwardsnode.easyadmin.bukkit.command;
 import com.backwardsnode.easyadmin.api.EasyAdmin;
 import com.backwardsnode.easyadmin.bukkit.EasyAdminBukkit;
 import com.backwardsnode.easyadmin.core.command.Command;
+import com.backwardsnode.easyadmin.core.command.CommandRegistration;
 import com.backwardsnode.easyadmin.core.command.CommandRegistrationProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.SimplePluginManager;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
 public final class BukkitCommandRegister implements CommandRegistrationProvider {
@@ -64,7 +69,20 @@ public final class BukkitCommandRegister implements CommandRegistrationProvider 
     public void registerCommand(Command<?> command) {
         CommandMap map = getCommandMap();
         if (map != null) {
-            map.register(EasyAdmin.NAMESPACE, new BukkitCommand<>(plugin, command));
+            CommandRegistration registration = command.getRegistration();
+            String mainName = null;
+            List<String> aliases = new ArrayList<>();
+
+            for (Map.Entry<String, String[]> nameAndAliases : registration.commandNames().entrySet()) {
+                if (mainName == null) {
+                    mainName = nameAndAliases.getKey();
+                } else {
+                    aliases.add(nameAndAliases.getKey());
+                }
+                aliases.addAll(Arrays.asList(nameAndAliases.getValue()));
+            }
+
+            map.register(EasyAdmin.NAMESPACE, new BukkitCommand<>(plugin, command, mainName, aliases));
         }
     }
 
