@@ -26,7 +26,7 @@ package com.backwardsnode.easyadmin.core.builder;
 
 import com.backwardsnode.easyadmin.api.builder.CommentBuilder;
 import com.backwardsnode.easyadmin.api.record.CommentRecord;
-import com.backwardsnode.easyadmin.api.record.CommitResult;
+import com.backwardsnode.easyadmin.api.commit.CommitResult;
 import com.backwardsnode.easyadmin.core.commit.Committer;
 import com.backwardsnode.easyadmin.core.record.CommentRecordImpl;
 import org.jetbrains.annotations.NotNull;

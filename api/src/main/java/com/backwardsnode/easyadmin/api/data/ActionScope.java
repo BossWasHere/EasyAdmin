@@ -24,12 +24,12 @@
 
 package com.backwardsnode.easyadmin.api.data;
 
-import com.backwardsnode.easyadmin.api.record.SpecialAdminRecord;
+import com.backwardsnode.easyadmin.api.record.base.ScopedRecord;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents the scope of an administrative action.
- * @see SpecialAdminRecord
+ * @see ScopedRecord
  */
 public enum ActionScope {
 

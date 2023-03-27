@@ -34,7 +34,7 @@ import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import com.backwardsnode.easyadmin.api.internal.InternalServiceProviderType;
 import com.backwardsnode.easyadmin.api.internal.MessageKey;
 import com.backwardsnode.easyadmin.api.record.BanRecord;
-import com.backwardsnode.easyadmin.api.record.CommitResult;
+import com.backwardsnode.easyadmin.api.commit.CommitResult;
 import com.backwardsnode.easyadmin.core.command.CommandData;
 import com.backwardsnode.easyadmin.core.command.ExecutionStatus;
 import com.backwardsnode.easyadmin.core.command.ScopedCommand;

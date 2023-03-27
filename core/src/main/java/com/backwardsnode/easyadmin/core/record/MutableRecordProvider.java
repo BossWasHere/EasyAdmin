@@ -24,7 +24,7 @@
 
 package com.backwardsnode.easyadmin.core.record;
 
-import com.backwardsnode.easyadmin.api.record.MutableRecord;
+import com.backwardsnode.easyadmin.api.record.base.MutableRecord;
 import org.jetbrains.annotations.NotNull;
 
 public interface MutableRecordProvider<T extends MutableRecord<?>> {

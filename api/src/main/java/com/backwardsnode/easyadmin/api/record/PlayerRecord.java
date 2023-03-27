@@ -24,6 +24,7 @@
 
 package com.backwardsnode.easyadmin.api.record;
 
+import com.backwardsnode.easyadmin.api.record.base.LiveRecord;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -25,7 +25,7 @@
 package com.backwardsnode.easyadmin.api.builder.ext;
 
 import com.backwardsnode.easyadmin.api.builder.BuilderException;
-import com.backwardsnode.easyadmin.api.record.CommitResult;
+import com.backwardsnode.easyadmin.api.commit.CommitResult;
 import org.jetbrains.annotations.NotNull;
 
 /**

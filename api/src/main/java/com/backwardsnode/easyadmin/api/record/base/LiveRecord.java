@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2022-2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,14 +22,25 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.record;
+package com.backwardsnode.easyadmin.api.record.base;
 
-public interface MutableRecord<T> {
+import org.jetbrains.annotations.NotNull;
 
-    boolean isModified();
+/**
+ * Represents a record that can be created or loaded from a database.
+ * @param <ID> the type which represents this record's primary key in a database.
+ */
+public interface LiveRecord<ID> {
 
-    T getOriginal();
+    /**
+     * Gets the ID of this record.
+     * @return the record's ID.
+     */
+    @NotNull ID getId();
 
-    T asImmutable();
-
+    /**
+     * Determines if this record was loaded from a database or not.
+     * @return true if loaded, false if newly created.
+     */
+    boolean isLoaded();
 }

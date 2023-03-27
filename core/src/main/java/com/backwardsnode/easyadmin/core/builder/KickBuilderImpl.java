@@ -25,7 +25,7 @@
 package com.backwardsnode.easyadmin.core.builder;
 
 import com.backwardsnode.easyadmin.api.builder.KickBuilder;
-import com.backwardsnode.easyadmin.api.record.CommitResult;
+import com.backwardsnode.easyadmin.api.commit.CommitResult;
 import com.backwardsnode.easyadmin.api.record.KickRecord;
 import com.backwardsnode.easyadmin.core.commit.Committer;
 import com.backwardsnode.easyadmin.core.record.KickRecordImpl;

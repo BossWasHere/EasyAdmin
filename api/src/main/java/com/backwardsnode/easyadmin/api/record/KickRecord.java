@@ -25,13 +25,16 @@
 package com.backwardsnode.easyadmin.api.record;
 
 import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
+import com.backwardsnode.easyadmin.api.record.base.AdminRecord;
+import com.backwardsnode.easyadmin.api.record.base.LiveRecord;
+import com.backwardsnode.easyadmin.api.record.base.ReasonedRecord;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a kick entry for a specific player.
  * <p>A new record can be created through the {@link RecordBuilder}</p>
  */
-public interface KickRecord extends LiveRecord<Integer>, ReasonedAdminRecord {
+public interface KickRecord extends LiveRecord<Integer>, AdminRecord, ReasonedRecord {
 
     /**
      * Gets whether this kick is global or not.

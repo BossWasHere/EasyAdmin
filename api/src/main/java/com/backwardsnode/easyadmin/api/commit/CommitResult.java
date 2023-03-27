@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,28 +22,27 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.record;
+package com.backwardsnode.easyadmin.api.commit;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Represents an administrative action taking place between a player and staff member with an optional reason.
+ * Holds the result of a commit operation.
+ * @param record The record that was (or was attempted to be) committed.
+ * @param status The status of the commit operation.
+ * @param existing The existing record that prevented the commit operation from succeeding.
+ * @param <T> The type of record held by this result.
  */
-public interface ReasonedAdminRecord extends AdminRecord {
-
-
-    /**
-     * Gets the reason for this action.
-     * @return the reason. May be null.
-     */
-    @Nullable String getReason();
+public record CommitResult<T>(@NotNull T record, @NotNull CommitStatus status, @Nullable T existing) {
 
     /**
-     * Determines if a reason is provided for this action.
-     * @return true if a reason is provided, false otherwise.
+     * Shorthand constructor for results that do not reflect an existing record.
+     * @param record The record that was (or was attempted to be) committed.
+     * @param status The status of the commit operation.
      */
-    default boolean hasReason() {
-        return getReason() != null;
+    public CommitResult(T record, CommitStatus status) {
+        this(record, status, null);
     }
 
 }

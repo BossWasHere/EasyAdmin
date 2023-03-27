@@ -32,7 +32,7 @@ import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
 import com.backwardsnode.easyadmin.api.internal.InternalServiceProviderType;
 import com.backwardsnode.easyadmin.api.internal.MessageKey;
 import com.backwardsnode.easyadmin.api.record.CommentRecord;
-import com.backwardsnode.easyadmin.api.record.CommitResult;
+import com.backwardsnode.easyadmin.api.commit.CommitResult;
 import com.backwardsnode.easyadmin.core.command.Command;
 import com.backwardsnode.easyadmin.core.command.CommandData;
 import com.backwardsnode.easyadmin.core.command.CommandRegistration;

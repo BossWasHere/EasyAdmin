@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2022-2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,40 +22,28 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.record;
+package com.backwardsnode.easyadmin.api.record.base;
+
+import org.jetbrains.annotations.Nullable;
 
 /**
- * Status codes for record commit operations.
+ * Represents a record with an optional reason.
  */
-public enum CommitStatus {
+public interface ReasonedRecord {
+
 
     /**
-     * Indicates that the record was committed successfully.
+     * Gets the reason for this action.
+     * @return the reason. May be null.
      */
-    COMMITTED,
+    @Nullable String getReason();
 
     /**
-     * Indicates that the record was not committed because it was cancelled by an event listener.
+     * Determines if a reason is provided for this action.
+     * @return true if a reason is provided, false otherwise.
      */
-    CANCELLED,
+    default boolean hasReason() {
+        return getReason() != null;
+    }
 
-    /**
-     * Indicates that the record was not committed because another record with the same purpose exists.
-     */
-    CANCELLED_DUPLICATE,
-
-    /**
-     * Indicates that the record was not committed because its target is immune.
-     */
-    CANCELLED_IMMUNE,
-
-    /**
-     * Indicates that the record was not committed because it its effect is currently impossible.
-     */
-    IMPOSSIBLE,
-
-    /**
-     * Indicates that the record has not yet been committed, but might be in the future.
-     */
-    WITHHELD
 }

@@ -24,6 +24,7 @@
 
 package com.backwardsnode.easyadmin.core.commit;
 
+import com.backwardsnode.easyadmin.api.commit.CommitResult;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.record.*;
 import com.backwardsnode.easyadmin.core.record.BanRecordImpl;

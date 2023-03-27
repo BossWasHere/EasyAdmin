@@ -27,7 +27,7 @@ package com.backwardsnode.easyadmin.core.builder;
 import com.backwardsnode.easyadmin.api.builder.BanBuilder;
 import com.backwardsnode.easyadmin.api.builder.BuilderException;
 import com.backwardsnode.easyadmin.api.record.BanRecord;
-import com.backwardsnode.easyadmin.api.record.CommitResult;
+import com.backwardsnode.easyadmin.api.commit.CommitResult;
 import com.backwardsnode.easyadmin.core.commit.Committer;
 import com.backwardsnode.easyadmin.core.record.BanRecordImpl;
 import org.jetbrains.annotations.NotNull;

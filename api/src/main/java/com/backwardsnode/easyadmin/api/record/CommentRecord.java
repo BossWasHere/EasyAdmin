@@ -25,7 +25,8 @@
 package com.backwardsnode.easyadmin.api.record;
 
 import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
-import com.backwardsnode.easyadmin.api.record.mutable.MutableCommentRecord;
+import com.backwardsnode.easyadmin.api.record.base.AdminRecord;
+import com.backwardsnode.easyadmin.api.record.base.LiveRecord;
 import org.jetbrains.annotations.NotNull;
 
 /**

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,25 +22,40 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.record;
-
-import org.jetbrains.annotations.NotNull;
+package com.backwardsnode.easyadmin.api.commit;
 
 /**
- * Represents a record that can be created or loaded from a database.
- * @param <ID> the type which represents this record's primary key in a database.
+ * Status codes for record commit operations.
  */
-public interface LiveRecord<ID> {
+public enum CommitStatus {
 
     /**
-     * Gets the ID of this record.
-     * @return the record's ID.
+     * Indicates that the record was committed successfully.
      */
-    @NotNull ID getId();
+    COMMITTED,
 
     /**
-     * Determines if this record was loaded from a database or not.
-     * @return true if loaded, false if newly created.
+     * Indicates that the record was not committed because it was cancelled by an event listener.
      */
-    boolean isLoaded();
+    CANCELLED,
+
+    /**
+     * Indicates that the record was not committed because another record with the same purpose exists.
+     */
+    CANCELLED_DUPLICATE,
+
+    /**
+     * Indicates that the record was not committed because its target is immune.
+     */
+    CANCELLED_IMMUNE,
+
+    /**
+     * Indicates that the record was not committed because it its effect is currently impossible.
+     */
+    IMPOSSIBLE,
+
+    /**
+     * Indicates that the record has not yet been committed, but might be in the future.
+     */
+    WITHHELD
 }

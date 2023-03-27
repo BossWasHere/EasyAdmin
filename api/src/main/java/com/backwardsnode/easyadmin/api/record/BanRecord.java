@@ -25,10 +25,31 @@
 package com.backwardsnode.easyadmin.api.record;
 
 import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
-import com.backwardsnode.easyadmin.api.record.mutable.MutableBanRecord;
+import com.backwardsnode.easyadmin.api.contextual.Contextual;
+import com.backwardsnode.easyadmin.api.data.ActionScope;
+import com.backwardsnode.easyadmin.api.record.base.AdminRecord;
+import com.backwardsnode.easyadmin.api.record.base.LiveRecord;
+import com.backwardsnode.easyadmin.api.record.base.ReasonedRecord;
+import com.backwardsnode.easyadmin.api.record.base.ScopedRecord;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 /**
  * Represents a ban entry for a specific player (and sometimes IP address).
  * <p>A new record can be created through the {@link RecordBuilder}</p>
  */
-public interface BanRecord extends LiveRecord<Integer>, SpecialAdminRecord { }
+public interface BanRecord extends LiveRecord<Integer>, AdminRecord, ReasonedRecord, ScopedRecord, Contextual {
+
+    default @Nullable Duration getDuration() {
+        LocalDateTime terminationDate = getTerminationDate();
+        return terminationDate == null ? null : Duration.between(getDateAdded(), terminationDate);
+    }
+
+    default @NotNull ActionScope getScope() {
+        return ActionScope.fromFlags(isTemporary(), !hasContext(), hasIpAddress());
+    }
+
+}

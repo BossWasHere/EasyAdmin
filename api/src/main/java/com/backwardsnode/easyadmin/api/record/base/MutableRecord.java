@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,35 +22,14 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.record;
+package com.backwardsnode.easyadmin.api.record.base;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+public interface MutableRecord<T> {
 
-import java.time.LocalDateTime;
-import java.util.UUID;
+    boolean isModified();
 
-/**
- * Represents an administrative action taking place between a player and staff member.
- */
-public interface AdminRecord {
+    T getOriginal();
 
-    /**
-     * Gets the {@link UUID} of the player involved in this action.
-     * @return the player's UUID.
-     */
-    @NotNull UUID getPlayer();
-
-    /**
-     * Gets the {@link UUID} of the staff member who authored this action, or null if on behalf of the console.
-     * @return the author's UUID, or null for the console.
-     */
-    @Nullable UUID getAuthor();
-
-    /**
-     * Gets the {@link LocalDateTime} of when this action took place.
-     * @return the time of this action.
-     */
-    @NotNull LocalDateTime getDateAdded();
+    T asImmutable();
 
 }

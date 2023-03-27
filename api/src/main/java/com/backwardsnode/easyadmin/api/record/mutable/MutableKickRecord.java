@@ -25,7 +25,7 @@
 package com.backwardsnode.easyadmin.api.record.mutable;
 
 import com.backwardsnode.easyadmin.api.record.KickRecord;
-import com.backwardsnode.easyadmin.api.record.MutableRecord;
+import com.backwardsnode.easyadmin.api.record.base.MutableRecord;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

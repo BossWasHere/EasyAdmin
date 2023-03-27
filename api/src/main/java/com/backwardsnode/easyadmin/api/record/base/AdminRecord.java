@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2022-2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,27 +22,35 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.record;
+package com.backwardsnode.easyadmin.api.record.base;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 /**
- * Holds the result of a commit operation.
- * @param record The record that was (or was attempted to be) committed.
- * @param status The status of the commit operation.
- * @param existing The existing record that prevented the commit operation from succeeding.
- * @param <T> The type of record held by this result.
+ * Represents an administrative action taking place between a player and staff member.
  */
-public record CommitResult<T>(@NotNull T record, @NotNull CommitStatus status, @Nullable T existing) {
+public interface AdminRecord {
 
     /**
-     * Shorthand constructor for results that do not reflect an existing record.
-     * @param record The record that was (or was attempted to be) committed.
-     * @param status The status of the commit operation.
+     * Gets the {@link UUID} of the player involved in this action.
+     * @return the player's UUID.
      */
-    public CommitResult(T record, CommitStatus status) {
-        this(record, status, null);
-    }
+    @NotNull UUID getPlayer();
+
+    /**
+     * Gets the {@link UUID} of the staff member who authored this action, or null if on behalf of the console.
+     * @return the author's UUID, or null for the console.
+     */
+    @Nullable UUID getAuthor();
+
+    /**
+     * Gets the {@link LocalDateTime} of when this action took place.
+     * @return the time of this action.
+     */
+    @NotNull LocalDateTime getDateAdded();
 
 }

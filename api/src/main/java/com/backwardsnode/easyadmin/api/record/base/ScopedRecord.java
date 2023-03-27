@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2022-2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,11 +22,12 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.record;
+package com.backwardsnode.easyadmin.api.record.base;
 
-import com.backwardsnode.easyadmin.api.contextual.Contextual;
 import com.backwardsnode.easyadmin.api.data.ActionScope;
 import com.backwardsnode.easyadmin.api.data.PunishmentStatus;
+import com.backwardsnode.easyadmin.api.record.BanRecord;
+import com.backwardsnode.easyadmin.api.record.MuteRecord;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +40,7 @@ import java.util.UUID;
  * @see BanRecord
  * @see MuteRecord
  */
-public interface SpecialAdminRecord extends ReasonedAdminRecord, Contextual {
+public interface ScopedRecord {
 
     /**
      * Gets the current {@link PunishmentStatus} of this record.
@@ -72,6 +73,18 @@ public interface SpecialAdminRecord extends ReasonedAdminRecord, Contextual {
     @Nullable String getTerminationReason();
 
     /**
+     * Gets the total duration of this record.
+     * @return the duration of this record, or null if it is non-temporary.
+     */
+    @Nullable Duration getDuration();
+
+    /**
+     * Gets the scope of this record.
+     * @return the {@link ActionScope} of this record.
+     */
+    @NotNull ActionScope getScope();
+
+    /**
      * Determines if this record has an IP address associated with it.
      * @return true if this record has an IP address, false otherwise.
      */
@@ -93,23 +106,6 @@ public interface SpecialAdminRecord extends ReasonedAdminRecord, Contextual {
      */
     default boolean hasEnded() {
         return getStatus() == PunishmentStatus.ENDED;
-    }
-
-    /**
-     * Gets the total duration of this record.
-     * @return the duration of this record, or null if it is non-temporary.
-     */
-    default @Nullable Duration getDuration() {
-        LocalDateTime terminationDate = getTerminationDate();
-        return terminationDate == null ? null : Duration.between(getDateAdded(), terminationDate);
-    }
-
-    /**
-     * Gets the scope of this record.
-     * @return the {@link ActionScope} of this record.
-     */
-    default @NotNull ActionScope getScope() {
-        return ActionScope.fromFlags(isTemporary(), !hasContext(), hasIpAddress());
     }
 
 }

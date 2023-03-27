@@ -27,6 +27,7 @@ package com.backwardsnode.easyadmin.core.database;
 import com.backwardsnode.easyadmin.api.data.LookupOptions;
 import com.backwardsnode.easyadmin.api.data.PunishmentStatus;
 import com.backwardsnode.easyadmin.api.record.*;
+import com.backwardsnode.easyadmin.api.record.base.ScopedRecord;
 import com.backwardsnode.easyadmin.api.record.mutable.MutableBanRecord;
 import com.backwardsnode.easyadmin.api.record.mutable.MutableMuteRecord;
 import com.backwardsnode.easyadmin.api.record.mutable.MutablePlayerRecord;
@@ -255,7 +256,19 @@ public abstract class AbstractStatementFactory implements DatabaseStatementFacto
     public PreparedStatement getCreateBanStatement(Connection connection, BanRecord record) throws SQLException {
         PreparedStatement statement = initCreateBanSql(connection, record);
 
-        applyCreateStatusAdminRecordStatement(statement, record);
+        int index = 1;
+        statement.setString(index++, notNull(record.getStatus()));
+        statement.setString(index++, notNull(record.getPlayer()));
+        statement.setString(index++, maybeNull(record.getAuthor()));
+        if (record.getIpAddress() != null) {
+            statement.setString(index++, record.getIpAddress());
+        }
+        statement.setTimestamp(index++, Timestamp.valueOf(record.getDateAdded()));
+        if (record.getTerminationDate() != null) {
+            statement.setTimestamp(index++, Timestamp.valueOf(record.getTerminationDate()));
+        }
+        statement.setString(index++, record.getContext());
+        statement.setString(index, record.getReason());
         return statement;
     }
 
@@ -290,11 +303,6 @@ public abstract class AbstractStatementFactory implements DatabaseStatementFacto
     public PreparedStatement getCreateMuteStatement(Connection connection, MuteRecord record) throws SQLException {
         PreparedStatement statement = initCreateMuteSql(connection, record);
 
-        applyCreateStatusAdminRecordStatement(statement, record);
-        return statement;
-    }
-
-    protected void applyCreateStatusAdminRecordStatement(PreparedStatement statement, SpecialAdminRecord record) throws SQLException {
         int index = 1;
         statement.setString(index++, notNull(record.getStatus()));
         statement.setString(index++, notNull(record.getPlayer()));
@@ -308,6 +316,8 @@ public abstract class AbstractStatementFactory implements DatabaseStatementFacto
         }
         statement.setString(index++, record.getContext());
         statement.setString(index, record.getReason());
+
+        return statement;
     }
 
     @Override

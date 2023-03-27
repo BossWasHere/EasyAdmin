@@ -24,6 +24,8 @@
 
 package com.backwardsnode.easyadmin.core.commit;
 
+import com.backwardsnode.easyadmin.api.commit.CommitResult;
+import com.backwardsnode.easyadmin.api.commit.CommitStatus;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.event.admin.AdminEventSource;
 import com.backwardsnode.easyadmin.api.record.*;
