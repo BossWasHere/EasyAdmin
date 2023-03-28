@@ -294,7 +294,7 @@ public final class DatabaseController {
                 return statement.executeUpdate();
 
             } catch (SQLException e) {
-                LOGGER.error("Exception while trying to retrieve record", e);
+                LOGGER.error("Exception while trying to insert record", e);
             }
         } catch (SQLException e) {
             LOGGER.error("Failed to connect to database", e);

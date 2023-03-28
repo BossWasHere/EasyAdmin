@@ -46,7 +46,7 @@ import com.backwardsnode.easyadmin.core.record.*;
 
 import java.util.EnumSet;
 
-public class EventFiringCommitter implements Committer {
+public final class EventFiringCommitter implements Committer {
 
     private final EasyAdminService service;
     private final ServiceSource source;
@@ -130,7 +130,8 @@ public class EventFiringCommitter implements Committer {
             record = event.getCurrent();
         }
 
-        // TODO commit it
+        service.getEnforcer().enforceBan(record);
+        service.getDatabaseController().insertBan(record);
 
         return new CommitResult<>(record, CommitStatus.COMMITTED);
     }
@@ -165,7 +166,8 @@ public class EventFiringCommitter implements Committer {
             }
         }
 
-        // TODO commit it
+        service.getEnforcer().enforceMute(record);
+        service.getDatabaseController().insertMute(record);
 
         return new CommitResult<>(record, CommitStatus.COMMITTED);
     }
@@ -203,7 +205,8 @@ public class EventFiringCommitter implements Committer {
             }
         }
 
-        // TODO commit it
+        service.getEnforcer().enforceComment(record);
+        service.getDatabaseController().insertComment(record);
 
         return new CommitResult<>(record, CommitStatus.COMMITTED);
     }
@@ -238,7 +241,8 @@ public class EventFiringCommitter implements Committer {
             }
         }
 
-        // TODO commit it
+        service.getEnforcer().enforceKick(record);
+        service.getDatabaseController().insertKick(record);
 
         return new CommitResult<>(record, CommitStatus.COMMITTED);
     }

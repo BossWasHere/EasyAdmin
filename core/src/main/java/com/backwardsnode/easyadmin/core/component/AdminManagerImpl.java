@@ -26,6 +26,7 @@ package com.backwardsnode.easyadmin.core.component;
 
 import com.backwardsnode.easyadmin.api.EasyAdmin;
 import com.backwardsnode.easyadmin.api.admin.AdminManager;
+import com.backwardsnode.easyadmin.api.commit.CommitException;
 import com.backwardsnode.easyadmin.api.contextual.ContextTester;
 import com.backwardsnode.easyadmin.api.contextual.Contextual;
 import com.backwardsnode.easyadmin.api.data.LookupOptions;
@@ -35,6 +36,7 @@ import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import com.backwardsnode.easyadmin.api.record.*;
 import com.backwardsnode.easyadmin.api.record.mutable.MutableBanRecord;
 import com.backwardsnode.easyadmin.api.record.mutable.MutableMuteRecord;
+import com.backwardsnode.easyadmin.core.EasyAdminService;
 import com.backwardsnode.easyadmin.core.cache.CacheGroupType;
 import com.backwardsnode.easyadmin.core.cache.CacheLoader;
 import com.backwardsnode.easyadmin.core.cache.RecordCache;
@@ -43,6 +45,8 @@ import com.backwardsnode.easyadmin.core.record.MutableRecordProvider;
 import com.backwardsnode.easyadmin.core.record.PlayerRecordImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -52,13 +56,13 @@ import java.util.stream.Collectors;
 
 public class AdminManagerImpl implements AdminManager {
 
-    private final EasyAdmin service;
+    private final EasyAdminService service;
     private final DatabaseController databaseController;
     private final RecordCache cache;
 
-    public AdminManagerImpl(EasyAdmin service, DatabaseController databaseController) {
+    public AdminManagerImpl(EasyAdminService service) {
         this.service = service;
-        this.databaseController = databaseController;
+        this.databaseController = service.getDatabaseController();
         this.cache = new RecordCache(databaseController);
     }
 
@@ -444,9 +448,12 @@ public class AdminManagerImpl implements AdminManager {
                 MutableBanRecord mbr = (MutableBanRecord) mrp.asMutable();
                 mbr.unbanNow(staffUUID, unbanReason);
 
-                // TODO commit it with API committer
-
-                count++;
+                try {
+                    service.getCommitter().commit(mbr);
+                    count++;
+                } catch (CommitException e) {
+                    service.getLogger().error("Failed to unban player everywhere (record ID: " + mbr.getId() + ")", e);
+                }
             }
         }
         return count;
@@ -462,14 +469,22 @@ public class AdminManagerImpl implements AdminManager {
                 // TODO where are we updating the status here!?!?!?!
                 continue;
             }
-            for (String context : contexts) {
-                if (record instanceof MutableRecordProvider<?> mrp && contextTester.testContext(record, context)) {
+            if (record instanceof MutableRecordProvider<?> mrp) {
+                for (String context : contexts) {
+                    if (!contextTester.testContext(record, context)) {
+                        continue;
+                    }
+
                     MutableBanRecord mbr = (MutableBanRecord) mrp.asMutable();
                     mbr.unbanNow(staffUUID, unbanReason);
 
-                    // TODO commit it with API committer
-
-                    count++;
+                    try {
+                        service.getCommitter().commit(mbr);
+                        count++;
+                    } catch (CommitException e) {
+                        service.getLogger().error("Failed to unban player (context: " + context
+                                + " | record ID: " + mbr.getId() + ")", e);
+                    }
                     break;
                 }
             }
@@ -484,8 +499,12 @@ public class AdminManagerImpl implements AdminManager {
             MutableBanRecord mbr = (MutableBanRecord) mrp.asMutable();
             mbr.unbanNow(staffUUID, unbanReason);
 
-            // TODO commit it with API committer
-            return true;
+            try {
+                service.getCommitter().commit(mbr);
+                return true;
+            } catch (CommitException e) {
+                service.getLogger().error("Failed to unban player (record ID: " + mbr.getId() + ")", e);
+            }
         }
         return false;
     }
@@ -503,9 +522,12 @@ public class AdminManagerImpl implements AdminManager {
                 MutableMuteRecord mmr = (MutableMuteRecord) mrp.asMutable();
                 mmr.unmuteNow(staffUUID, unmuteReason);
 
-                // TODO commit it with API committer
-
-                count++;
+                try {
+                    service.getCommitter().commit(mmr);
+                    count++;
+                } catch (CommitException e) {
+                    service.getLogger().error("Failed to unmute player everywhere (record ID: " + mmr.getId() + ")", e);
+                }
             }
         }
         return count;
@@ -521,14 +543,22 @@ public class AdminManagerImpl implements AdminManager {
                 // TODO where are we updating the status here!?!?!?!
                 continue;
             }
-            for (String context : contexts) {
-                if (record instanceof MutableRecordProvider<?> mrp && contextTester.testContext(record, context)) {
+            if (record instanceof MutableRecordProvider<?> mrp) {
+                for (String context : contexts) {
+                    if (!contextTester.testContext(record, context)) {
+                        continue;
+                    }
+
                     MutableMuteRecord mmr = (MutableMuteRecord) mrp.asMutable();
                     mmr.unmuteNow(staffUUID, unmuteReason);
 
-                    // TODO commit it with API committer
-
-                    count++;
+                    try {
+                        service.getCommitter().commit(mmr);
+                        count++;
+                    } catch (CommitException e) {
+                        service.getLogger().error("Failed to unmute player (context: " + context
+                                + " | record ID: " + mmr.getId() + ")", e);
+                    }
                     break;
                 }
             }
@@ -543,8 +573,12 @@ public class AdminManagerImpl implements AdminManager {
             MutableMuteRecord mmr = (MutableMuteRecord) mrp.asMutable();
             mmr.unmuteNow(staffUUID, unmuteReason);
 
-            // TODO commit it with API committer
-            return true;
+            try {
+                service.getCommitter().commit(mmr);
+                return true;
+            } catch (CommitException e) {
+                service.getLogger().error("Failed to unmute player (record ID: " + mmr.getId() + ")", e);
+            }
         }
         return false;
     }

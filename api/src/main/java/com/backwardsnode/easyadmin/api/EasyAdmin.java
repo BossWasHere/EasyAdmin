@@ -29,6 +29,7 @@ import com.backwardsnode.easyadmin.api.admin.AdminManager;
 import com.backwardsnode.easyadmin.api.admin.ChatFilter;
 import com.backwardsnode.easyadmin.api.admin.RecommendationEngine;
 import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
+import com.backwardsnode.easyadmin.api.commit.Committer;
 import com.backwardsnode.easyadmin.api.config.ConfigurationManager;
 import com.backwardsnode.easyadmin.api.contextual.ContextTester;
 import com.backwardsnode.easyadmin.api.event.EventBus;
@@ -37,6 +38,8 @@ import com.backwardsnode.easyadmin.api.internal.MessageFactory;
 import com.backwardsnode.easyadmin.api.server.NetworkInfo;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.logging.Logger;
 
 /**
  * The API for EasyAdmin.
@@ -74,6 +77,12 @@ public interface EasyAdmin {
      * @return the {@link RecordBuilder}.
      */
     @NotNull RecordBuilder getRecordBuilder();
+
+    /**
+     * Gets the {@link Committer} which can commit and update admin records.
+     * @return the {@link Committer}.
+     */
+    @NotNull Committer getCommitter();
 
     /**
      * Gets the {@link ChatFilter}, which is used to filter chat messages.

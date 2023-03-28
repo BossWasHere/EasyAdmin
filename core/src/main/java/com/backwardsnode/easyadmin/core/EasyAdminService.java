@@ -31,6 +31,7 @@ import com.backwardsnode.easyadmin.api.admin.AdminManager;
 import com.backwardsnode.easyadmin.api.admin.ChatFilter;
 import com.backwardsnode.easyadmin.api.admin.RecommendationEngine;
 import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
+import com.backwardsnode.easyadmin.api.commit.Committer;
 import com.backwardsnode.easyadmin.api.config.ConfigurationManager;
 import com.backwardsnode.easyadmin.api.contextual.ContextTester;
 import com.backwardsnode.easyadmin.api.data.ServiceSource;
@@ -42,6 +43,7 @@ import com.backwardsnode.easyadmin.core.builder.RecordBuilderImpl;
 import com.backwardsnode.easyadmin.core.commit.CommitterMode;
 import com.backwardsnode.easyadmin.core.commit.EventFiringCommitter;
 import com.backwardsnode.easyadmin.core.commit.WithholdAgent;
+import com.backwardsnode.easyadmin.core.component.AbstractEnforcer;
 import com.backwardsnode.easyadmin.core.component.AdminManagerImpl;
 import com.backwardsnode.easyadmin.core.component.PermissionsPlatform;
 import com.backwardsnode.easyadmin.core.config.RootConfig;
@@ -66,7 +68,6 @@ import java.util.EnumSet;
 public class EasyAdminService implements EasyAdmin, AutoCloseable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EasyAdminService.class);
-
     private static final String LANG_DIRECTORY = "lang";
     private static final String CONFIG_YML = "config.yml";
 
@@ -76,9 +77,9 @@ public class EasyAdminService implements EasyAdmin, AutoCloseable {
     private final Path languageDirectory;
 
     private final EventFiringCommitter apiCommitter;
+    private final AbstractEnforcer enforcer;
     private final PermissionsPlatform permissionsPlatform;
     private final WithholdAgent withholdAgent;
-
     private final DatabaseController databaseController;
     private final AdminManager adminManager;
     private final RecordBuilder apiRecordBuilder;
@@ -114,6 +115,8 @@ public class EasyAdminService implements EasyAdmin, AutoCloseable {
         }
         databaseController.logMetadata();
 
+        // TODO enforcer
+        enforcer = null;
         // TODO permissions platform
         permissionsPlatform = new PermissionsPlatform();
         // TODO withhold agent
@@ -121,7 +124,7 @@ public class EasyAdminService implements EasyAdmin, AutoCloseable {
 
 
         apiCommitter = new EventFiringCommitter(this, ServiceSource.API, EnumSet.of(CommitterMode.EVENT_ALLOW_CANCELLATIONS));
-        adminManager = new AdminManagerImpl(this, databaseController);
+        adminManager = new AdminManagerImpl(this);
         apiRecordBuilder = new RecordBuilderImpl(apiCommitter);
         messageFactory = new MessageProvider(this,true);
         eventBus = new CommonEventBus();
@@ -143,6 +146,11 @@ public class EasyAdminService implements EasyAdmin, AutoCloseable {
     public @NotNull RecordBuilder getRecordBuilder() {
         verifyOpen();
         return apiRecordBuilder;
+    }
+
+    @Override
+    public @NotNull Committer getCommitter() {
+        return apiCommitter;
     }
 
     @Override
@@ -205,6 +213,18 @@ public class EasyAdminService implements EasyAdmin, AutoCloseable {
 
     public EasyAdminPlugin getPlugin() {
         return plugin;
+    }
+
+    public Logger getLogger() {
+        return LOGGER;
+    }
+
+    public AbstractEnforcer getEnforcer() {
+        return enforcer;
+    }
+
+    public DatabaseController getDatabaseController() {
+        return databaseController;
     }
 
     public PermissionsPlatform getPermissionsPlatform() {

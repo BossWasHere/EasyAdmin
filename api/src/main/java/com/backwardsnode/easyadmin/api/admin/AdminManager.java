@@ -650,7 +650,7 @@ public interface AdminManager {
      * @param playerUUID the UUID of the player to unban.
      * @param staffUUID the UUID of the staff member who is unbanning the player.
      * @param unbanReason the (optional) reason for this action.
-     * @return true if a ban was ended, false if no ban was found.
+     * @return true if a ban was ended, false if no ban was found, or it could not be ended.
      */
     boolean unbanPlayerInGlobalContextOnly(@NotNull UUID playerUUID, @Nullable UUID staffUUID, @Nullable String unbanReason);
 
@@ -679,7 +679,7 @@ public interface AdminManager {
      * @param playerUUID the UUID of the player to unmute.
      * @param staffUUID the UUID of the staff member who is unmuting the player.
      * @param unmuteReason the (optional) reason for this action.
-     * @return true if a mute was ended, false if no mute was found.
+     * @return true if a mute was ended, false if no mute was found, or it could not be ended.
      */
     boolean unmutePlayerInGlobalContextOnly(@NotNull UUID playerUUID, @Nullable UUID staffUUID, @Nullable String unmuteReason);
 
