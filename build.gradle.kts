@@ -1,5 +1,6 @@
 val bungeecordVersion by extra("1.19-R0.1-SNAPSHOT")
 val spigotVersion by extra("1.19-R0.1-SNAPSHOT")
+val velocityVersion by extra("3.1.1")
 
 subprojects {
 

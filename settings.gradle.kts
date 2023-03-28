@@ -1,5 +1,10 @@
 rootProject.name = "EasyAdmin"
-include("api")
-include("core")
-include("bungee")
-include("bukkit")
+include(
+    "api",
+    "core",
+    "datasource",
+    "bungee",
+    "bukkit",
+    "velocity",
+    "webapi"
+)

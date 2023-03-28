@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
+ * Copyright (c) 2023 Thomas Stephenson (BackwardsNode) <backwardsnode@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,24 +22,10 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.data;
+package com.backwardsnode.easyadmin.velocity;
 
-/**
- * Represents the type of platform this API is currently running on.
- */
-public enum Platform {
+public class BuildInfo {
 
-    /**
-     * Represents all BungeeCord and similar platforms.
-     */
-    BUNGEE,
-    /**
-     * Represents all Bukkit and similar platforms.
-     */
-    BUKKIT,
-    /**
-     * Represents Velocity platforms.
-     */
-    VELOCITY,
+    public static final String VERSION = "${version}";
 
 }

@@ -22,24 +22,25 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.data;
+package com.backwardsnode.easyadmin.datasource;
 
-/**
- * Represents the type of platform this API is currently running on.
- */
-public enum Platform {
+import com.backwardsnode.easyadmin.api.internal.ExternalDataSource;
+import org.jetbrains.annotations.NotNull;
 
-    /**
-     * Represents all BungeeCord and similar platforms.
-     */
-    BUNGEE,
-    /**
-     * Represents all Bukkit and similar platforms.
-     */
-    BUKKIT,
-    /**
-     * Represents Velocity platforms.
-     */
-    VELOCITY,
+import java.util.UUID;
+
+public class MojangDataSource implements ExternalDataSource {
+
+    @Override
+    public String getUsernameForUUID(@NotNull UUID playerUUID) {
+        //TODO implementation
+        return null;
+    }
+
+    @Override
+    public UUID getUUIDForUsername(@NotNull String username) {
+        //TODO implementation
+        return null;
+    }
 
 }
