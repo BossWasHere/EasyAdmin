@@ -40,6 +40,7 @@ import com.backwardsnode.easyadmin.api.internal.MessageFactory;
 import com.backwardsnode.easyadmin.api.server.NetworkInfo;
 import com.backwardsnode.easyadmin.core.boot.Registration;
 import com.backwardsnode.easyadmin.core.builder.RecordBuilderImpl;
+import com.backwardsnode.easyadmin.core.cache.RecordCache;
 import com.backwardsnode.easyadmin.core.commit.CommitterMode;
 import com.backwardsnode.easyadmin.core.commit.EventFiringCommitter;
 import com.backwardsnode.easyadmin.core.commit.WithholdAgent;
@@ -81,6 +82,7 @@ public class EasyAdminService implements EasyAdmin, AutoCloseable {
     private final PermissionsPlatform permissionsPlatform;
     private final WithholdAgent withholdAgent;
     private final DatabaseController databaseController;
+    private final RecordCache recordCache;
     private final AdminManager adminManager;
     private final RecordBuilder apiRecordBuilder;
     private final RootConfig configurationManager;
@@ -114,6 +116,8 @@ public class EasyAdminService implements EasyAdmin, AutoCloseable {
             throw new ServiceInitializationException("Failed to create database controller");
         }
         databaseController.logMetadata();
+
+        recordCache = new RecordCache(databaseController);
 
         // TODO enforcer
         enforcer = null;
@@ -225,6 +229,10 @@ public class EasyAdminService implements EasyAdmin, AutoCloseable {
 
     public DatabaseController getDatabaseController() {
         return databaseController;
+    }
+
+    public RecordCache getRecordCache() {
+        return recordCache;
     }
 
     public PermissionsPlatform getPermissionsPlatform() {

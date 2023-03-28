@@ -58,23 +58,21 @@ public class AdminManagerImpl implements AdminManager {
 
     private final EasyAdminService service;
     private final DatabaseController databaseController;
-    private final RecordCache cache;
 
     public AdminManagerImpl(EasyAdminService service) {
         this.service = service;
         this.databaseController = service.getDatabaseController();
-        this.cache = new RecordCache(databaseController);
     }
 
     @Override
     public @NotNull Optional<BanRecord> getActiveBanRecord(@NotNull UUID playerUUID, @Nullable String inContext, boolean includeGlobalBans) {
-        Collection<BanRecord> records = cache.request(CacheGroupType.ACTIVE_BAN_BY_UUID, playerUUID);
+        Collection<BanRecord> records = service.getRecordCache().request(CacheGroupType.ACTIVE_BAN_BY_UUID, playerUUID);
         return firstMatchContext(records, inContext, includeGlobalBans);
     }
 
     @Override
     public @NotNull Optional<BanRecord> getActiveBanRecord(@NotNull String ipAddress, @Nullable String inContext, boolean includeGlobalBans) {
-        Collection<BanRecord> records = cache.request(CacheGroupType.ACTIVE_BAN_BY_ADDR, ipAddress);
+        Collection<BanRecord> records = service.getRecordCache().request(CacheGroupType.ACTIVE_BAN_BY_ADDR, ipAddress);
         return firstMatchContext(records, inContext, includeGlobalBans);
     }
 
@@ -94,13 +92,13 @@ public class AdminManagerImpl implements AdminManager {
 
     @Override
     public @NotNull Optional<MuteRecord> getActiveMuteRecord(@NotNull UUID playerUUID, @Nullable String inContext, boolean includeGlobalMutes) {
-        Collection<MuteRecord> records = cache.request(CacheGroupType.ACTIVE_MUTE_BY_UUID, playerUUID);
+        Collection<MuteRecord> records = service.getRecordCache().request(CacheGroupType.ACTIVE_MUTE_BY_UUID, playerUUID);
         return firstMatchContext(records, inContext, includeGlobalMutes);
     }
 
     @Override
     public @NotNull Optional<MuteRecord> getActiveMuteRecord(@NotNull String ipAddress, @Nullable String inContext, boolean includeGlobalMutes) {
-        Collection<MuteRecord> records = cache.request(CacheGroupType.ACTIVE_MUTE_BY_ADDR, ipAddress);
+        Collection<MuteRecord> records = service.getRecordCache().request(CacheGroupType.ACTIVE_MUTE_BY_ADDR, ipAddress);
         return firstMatchContext(records, inContext, includeGlobalMutes);
     }
 
@@ -120,7 +118,7 @@ public class AdminManagerImpl implements AdminManager {
 
     @Override
     public @NotNull Collection<BanRecord> getBanRecords(@NotNull UUID playerUUID) {
-        return cache.request(CacheGroupType.BAN_BY_UUID, playerUUID);
+        return service.getRecordCache().request(CacheGroupType.BAN_BY_UUID, playerUUID);
     }
 
     @Override
@@ -134,7 +132,7 @@ public class AdminManagerImpl implements AdminManager {
 
     @Override
     public @NotNull Collection<BanRecord> getBanRecords(@NotNull String ipAddress) {
-        return cache.request(CacheGroupType.BAN_BY_ADDR, ipAddress);
+        return service.getRecordCache().request(CacheGroupType.BAN_BY_ADDR, ipAddress);
     }
 
     @Override
@@ -214,7 +212,7 @@ public class AdminManagerImpl implements AdminManager {
 
     @Override
     public @NotNull Collection<CommentRecord> getCommentRecords(@NotNull UUID playerUUID) {
-        return cache.request(CacheGroupType.COMMENT, playerUUID);
+        return service.getRecordCache().request(CacheGroupType.COMMENT, playerUUID);
     }
 
     @Override
@@ -242,7 +240,8 @@ public class AdminManagerImpl implements AdminManager {
 
     @Override
     public @NotNull Collection<CommentRecord> getCommentRecordsByType(@NotNull UUID playerUUID, boolean warning) {
-        return cache.request(CacheGroupType.COMMENT, playerUUID).stream().filter(record -> record.isWarning() == warning).collect(Collectors.toUnmodifiableSet());
+        return service.getRecordCache().request(CacheGroupType.COMMENT, playerUUID).stream()
+                .filter(record -> record.isWarning() == warning).collect(Collectors.toUnmodifiableSet());
     }
 
     @Override
@@ -266,7 +265,7 @@ public class AdminManagerImpl implements AdminManager {
 
     @Override
     public @NotNull Collection<KickRecord> getKickRecords(@NotNull UUID playerUUID) {
-        return cache.request(CacheGroupType.KICK, playerUUID);
+        return service.getRecordCache().request(CacheGroupType.KICK, playerUUID);
     }
 
     @Override
@@ -314,7 +313,7 @@ public class AdminManagerImpl implements AdminManager {
 
     @Override
     public @NotNull Collection<MuteRecord> getMuteRecords(@NotNull UUID playerUUID) {
-        return cache.request(CacheGroupType.MUTE_BY_UUID, playerUUID);
+        return service.getRecordCache().request(CacheGroupType.MUTE_BY_UUID, playerUUID);
     }
 
     @Override
@@ -328,7 +327,7 @@ public class AdminManagerImpl implements AdminManager {
 
     @Override
     public @NotNull Collection<MuteRecord> getMuteRecords(@NotNull String ipAddress) {
-        return cache.request(CacheGroupType.MUTE_BY_ADDR, ipAddress);
+        return service.getRecordCache().request(CacheGroupType.MUTE_BY_ADDR, ipAddress);
     }
 
     @Override
@@ -404,7 +403,7 @@ public class AdminManagerImpl implements AdminManager {
 
     @Override
     public @NotNull Optional<PlayerRecord> getPlayerRecord(@NotNull UUID playerUUID) {
-        return Optional.ofNullable(cache.requestSingleton(CacheGroupType.PLAYER, playerUUID));
+        return Optional.ofNullable(service.getRecordCache().requestSingleton(CacheGroupType.PLAYER, playerUUID));
     }
 
     @Override
@@ -425,7 +424,7 @@ public class AdminManagerImpl implements AdminManager {
             return record.get();
         }
         PlayerRecord newRecord = new PlayerRecordImpl(playerUUID, currentUsername, LocalDateTime.now(), null, null);
-        cache.insert(CacheGroupType.PLAYER, playerUUID, CacheLoader.singleton(newRecord));
+        service.getRecordCache().insert(CacheGroupType.PLAYER, playerUUID, CacheLoader.singleton(newRecord));
 
         return newRecord;
     }

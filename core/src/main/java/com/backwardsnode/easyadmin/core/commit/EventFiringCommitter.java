@@ -38,6 +38,7 @@ import com.backwardsnode.easyadmin.api.record.KickRecord;
 import com.backwardsnode.easyadmin.api.record.MuteRecord;
 import com.backwardsnode.easyadmin.api.record.base.LiveRecord;
 import com.backwardsnode.easyadmin.core.EasyAdminService;
+import com.backwardsnode.easyadmin.core.cache.CacheGroupType;
 import com.backwardsnode.easyadmin.core.event.admin.BanEventImpl;
 import com.backwardsnode.easyadmin.core.event.admin.CommentEventImpl;
 import com.backwardsnode.easyadmin.core.event.admin.KickEventImpl;
@@ -131,6 +132,10 @@ public final class EventFiringCommitter implements Committer {
         }
 
         service.getEnforcer().enforceBan(record);
+        service.getRecordCache().infuseIfCollectionPresent(CacheGroupType.ACTIVE_BAN_BY_UUID, record.getPlayer(), record);
+        if (record.hasIpAddress()) {
+            service.getRecordCache().infuseIfCollectionPresent(CacheGroupType.ACTIVE_BAN_BY_ADDR, record.getIpAddress(), record);
+        }
         service.getDatabaseController().insertBan(record);
 
         return new CommitResult<>(record, CommitStatus.COMMITTED);
@@ -167,6 +172,10 @@ public final class EventFiringCommitter implements Committer {
         }
 
         service.getEnforcer().enforceMute(record);
+        service.getRecordCache().infuseIfCollectionPresent(CacheGroupType.ACTIVE_MUTE_BY_UUID, record.getPlayer(), record);
+        if (record.hasIpAddress()) {
+            service.getRecordCache().infuseIfCollectionPresent(CacheGroupType.ACTIVE_MUTE_BY_ADDR, record.getIpAddress(), record);
+        }
         service.getDatabaseController().insertMute(record);
 
         return new CommitResult<>(record, CommitStatus.COMMITTED);
@@ -206,6 +215,7 @@ public final class EventFiringCommitter implements Committer {
         }
 
         service.getEnforcer().enforceComment(record);
+        service.getRecordCache().infuseIfCollectionPresent(CacheGroupType.COMMENT, record.getPlayer(), record);
         service.getDatabaseController().insertComment(record);
 
         return new CommitResult<>(record, CommitStatus.COMMITTED);
@@ -242,6 +252,7 @@ public final class EventFiringCommitter implements Committer {
         }
 
         service.getEnforcer().enforceKick(record);
+        service.getRecordCache().infuseIfCollectionPresent(CacheGroupType.KICK, record.getPlayer(), record);
         service.getDatabaseController().insertKick(record);
 
         return new CommitResult<>(record, CommitStatus.COMMITTED);
