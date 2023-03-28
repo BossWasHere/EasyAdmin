@@ -74,7 +74,7 @@ public class BungeeListener implements Listener {
 
             if (muteRecord.isPresent()) {
                 e.setCancelled(true);
-                player.sendMessage(CommonMessages.PLAYER.MUTE.MUTE_TITLE);
+                player.sendKeyedMessage(CommonMessages.PLAYER.MUTE.MUTE_TITLE);
 
                 plugin.getInstance().getAdminDynamo().recordAttemptedChatMessage(player, message, context);
             } else {

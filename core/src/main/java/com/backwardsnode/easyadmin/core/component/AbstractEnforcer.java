@@ -24,6 +24,7 @@
 
 package com.backwardsnode.easyadmin.core.component;
 
+import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import com.backwardsnode.easyadmin.api.record.BanRecord;
 import com.backwardsnode.easyadmin.api.record.CommentRecord;
 import com.backwardsnode.easyadmin.api.record.KickRecord;
@@ -38,4 +39,8 @@ public abstract class AbstractEnforcer {
     public abstract boolean enforceComment(CommentRecord record);
 
     public abstract boolean enforceKick(KickRecord record);
+
+    public boolean processPlayerChat(OnlinePlayer player, String message) {
+        return true;
+    }
 }

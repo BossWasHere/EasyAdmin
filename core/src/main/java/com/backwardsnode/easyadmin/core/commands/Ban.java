@@ -172,35 +172,35 @@ public class Ban extends ScopedCommand<TemporalScopedData> {
                     switch (state.getScope()) {
                         case DEFAULT -> {
                             MessageKey key = state.hasReason() ? BANNED_REASON : BANNED;
-                            executor.sendMessage(key, username, context, reason);
+                            executor.sendKeyedMessage(key, username, context, reason);
                         }
                         case TEMPORARY -> {
                             MessageKey key = state.hasReason() ? TEMPBANNED_REASON : TEMPBANNED;
-                            executor.sendMessage(key, username, context, duration, reason);
+                            executor.sendKeyedMessage(key, username, context, duration, reason);
                         }
                         case GLOBAL -> {
                             MessageKey key = state.hasReason() ? BANNED_ALL_REASON : BANNED_ALL;
-                            executor.sendMessage(key, username, reason);
+                            executor.sendKeyedMessage(key, username, reason);
                         }
                         case IP -> {
                             MessageKey key = state.hasReason() ? BANNED_IP_REASON : BANNED_IP;
-                            executor.sendMessage(key, username, context, reason);
+                            executor.sendKeyedMessage(key, username, context, reason);
                         }
                         case TEMPORARY_GLOBAL -> {
                             MessageKey key = state.hasReason() ? TEMPBANNED_ALL_REASON : TEMPBANNED_ALL;
-                            executor.sendMessage(key, username, duration, reason);
+                            executor.sendKeyedMessage(key, username, duration, reason);
                         }
                         case TEMPORARY_IP -> {
                             MessageKey key = state.hasReason() ? TEMPBANNED_IP_REASON : TEMPBANNED_IP;
-                            executor.sendMessage(key, username, context, duration, reason);
+                            executor.sendKeyedMessage(key, username, context, duration, reason);
                         }
                         case GLOBAL_IP -> {
                             MessageKey key = state.hasReason() ? BANNED_IP_ALL_REASON : BANNED_IP_ALL;
-                            executor.sendMessage(key, username, reason);
+                            executor.sendKeyedMessage(key, username, reason);
                         }
                         case TEMPORARY_GLOBAL_IP -> {
                             MessageKey key = state.hasReason() ? TEMPBANNED_IP_ALL_REASON : TEMPBANNED_IP_ALL;
-                            executor.sendMessage(key, username, duration, reason);
+                            executor.sendKeyedMessage(key, username, duration, reason);
                         }
                     }
                 }
@@ -222,46 +222,46 @@ public class Ban extends ScopedCommand<TemporalScopedData> {
                     switch (existing.getScope()) {
                         case DEFAULT -> {
                             MessageKey key = existing.hasReason() ? ALREADY_BANNED_REASON : ALREADY_BANNED;
-                            executor.sendMessage(key, username, context, staffUsername, dateAdded, reason);
+                            executor.sendKeyedMessage(key, username, context, staffUsername, dateAdded, reason);
                         }
                         case TEMPORARY -> {
                             MessageKey key = existing.hasReason() ? ALREADY_TEMPBANNED_REASON : ALREADY_TEMPBANNED;
-                            executor.sendMessage(key, username, context, duration, staffUsername, dateAdded, reason);
+                            executor.sendKeyedMessage(key, username, context, duration, staffUsername, dateAdded, reason);
                         }
                         case GLOBAL -> {
                             MessageKey key = existing.hasReason() ? ALREADY_BANNED_ALL_REASON : ALREADY_BANNED_ALL;
-                            executor.sendMessage(key, username, staffUsername, dateAdded, staffUsername, dateAdded, reason);
+                            executor.sendKeyedMessage(key, username, staffUsername, dateAdded, staffUsername, dateAdded, reason);
                         }
                         case IP -> {
                             MessageKey key = existing.hasReason() ? ALREADY_BANNED_IP_REASON : ALREADY_BANNED_IP;
-                            executor.sendMessage(key, username, context, staffUsername, dateAdded, reason);
+                            executor.sendKeyedMessage(key, username, context, staffUsername, dateAdded, reason);
                         }
                         case TEMPORARY_GLOBAL -> {
                             MessageKey key = existing.hasReason() ? ALREADY_TEMPBANNED_ALL_REASON : ALREADY_TEMPBANNED_ALL;
-                            executor.sendMessage(key, username, duration, staffUsername, dateAdded, reason);
+                            executor.sendKeyedMessage(key, username, duration, staffUsername, dateAdded, reason);
                         }
                         case TEMPORARY_IP -> {
                             MessageKey key = existing.hasReason() ? ALREADY_TEMPBANNED_IP_REASON : ALREADY_TEMPBANNED_IP;
-                            executor.sendMessage(key, username, context, duration, staffUsername, dateAdded, reason);
+                            executor.sendKeyedMessage(key, username, context, duration, staffUsername, dateAdded, reason);
                         }
                         case GLOBAL_IP -> {
                             MessageKey key = existing.hasReason() ? ALREADY_BANNED_IP_ALL_REASON : ALREADY_BANNED_IP_ALL;
-                            executor.sendMessage(key, username, staffUsername, dateAdded, reason);
+                            executor.sendKeyedMessage(key, username, staffUsername, dateAdded, reason);
                         }
                         case TEMPORARY_GLOBAL_IP -> {
                             MessageKey key = existing.hasReason() ? ALREADY_TEMPBANNED_IP_ALL_REASON : ALREADY_TEMPBANNED_IP_ALL;
-                            executor.sendMessage(key, username, duration, staffUsername, dateAdded, reason);
+                            executor.sendKeyedMessage(key, username, duration, staffUsername, dateAdded, reason);
                         }
                     }
                 }
-                case CANCELLED -> executor.sendMessage(CommonMessages.ADMINISTRATIVE.CANCELLED.BAN);
-                case CANCELLED_IMMUNE -> executor.sendMessage(CommonMessages.ADMINISTRATIVE.PLAYER_IMMUNE);
+                case CANCELLED -> executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.CANCELLED.BAN);
+                case CANCELLED_IMMUNE -> executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.PLAYER_IMMUNE);
                 // TODO send playerNonExistent message in preExecute?
-                case IMPOSSIBLE -> executor.sendMessage(CommonMessages.ADMINISTRATIVE.PLAYER_OFFLINE);
-                case WITHHELD -> executor.sendMessage(CommonMessages.ADMINISTRATIVE.WITHHELD.BAN);
+                case IMPOSSIBLE -> executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.PLAYER_OFFLINE);
+                case WITHHELD -> executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.WITHHELD.BAN);
             }
         } catch (Exception e) {
-            executor.sendMessage(CommonMessages.ADMINISTRATIVE.ERROR, e.getClass().getName());
+            executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.ERROR, e.getClass().getName());
             e.printStackTrace();
             return ExecutionStatus.ERROR;
         }

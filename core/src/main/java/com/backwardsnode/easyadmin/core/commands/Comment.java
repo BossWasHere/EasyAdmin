@@ -123,38 +123,38 @@ public class Comment implements Command<CommentData> {
             switch (result.status()) {
                 case COMMITTED:
                     if (state.isWarning()) {
-                        executor.sendMessage(CommonMessages.ADMINISTRATIVE.WARNING.WARNED, state.getPlayer().getUsername(), state.getComment());
+                        executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.WARNING.WARNED, state.getPlayer().getUsername(), state.getComment());
                     } else {
-                        executor.sendMessage(CommonMessages.ADMINISTRATIVE.COMMENT.COMMENTED, state.getPlayer().getUsername(), state.getComment());
+                        executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.COMMENT.COMMENTED, state.getPlayer().getUsername(), state.getComment());
                     }
                     break;
                 case CANCELLED:
                     if (state.isWarning()) {
-                        executor.sendMessage(CommonMessages.ADMINISTRATIVE.CANCELLED.WARNING);
+                        executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.CANCELLED.WARNING);
                     } else {
-                        executor.sendMessage(CommonMessages.ADMINISTRATIVE.CANCELLED.COMMENT);
+                        executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.CANCELLED.COMMENT);
                     }
                     break;
                 case CANCELLED_DUPLICATE:
                     // should never happen
                     break;
                 case CANCELLED_IMMUNE:
-                    executor.sendMessage(CommonMessages.ADMINISTRATIVE.PLAYER_IMMUNE);
+                    executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.PLAYER_IMMUNE);
                     break;
                 case IMPOSSIBLE:
                     // TODO send playerNonExistent message in preExecute?
-                    executor.sendMessage(CommonMessages.ADMINISTRATIVE.PLAYER_OFFLINE);
+                    executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.PLAYER_OFFLINE);
                     break;
                 case WITHHELD:
                     if (state.isWarning()) {
-                        executor.sendMessage(CommonMessages.ADMINISTRATIVE.WITHHELD.WARNING);
+                        executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.WITHHELD.WARNING);
                     } else {
-                        executor.sendMessage(CommonMessages.ADMINISTRATIVE.WITHHELD.COMMENT);
+                        executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.WITHHELD.COMMENT);
                     }
                     break;
             }
         } catch (Exception e) {
-            executor.sendMessage(CommonMessages.ADMINISTRATIVE.ERROR, e.getClass().getName());
+            executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.ERROR, e.getClass().getName());
             e.printStackTrace();
             return ExecutionStatus.ERROR;
         }

@@ -173,35 +173,35 @@ public class Mute extends ScopedCommand<TemporalScopedData> {
                     switch (state.getScope()) {
                         case DEFAULT -> {
                             MessageKey key = state.hasReason() ? MUTED_REASON : MUTED;
-                            executor.sendMessage(key, username, context, reason);
+                            executor.sendKeyedMessage(key, username, context, reason);
                         }
                         case TEMPORARY -> {
                             MessageKey key = state.hasReason() ? TEMPMUTED_REASON : TEMPMUTED;
-                            executor.sendMessage(key, username, context, duration, reason);
+                            executor.sendKeyedMessage(key, username, context, duration, reason);
                         }
                         case GLOBAL -> {
                             MessageKey key = state.hasReason() ? MUTED_ALL_REASON : MUTED_ALL;
-                            executor.sendMessage(key, username, reason);
+                            executor.sendKeyedMessage(key, username, reason);
                         }
                         case IP -> {
                             MessageKey key = state.hasReason() ? MUTED_IP_REASON : MUTED_IP;
-                            executor.sendMessage(key, username, context, reason);
+                            executor.sendKeyedMessage(key, username, context, reason);
                         }
                         case TEMPORARY_GLOBAL -> {
                             MessageKey key = state.hasReason() ? TEMPMUTED_ALL_REASON : TEMPMUTED_ALL;
-                            executor.sendMessage(key, username, duration, reason);
+                            executor.sendKeyedMessage(key, username, duration, reason);
                         }
                         case TEMPORARY_IP -> {
                             MessageKey key = state.hasReason() ? TEMPMUTED_IP_REASON : TEMPMUTED_IP;
-                            executor.sendMessage(key, username, context, duration, reason);
+                            executor.sendKeyedMessage(key, username, context, duration, reason);
                         }
                         case GLOBAL_IP -> {
                             MessageKey key = state.hasReason() ? MUTED_IP_ALL_REASON : MUTED_IP_ALL;
-                            executor.sendMessage(key, username, reason);
+                            executor.sendKeyedMessage(key, username, reason);
                         }
                         case TEMPORARY_GLOBAL_IP -> {
                             MessageKey key = state.hasReason() ? TEMPMUTED_IP_ALL_REASON : TEMPMUTED_IP_ALL;
-                            executor.sendMessage(key, username, duration, reason);
+                            executor.sendKeyedMessage(key, username, duration, reason);
                         }
                     }
                 }
@@ -223,46 +223,46 @@ public class Mute extends ScopedCommand<TemporalScopedData> {
                     switch (existing.getScope()) {
                         case DEFAULT -> {
                             MessageKey key = existing.hasReason() ? ALREADY_MUTED_REASON : ALREADY_MUTED;
-                            executor.sendMessage(key, username, context, staffUsername, dateAdded, reason);
+                            executor.sendKeyedMessage(key, username, context, staffUsername, dateAdded, reason);
                         }
                         case TEMPORARY -> {
                             MessageKey key = existing.hasReason() ? ALREADY_TEMPMUTED_REASON : ALREADY_TEMPMUTED;
-                            executor.sendMessage(key, username, context, duration, staffUsername, dateAdded, reason);
+                            executor.sendKeyedMessage(key, username, context, duration, staffUsername, dateAdded, reason);
                         }
                         case GLOBAL -> {
                             MessageKey key = existing.hasReason() ? ALREADY_MUTED_ALL_REASON : ALREADY_MUTED_ALL;
-                            executor.sendMessage(key, username, staffUsername, dateAdded, staffUsername, dateAdded, reason);
+                            executor.sendKeyedMessage(key, username, staffUsername, dateAdded, staffUsername, dateAdded, reason);
                         }
                         case IP -> {
                             MessageKey key = existing.hasReason() ? ALREADY_MUTED_IP_REASON : ALREADY_MUTED_IP;
-                            executor.sendMessage(key, username, context, staffUsername, dateAdded, reason);
+                            executor.sendKeyedMessage(key, username, context, staffUsername, dateAdded, reason);
                         }
                         case TEMPORARY_GLOBAL -> {
                             MessageKey key = existing.hasReason() ? ALREADY_TEMPMUTED_ALL_REASON : ALREADY_TEMPMUTED_ALL;
-                            executor.sendMessage(key, username, duration, staffUsername, dateAdded, reason);
+                            executor.sendKeyedMessage(key, username, duration, staffUsername, dateAdded, reason);
                         }
                         case TEMPORARY_IP -> {
                             MessageKey key = existing.hasReason() ? ALREADY_TEMPMUTED_IP_REASON : ALREADY_TEMPMUTED_IP;
-                            executor.sendMessage(key, username, context, duration, staffUsername, dateAdded, reason);
+                            executor.sendKeyedMessage(key, username, context, duration, staffUsername, dateAdded, reason);
                         }
                         case GLOBAL_IP -> {
                             MessageKey key = existing.hasReason() ? ALREADY_MUTED_IP_ALL_REASON : ALREADY_MUTED_IP_ALL;
-                            executor.sendMessage(key, username, staffUsername, dateAdded, reason);
+                            executor.sendKeyedMessage(key, username, staffUsername, dateAdded, reason);
                         }
                         case TEMPORARY_GLOBAL_IP -> {
                             MessageKey key = existing.hasReason() ? ALREADY_TEMPMUTED_IP_ALL_REASON : ALREADY_TEMPMUTED_IP_ALL;
-                            executor.sendMessage(key, username, duration, staffUsername, dateAdded, reason);
+                            executor.sendKeyedMessage(key, username, duration, staffUsername, dateAdded, reason);
                         }
                     }
                 }
-                case CANCELLED -> executor.sendMessage(CommonMessages.ADMINISTRATIVE.CANCELLED.MUTE);
-                case CANCELLED_IMMUNE -> executor.sendMessage(CommonMessages.ADMINISTRATIVE.PLAYER_IMMUNE);
+                case CANCELLED -> executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.CANCELLED.MUTE);
+                case CANCELLED_IMMUNE -> executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.PLAYER_IMMUNE);
                 // TODO send playerNonExistent message in preExecute?
-                case IMPOSSIBLE -> executor.sendMessage(CommonMessages.ADMINISTRATIVE.PLAYER_OFFLINE);
-                case WITHHELD -> executor.sendMessage(CommonMessages.ADMINISTRATIVE.WITHHELD.MUTE);
+                case IMPOSSIBLE -> executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.PLAYER_OFFLINE);
+                case WITHHELD -> executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.WITHHELD.MUTE);
             }
         } catch (Exception e) {
-            executor.sendMessage(CommonMessages.ADMINISTRATIVE.ERROR, e.getClass().getName());
+            executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.ERROR, e.getClass().getName());
             e.printStackTrace();
             return ExecutionStatus.ERROR;
         }

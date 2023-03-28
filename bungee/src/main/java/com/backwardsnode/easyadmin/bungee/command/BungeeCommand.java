@@ -34,7 +34,6 @@ import com.backwardsnode.easyadmin.core.i18n.CommonMessages;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 
-import java.util.Map;
 import java.util.logging.Level;
 
 public class BungeeCommand<S> extends net.md_5.bungee.api.plugin.Command {
@@ -67,8 +66,8 @@ public class BungeeCommand<S> extends net.md_5.bungee.api.plugin.Command {
                 }
 
                 switch (status) {
-                    case INVALID_ARGUMENTS -> wrapper.sendMessage(source.getUsageMessage(wrapper, data, state));
-                    case NO_PERMISSION -> wrapper.sendMessage(CommonMessages.EASYADMIN.NO_PERMISSION);
+                    case INVALID_ARGUMENTS -> wrapper.sendKeyedMessage(source.getUsageMessage(wrapper, data, state));
+                    case NO_PERMISSION -> wrapper.sendKeyedMessage(CommonMessages.EASYADMIN.NO_PERMISSION);
                     case ERROR ->
                             ProxyServer.getInstance().getLogger().severe(
                                     "An error occurred whilst executing the following command: "
@@ -76,7 +75,7 @@ public class BungeeCommand<S> extends net.md_5.bungee.api.plugin.Command {
                     default -> {}
                 }
             } else {
-                wrapper.sendMessage(source.getUsageMessage(wrapper, data, state));
+                wrapper.sendKeyedMessage(source.getUsageMessage(wrapper, data, state));
             }
         } catch (Exception e) {
             ProxyServer.getInstance().getLogger().log(Level.SEVERE,

@@ -279,10 +279,6 @@ public class EasyAdminService implements EasyAdmin, AutoCloseable {
         return languageFilePath;
     }
 
-    public String translateAlternateColorCodes(char altColorChar, String text) {
-        return plugin.translateAlternateColorCodes(altColorChar, text);
-    }
-
     private void verifyOpen() {
         if (closed) {
             throw new IllegalStateException("Service is closed");

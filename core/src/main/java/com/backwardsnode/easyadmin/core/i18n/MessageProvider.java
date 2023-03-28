@@ -151,10 +151,6 @@ public class MessageProvider implements MessageFactory {
         return lg;
     }
 
-    public void sendMessage(CommandExecutor executor, MessageKey message, Object... args) {
-        executor.sendMessage(getMessage(message, executor.getLocale(), args));
-    }
-
     @Override
     public String getMessage(MessageKey key, String language, Object... args) {
         LanguageGroup lg = loadLanguageOrDefault(language);
@@ -179,7 +175,7 @@ public class MessageProvider implements MessageFactory {
         if (key.addPrefix()) {
             msg = lg.getMessage(EASYADMIN.PREFIX) + msg;
         }
-        return service.translateAlternateColorCodes('&', msg);
+        return msg;
     }
 
     @Override

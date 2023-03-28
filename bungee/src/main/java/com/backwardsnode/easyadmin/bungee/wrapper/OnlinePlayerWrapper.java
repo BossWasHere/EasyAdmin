@@ -27,6 +27,7 @@ package com.backwardsnode.easyadmin.bungee.wrapper;
 import com.backwardsnode.easyadmin.api.EasyAdminProvider;
 import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import com.backwardsnode.easyadmin.api.internal.MessageKey;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -50,13 +51,14 @@ public class OnlinePlayerWrapper extends OfflinePlayerWrapper implements OnlineP
     }
 
     @Override
-    public void sendMessage(@NotNull String msg) {
+    public void sendMessage(@NotNull String msg, boolean isColorCoded) {
+        msg = isColorCoded ? ChatColor.translateAlternateColorCodes('&', msg) : msg;
         player.sendMessage(TextComponent.fromLegacyText(msg));
     }
 
     @Override
-    public void sendMessage(@NotNull MessageKey key, @NotNull Object... args) {
-        sendMessage(EasyAdminProvider.get().getMessageFactory().getMessage(key, getLocale(), args));
+    public void sendKeyedMessage(@NotNull MessageKey key, @NotNull Object... args) {
+        sendMessage(EasyAdminProvider.get().getMessageFactory().getMessage(key, getLocale(), args), true);
     }
 
     @Override

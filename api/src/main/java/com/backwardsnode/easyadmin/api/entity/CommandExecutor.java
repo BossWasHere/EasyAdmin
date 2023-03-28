@@ -43,15 +43,16 @@ public interface CommandExecutor {
     /**
      * Sends a message to this entity.
      * @param msg the message to send.
+     * @param isColorCoded whether the message should have color codes with '&' replaced.
      */
-    void sendMessage(@NotNull String msg);
+    void sendMessage(@NotNull String msg, boolean isColorCoded);
 
     /**
      * Sends a localized message to this entity.
      * @param key the key of the message to send.
      * @param args the arguments to replace in the message.
      */
-    void sendMessage(@NotNull MessageKey key, @NotNull Object... args);
+    void sendKeyedMessage(@NotNull MessageKey key, @NotNull Object... args);
 
     /**
      * Gets the locale of this entity.

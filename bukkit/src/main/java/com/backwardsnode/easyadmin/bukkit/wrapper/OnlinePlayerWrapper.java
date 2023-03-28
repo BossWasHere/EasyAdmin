@@ -28,6 +28,7 @@ import com.backwardsnode.easyadmin.api.EasyAdminProvider;
 import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
 import com.backwardsnode.easyadmin.api.internal.MessageKey;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,13 +50,13 @@ public class OnlinePlayerWrapper extends OfflinePlayerWrapper implements OnlineP
     }
 
     @Override
-    public void sendMessage(@NotNull String msg) {
-        player.sendMessage(msg);
+    public void sendMessage(@NotNull String msg, boolean isColorCoded) {
+        player.sendMessage(isColorCoded ? ChatColor.translateAlternateColorCodes('&', msg) : msg);
     }
 
     @Override
-    public void sendMessage(@NotNull MessageKey key, @NotNull Object... args) {
-        sendMessage(EasyAdminProvider.get().getMessageFactory().getMessage(key, getLocale(), args));
+    public void sendKeyedMessage(@NotNull MessageKey key, @NotNull Object... args) {
+        sendMessage(EasyAdminProvider.get().getMessageFactory().getMessage(key, getLocale(), args), true);
     }
 
     @Override

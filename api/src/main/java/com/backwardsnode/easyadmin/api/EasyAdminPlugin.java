@@ -42,14 +42,6 @@ import java.util.UUID;
 public interface EasyAdminPlugin {
 
     /**
-     * Transforms the input text into a color/style formatted string.
-     * @param altColorChar the character to use as the alternate color code character.
-     * @param text the raw text.
-     * @return the formatted text.
-     */
-    @NotNull String translateAlternateColorCodes(char altColorChar, @NotNull String text);
-
-    /**
      * Gets the active API instance for EasyAdmin.
      * @return the API instance.
      */

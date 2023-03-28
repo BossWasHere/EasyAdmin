@@ -63,7 +63,6 @@ public class LanguageTest {
         when(cm.getLocaleConfiguration()).thenReturn(configuration);
 
         when(eas.getConfigurationManager()).thenReturn(cm);
-        when(eas.translateAlternateColorCodes(anyChar(), anyString())).then((Answer<String>) invocation -> invocation.getArgument(1));
 
         MessageProvider mp = new MessageProvider(eas, true, "en_US");
         assertEquals("EasyAdmin", mp.getMessage(CommonMessages.EASYADMIN.PREFIX, "en_US"));

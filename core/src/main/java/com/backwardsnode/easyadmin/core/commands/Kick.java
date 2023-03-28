@@ -130,29 +130,29 @@ public class Kick implements Command<KickData> {
             switch (result.status()) {
                 case COMMITTED:
                     if (state.isGlobal()) {
-                        executor.sendMessage(CommonMessages.ADMINISTRATIVE.KICK.KICKED_ALL, state.getPlayer().getUsername(), state.getReason());
+                        executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.KICK.KICKED_ALL, state.getPlayer().getUsername(), state.getReason());
                     } else {
-                        executor.sendMessage(CommonMessages.ADMINISTRATIVE.KICK.KICKED, state.getPlayer().getUsername(), result.record().getServerName(), state.getReason());
+                        executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.KICK.KICKED, state.getPlayer().getUsername(), result.record().getServerName(), state.getReason());
                     }
                     break;
                 case CANCELLED:
-                    executor.sendMessage(CommonMessages.ADMINISTRATIVE.CANCELLED.KICK);
+                    executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.CANCELLED.KICK);
                     break;
                 case CANCELLED_DUPLICATE:
                     // should never happen
                     break;
                 case CANCELLED_IMMUNE:
-                    executor.sendMessage(CommonMessages.ADMINISTRATIVE.PLAYER_IMMUNE);
+                    executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.PLAYER_IMMUNE);
                     break;
                 case IMPOSSIBLE:
-                    executor.sendMessage(CommonMessages.ADMINISTRATIVE.PLAYER_OFFLINE);
+                    executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.PLAYER_OFFLINE);
                     break;
                 case WITHHELD:
-                    executor.sendMessage(CommonMessages.ADMINISTRATIVE.WITHHELD.KICK);
+                    executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.WITHHELD.KICK);
                     break;
             }
         } catch (Exception e) {
-            executor.sendMessage(CommonMessages.ADMINISTRATIVE.ERROR, e.getClass().getName());
+            executor.sendKeyedMessage(CommonMessages.ADMINISTRATIVE.ERROR, e.getClass().getName());
             e.printStackTrace();
             return ExecutionStatus.ERROR;
         }

@@ -112,11 +112,6 @@ public class EasyAdminBungee extends Plugin implements EasyAdminPlugin {
     }
 
     @Override
-    public @NotNull String translateAlternateColorCodes(char altColorChar, @NotNull String text) {
-        return ChatColor.translateAlternateColorCodes(altColorChar, text);
-    }
-
-    @Override
     public @NotNull EasyAdmin getInstance() {
         return instance;
     }
