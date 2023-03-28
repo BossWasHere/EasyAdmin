@@ -29,6 +29,5 @@ import com.backwardsnode.easyadmin.api.event.Mutable;
 import com.backwardsnode.easyadmin.api.event.staff.CommandEvent;
 import com.backwardsnode.easyadmin.api.record.MuteRecord;
 import com.backwardsnode.easyadmin.api.record.mutable.MutableMuteRecord;
-import org.jetbrains.annotations.NotNull;
 
 public interface MuteEvent extends AdministrationEvent, Cancellable, CommandEvent, Mutable<MuteRecord>, MutableMuteRecord { }

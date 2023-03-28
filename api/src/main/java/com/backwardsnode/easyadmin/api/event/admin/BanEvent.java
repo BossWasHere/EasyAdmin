@@ -29,6 +29,5 @@ import com.backwardsnode.easyadmin.api.event.Mutable;
 import com.backwardsnode.easyadmin.api.event.staff.CommandEvent;
 import com.backwardsnode.easyadmin.api.record.BanRecord;
 import com.backwardsnode.easyadmin.api.record.mutable.MutableBanRecord;
-import org.jetbrains.annotations.NotNull;
 
 public interface BanEvent extends AdministrationEvent, Cancellable, CommandEvent, Mutable<BanRecord>, MutableBanRecord { }

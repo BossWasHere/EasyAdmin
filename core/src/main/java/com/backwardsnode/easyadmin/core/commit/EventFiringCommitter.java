@@ -24,21 +24,24 @@
 
 package com.backwardsnode.easyadmin.core.commit;
 
+import com.backwardsnode.easyadmin.api.commit.CommitException;
 import com.backwardsnode.easyadmin.api.commit.CommitResult;
 import com.backwardsnode.easyadmin.api.commit.CommitStatus;
 import com.backwardsnode.easyadmin.api.commit.Committer;
 import com.backwardsnode.easyadmin.api.data.AdminAction;
+import com.backwardsnode.easyadmin.api.data.ServiceSource;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
-import com.backwardsnode.easyadmin.api.event.admin.AdminEventSource;
-import com.backwardsnode.easyadmin.api.record.*;
+import com.backwardsnode.easyadmin.api.record.BanRecord;
+import com.backwardsnode.easyadmin.api.record.CommentRecord;
+import com.backwardsnode.easyadmin.api.record.KickRecord;
+import com.backwardsnode.easyadmin.api.record.MuteRecord;
 import com.backwardsnode.easyadmin.api.record.base.LiveRecord;
 import com.backwardsnode.easyadmin.core.EasyAdminService;
 import com.backwardsnode.easyadmin.core.event.admin.BanEventImpl;
 import com.backwardsnode.easyadmin.core.event.admin.CommentEventImpl;
 import com.backwardsnode.easyadmin.core.event.admin.KickEventImpl;
 import com.backwardsnode.easyadmin.core.event.admin.MuteEventImpl;
-import com.backwardsnode.easyadmin.api.commit.CommitException;
 import com.backwardsnode.easyadmin.core.record.*;
 
 import java.util.EnumSet;
@@ -46,13 +49,13 @@ import java.util.EnumSet;
 public class EventFiringCommitter implements Committer {
 
     private final EasyAdminService service;
-    private final AdminEventSource source;
+    private final ServiceSource source;
 
     private final EnumSet<CommitterMode> modes;
     private final boolean allowCancellations;
     private final boolean allowModifications;
 
-    public EventFiringCommitter(EasyAdminService service, AdminEventSource source, EnumSet<CommitterMode> modes) {
+    public EventFiringCommitter(EasyAdminService service, ServiceSource source, EnumSet<CommitterMode> modes) {
         this.service = service;
         this.source = source;
         this.modes = modes;

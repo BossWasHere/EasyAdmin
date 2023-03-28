@@ -30,7 +30,7 @@ import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
 import com.backwardsnode.easyadmin.api.data.Platform;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
 import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
-import com.backwardsnode.easyadmin.api.internal.InternalServiceProviderType;
+import com.backwardsnode.easyadmin.api.data.ServiceSource;
 import com.backwardsnode.easyadmin.bungee.command.BungeeCommandRegister;
 import com.backwardsnode.easyadmin.bungee.event.BungeeListener;
 import com.backwardsnode.easyadmin.bungee.interop.ExtraServerInfoManager;
@@ -41,7 +41,6 @@ import com.backwardsnode.easyadmin.core.EasyAdminService;
 import com.backwardsnode.easyadmin.core.boot.Registration;
 import com.backwardsnode.easyadmin.core.command.CommandManager;
 import com.backwardsnode.easyadmin.core.exception.ServiceInitializationException;
-import com.backwardsnode.easyadmin.core.i18n.MessageProvider;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
@@ -133,7 +132,7 @@ public class EasyAdminBungee extends Plugin implements EasyAdminPlugin {
     }
 
     @Override
-    public @NotNull RecordBuilder getRecordBuilderFor(@NotNull InternalServiceProviderType provider) {
+    public @NotNull RecordBuilder getRecordBuilderFor(@NotNull ServiceSource provider) {
         return null;
     }
 

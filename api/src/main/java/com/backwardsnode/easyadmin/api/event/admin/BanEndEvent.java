@@ -24,10 +24,6 @@
 
 package com.backwardsnode.easyadmin.api.event.admin;
 
-import com.backwardsnode.easyadmin.api.event.Cancellable;
-import com.backwardsnode.easyadmin.api.record.BanRecord;
-import org.jetbrains.annotations.NotNull;
-
 public interface BanEndEvent extends BanEvent {
 
     boolean hasExpired();

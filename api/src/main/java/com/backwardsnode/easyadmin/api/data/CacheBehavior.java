@@ -24,8 +24,6 @@
 
 package com.backwardsnode.easyadmin.api.data;
 
-import com.backwardsnode.easyadmin.api.data.LookupOptions;
-
 /**
  * Determines when responses to a request may or may not be cached.
  */

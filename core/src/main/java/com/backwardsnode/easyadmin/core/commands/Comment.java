@@ -27,12 +27,12 @@ package com.backwardsnode.easyadmin.core.commands;
 import com.backwardsnode.easyadmin.api.EasyAdminPlugin;
 import com.backwardsnode.easyadmin.api.builder.CommentBuilder;
 import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
+import com.backwardsnode.easyadmin.api.commit.CommitResult;
+import com.backwardsnode.easyadmin.api.data.ServiceSource;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
-import com.backwardsnode.easyadmin.api.internal.InternalServiceProviderType;
 import com.backwardsnode.easyadmin.api.internal.MessageKey;
 import com.backwardsnode.easyadmin.api.record.CommentRecord;
-import com.backwardsnode.easyadmin.api.commit.CommitResult;
 import com.backwardsnode.easyadmin.core.command.Command;
 import com.backwardsnode.easyadmin.core.command.CommandData;
 import com.backwardsnode.easyadmin.core.command.CommandRegistration;
@@ -112,7 +112,7 @@ public class Comment implements Command<CommentData> {
     @Override
     public ExecutionStatus execute(EasyAdminPlugin instance, CommandExecutor executor, CommandData data, CommentData state) {
         UUID staffUUID = executor instanceof OfflinePlayer player ? player.getUUID() : null;
-        RecordBuilder builder = instance.getRecordBuilderFor(InternalServiceProviderType.COMMAND);
+        RecordBuilder builder = instance.getRecordBuilderFor(ServiceSource.COMMAND);
         CommentBuilder commentBuilder =
                 builder.commentOnPlayer(state.getPlayer().getUUID(), state.getComment())
                         .byStaff(staffUUID)

@@ -24,12 +24,12 @@
 
 package com.backwardsnode.easyadmin.api.event.admin;
 
-import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
+import com.backwardsnode.easyadmin.api.data.ServiceSource;
 import com.backwardsnode.easyadmin.api.event.EasyAdminEvent;
 import org.jetbrains.annotations.NotNull;
 
 public interface AdministrationEvent extends EasyAdminEvent {
 
-    @NotNull AdminEventSource getSource();
+    @NotNull ServiceSource getSource();
 
 }

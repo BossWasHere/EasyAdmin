@@ -33,7 +33,7 @@ import com.backwardsnode.easyadmin.api.admin.RecommendationEngine;
 import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
 import com.backwardsnode.easyadmin.api.config.ConfigurationManager;
 import com.backwardsnode.easyadmin.api.contextual.ContextTester;
-import com.backwardsnode.easyadmin.api.event.admin.AdminEventSource;
+import com.backwardsnode.easyadmin.api.data.ServiceSource;
 import com.backwardsnode.easyadmin.api.internal.ExternalDataSource;
 import com.backwardsnode.easyadmin.api.internal.MessageFactory;
 import com.backwardsnode.easyadmin.api.server.NetworkInfo;
@@ -120,7 +120,7 @@ public class EasyAdminService implements EasyAdmin, AutoCloseable {
         withholdAgent = null;
 
 
-        apiCommitter = new EventFiringCommitter(this, AdminEventSource.API, EnumSet.of(CommitterMode.EVENT_ALLOW_CANCELLATIONS));
+        apiCommitter = new EventFiringCommitter(this, ServiceSource.API, EnumSet.of(CommitterMode.EVENT_ALLOW_CANCELLATIONS));
         adminManager = new AdminManagerImpl(this, databaseController);
         apiRecordBuilder = new RecordBuilderImpl(apiCommitter);
         messageFactory = new MessageProvider(this,true);

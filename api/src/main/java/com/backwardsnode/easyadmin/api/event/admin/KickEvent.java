@@ -29,6 +29,5 @@ import com.backwardsnode.easyadmin.api.event.Mutable;
 import com.backwardsnode.easyadmin.api.event.staff.CommandEvent;
 import com.backwardsnode.easyadmin.api.record.KickRecord;
 import com.backwardsnode.easyadmin.api.record.mutable.MutableKickRecord;
-import org.jetbrains.annotations.NotNull;
 
 public interface KickEvent extends AdministrationEvent, Cancellable, CommandEvent, Mutable<KickRecord>, MutableKickRecord { }

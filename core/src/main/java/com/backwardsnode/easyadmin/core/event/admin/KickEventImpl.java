@@ -25,8 +25,8 @@
 package com.backwardsnode.easyadmin.core.event.admin;
 
 import com.backwardsnode.easyadmin.api.EasyAdmin;
+import com.backwardsnode.easyadmin.api.data.ServiceSource;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
-import com.backwardsnode.easyadmin.api.event.admin.AdminEventSource;
 import com.backwardsnode.easyadmin.api.event.admin.KickEvent;
 import com.backwardsnode.easyadmin.api.record.KickRecord;
 import com.backwardsnode.easyadmin.api.record.mutable.MutableKickRecord;
@@ -42,14 +42,14 @@ import java.util.UUID;
 
 public final class KickEventImpl extends CancellableEvent implements KickEvent {
 
-    private final AdminEventSource source;
+    private final ServiceSource source;
     private final KickRecordImpl kickRecord;
     private final CommandExecutor executor;
     private final boolean modifiable;
 
     private MutableKickRecordImpl mutableRecord;
 
-    public KickEventImpl(EasyAdmin instance, AdminEventSource source, KickRecordImpl kickRecord,
+    public KickEventImpl(EasyAdmin instance, ServiceSource source, KickRecordImpl kickRecord,
                          CommandExecutor executor, boolean cancellable, boolean modifiable) {
         super(instance, KickEvent.class, cancellable);
         this.source = source;
@@ -59,7 +59,7 @@ public final class KickEventImpl extends CancellableEvent implements KickEvent {
     }
 
     @Override
-    public @NotNull AdminEventSource getSource() {
+    public @NotNull ServiceSource getSource() {
         return source;
     }
 

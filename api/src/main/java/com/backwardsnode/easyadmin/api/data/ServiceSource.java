@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 
-package com.backwardsnode.easyadmin.api.internal;
+package com.backwardsnode.easyadmin.api.data;
 
 /**
  * Enum to enable switching between providers for internal services.
  */
-public enum InternalServiceProviderType {
+public enum ServiceSource {
 
     /**
      * Accesses services used by through the API.

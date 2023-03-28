@@ -27,13 +27,13 @@ package com.backwardsnode.easyadmin.core.commands;
 import com.backwardsnode.easyadmin.api.EasyAdminPlugin;
 import com.backwardsnode.easyadmin.api.builder.MuteBuilder;
 import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
+import com.backwardsnode.easyadmin.api.commit.CommitResult;
 import com.backwardsnode.easyadmin.api.data.ActionScope;
+import com.backwardsnode.easyadmin.api.data.ServiceSource;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
 import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
-import com.backwardsnode.easyadmin.api.internal.InternalServiceProviderType;
 import com.backwardsnode.easyadmin.api.internal.MessageKey;
-import com.backwardsnode.easyadmin.api.commit.CommitResult;
 import com.backwardsnode.easyadmin.api.record.MuteRecord;
 import com.backwardsnode.easyadmin.core.command.CommandData;
 import com.backwardsnode.easyadmin.core.command.ExecutionStatus;
@@ -134,7 +134,7 @@ public class Mute extends ScopedCommand<TemporalScopedData> {
     @Override
     public ExecutionStatus execute(EasyAdminPlugin instance, CommandExecutor executor, CommandData data, TemporalScopedData state) {
         UUID staffUUID = executor instanceof OfflinePlayer player ? player.getUUID() : null;
-        RecordBuilder builder = instance.getRecordBuilderFor(InternalServiceProviderType.COMMAND);
+        RecordBuilder builder = instance.getRecordBuilderFor(ServiceSource.COMMAND);
         MuteBuilder muteBuilder;
 
         // TODO support IP only mutes?

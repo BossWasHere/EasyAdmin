@@ -30,7 +30,7 @@ import com.backwardsnode.easyadmin.api.builder.RecordBuilder;
 import com.backwardsnode.easyadmin.api.data.Platform;
 import com.backwardsnode.easyadmin.api.entity.OfflinePlayer;
 import com.backwardsnode.easyadmin.api.entity.OnlinePlayer;
-import com.backwardsnode.easyadmin.api.internal.InternalServiceProviderType;
+import com.backwardsnode.easyadmin.api.data.ServiceSource;
 import com.backwardsnode.easyadmin.bukkit.command.BukkitCommandRegister;
 import com.backwardsnode.easyadmin.bukkit.event.BukkitListener;
 import com.backwardsnode.easyadmin.bukkit.messaging.BukkitMessagingChannel;
@@ -116,7 +116,7 @@ public class EasyAdminBukkit extends JavaPlugin implements EasyAdminPlugin {
     }
 
     @Override
-    public @NotNull RecordBuilder getRecordBuilderFor(@NotNull InternalServiceProviderType provider) {
+    public @NotNull RecordBuilder getRecordBuilderFor(@NotNull ServiceSource provider) {
         return null;
     }
 

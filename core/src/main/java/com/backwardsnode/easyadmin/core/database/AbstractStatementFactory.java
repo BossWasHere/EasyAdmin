@@ -27,7 +27,6 @@ package com.backwardsnode.easyadmin.core.database;
 import com.backwardsnode.easyadmin.api.data.LookupOptions;
 import com.backwardsnode.easyadmin.api.data.PunishmentStatus;
 import com.backwardsnode.easyadmin.api.record.*;
-import com.backwardsnode.easyadmin.api.record.base.ScopedRecord;
 import com.backwardsnode.easyadmin.api.record.mutable.MutableBanRecord;
 import com.backwardsnode.easyadmin.api.record.mutable.MutableMuteRecord;
 import com.backwardsnode.easyadmin.api.record.mutable.MutablePlayerRecord;

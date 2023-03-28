@@ -26,8 +26,8 @@ package com.backwardsnode.easyadmin.core.event.admin;
 
 import com.backwardsnode.easyadmin.api.EasyAdmin;
 import com.backwardsnode.easyadmin.api.data.PunishmentStatus;
+import com.backwardsnode.easyadmin.api.data.ServiceSource;
 import com.backwardsnode.easyadmin.api.entity.CommandExecutor;
-import com.backwardsnode.easyadmin.api.event.admin.AdminEventSource;
 import com.backwardsnode.easyadmin.api.event.admin.MuteEvent;
 import com.backwardsnode.easyadmin.api.record.MuteRecord;
 import com.backwardsnode.easyadmin.api.record.mutable.MutableMuteRecord;
@@ -43,14 +43,14 @@ import java.util.UUID;
 
 public final class MuteEventImpl extends CancellableEvent implements MuteEvent {
 
-    private final AdminEventSource source;
+    private final ServiceSource source;
     private final MuteRecordImpl muteRecord;
     private final CommandExecutor executor;
     private final boolean modifiable;
 
     private MutableMuteRecordImpl mutableRecord;
 
-    public MuteEventImpl(EasyAdmin instance, AdminEventSource source, MuteRecordImpl muteRecord,
+    public MuteEventImpl(EasyAdmin instance, ServiceSource source, MuteRecordImpl muteRecord,
                          CommandExecutor executor, boolean cancellable, boolean modifiable) {
         super(instance, MuteEventImpl.class, cancellable);
         this.source = source;
@@ -60,7 +60,7 @@ public final class MuteEventImpl extends CancellableEvent implements MuteEvent {
     }
 
     @Override
-    public @NotNull AdminEventSource getSource() {
+    public @NotNull ServiceSource getSource() {
         return source;
     }
 

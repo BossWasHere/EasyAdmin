@@ -25,7 +25,6 @@
 package com.backwardsnode.easyadmin.api.entity;
 
 import com.backwardsnode.easyadmin.api.EasyAdminProvider;
-import com.backwardsnode.easyadmin.api.data.AdminAction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
